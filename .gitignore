@@ -49,3 +49,10 @@ scratch/
 
 # Local tests directory (Holds non-core demo files, test assets, scratch code)
 local_tests/
+
+# PDF and Word document exclusions
+*.pdf
+*.docx
+stego_charts/
+backup/
+src/test/file/
