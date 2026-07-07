@@ -326,6 +326,7 @@ def decode_video_multi_cb(video_path, total_bits, frame_metas, width, height):
 
 def run_benchmarks():
     print("🚀 Starting Steganography Benchmark Suite...")
+    os.makedirs("scratch", exist_ok=True)
     
     video_configs = [
         # (Type, Duration, Path)

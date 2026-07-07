@@ -397,9 +397,8 @@ class MultiTrackPlayer(QMainWindow):
         self.lbl_sec_geo = QLabel("地理國家: 載入中...")
         self.lbl_sec_decision = QLabel("決策路徑: 載入中...")
         self.lbl_sec_trust = QLabel("信任等級: 載入中...")
-        self.lbl_stego_checksum = QLabel("檔案 MD5: 載入中...")
         
-        for lbl in [self.lbl_sec_ip, self.lbl_sec_proxy, self.lbl_sec_geo, self.lbl_sec_decision, self.lbl_sec_trust, self.lbl_stego_checksum]:
+        for lbl in [self.lbl_sec_ip, self.lbl_sec_proxy, self.lbl_sec_geo, self.lbl_sec_decision, self.lbl_sec_trust]:
             lbl.setStyleSheet("color: #94A3B8; font-size: 11px; font-family: Consolas, monospace;")
             lbl.setWordWrap(True)
             sec_info_layout.addWidget(lbl)
@@ -740,7 +739,6 @@ class MultiTrackPlayer(QMainWindow):
             self.lbl_sec_geo.setText("地理國家: 載入中...")
             self.lbl_sec_decision.setText("決策路徑: 載入中...")
             self.lbl_sec_trust.setText("信任等級: 載入中...")
-            self.lbl_stego_checksum.setText("檔案 MD5: 計算中...")
         
         self.extraction_start_time = time.time()
         self.last_reported_frame = 0
@@ -917,18 +915,12 @@ class MultiTrackPlayer(QMainWindow):
         else:
             self.lbl_sec_trust.setStyleSheet("color: #94A3B8; font-size: 11px; font-family: Consolas, monospace;")
         
-        # Calculate/retrieve MD5 checksum from background worker
-        file_md5 = self.extract_thread.file_md5 if (self.extract_thread and hasattr(self.extract_thread, "file_md5")) else "Unknown"
-        self.lbl_stego_checksum.setText(f"檔案 MD5: {file_md5[:10]}...")
-        self.lbl_stego_checksum.setToolTip(f"完整檔案 MD5:\n{file_md5}")
-        
     def copy_security_info(self):
         client_ip = self.lbl_sec_ip.text()
         proxy = self.lbl_sec_proxy.text()
         geo = self.lbl_sec_geo.text()
         decision = self.lbl_sec_decision.text()
         trust = self.lbl_sec_trust.text()
-        md5 = self.lbl_stego_checksum.toolTip() if "完整檔案" in self.lbl_stego_checksum.toolTip() else self.lbl_stego_checksum.text()
         
         report_text = (
             "=== 多音軌安全取證報告 ===\n"
@@ -937,7 +929,6 @@ class MultiTrackPlayer(QMainWindow):
             f"{geo}\n"
             f"{decision}\n"
             f"{trust}\n"
-            f"{md5}\n"
             f"取證時間: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
             "========================="
         )
