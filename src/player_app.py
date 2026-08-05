@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
     QFrame, QSplitter, QMessageBox, QFileDialog, QStackedWidget,
     QProgressBar, QTextEdit
 )
-from PySide6.QtCore import Qt, QUrl, QTimer, QThread, Signal
+from PySide6.QtCore import Qt, QUrl, QTimer, QThread, Signal, QLocale, QSettings
 from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6.QtMultimediaWidgets import QVideoWidget
 from PySide6.QtGui import QFont
@@ -397,36 +397,40 @@ class MultiTrackPlayer(QMainWindow):
         self.lbl_sec_geo = QLabel("地理國家: 載入中...")
         self.lbl_sec_decision = QLabel("決策路徑: 載入中...")
         self.lbl_sec_trust = QLabel("信任等級: 載入中...")
-        self.lbl_stego_checksum = QLabel("檔案 MD5: 載入中...")
         
-        for lbl in [self.lbl_sec_ip, self.lbl_sec_proxy, self.lbl_sec_geo, self.lbl_sec_decision, self.lbl_sec_trust, self.lbl_stego_checksum]:
+        for lbl in [self.lbl_sec_ip, self.lbl_sec_proxy, self.lbl_sec_geo, self.lbl_sec_decision, self.lbl_sec_trust]:
             lbl.setStyleSheet("color: #94A3B8; font-size: 11px; font-family: Consolas, monospace;")
             lbl.setWordWrap(True)
             sec_info_layout.addWidget(lbl)
             
-        sidebar_layout.addWidget(sec_info_frame)
-        
-        # Interactive Web Dashboard launcher
-        self.btn_web_sim = QPushButton("🖥️ 開啟安全性分析網頁")
-        self.btn_web_sim.setObjectName("WebSimButton")
-        self.btn_web_sim.setStyleSheet("""
-            QPushButton#WebSimButton {
-                background-color: #111827;
-                color: #38BDF8;
-                border: 1px solid #0284C7;
-                border-radius: 6px;
-                padding: 10px 12px;
+        # 📋 複製取證報告小 icon 按鈕，放置於右下角
+        btn_layout = QHBoxLayout()
+        btn_layout.addStretch()
+        self.btn_copy_sec = QPushButton("📋")
+        self.btn_copy_sec.setToolTip("複製取證報告")
+        self.btn_copy_sec.setFixedSize(24, 24)
+        self.btn_copy_sec.setStyleSheet("""
+            QPushButton {
+                background-color: #1E293B;
+                color: #CBD5E1;
+                border: 1px solid #334155;
+                border-radius: 4px;
                 font-size: 12px;
-                font-weight: bold;
             }
-            QPushButton#WebSimButton:hover {
-                background-color: #1F2937;
-                border: 1px solid #38BDF8;
-                color: #F8FAFC;
+            QPushButton:hover {
+                background-color: #334155;
+                border-color: #475569;
+            }
+            QPushButton:pressed {
+                background-color: #0F172A;
             }
         """)
-        self.btn_web_sim.clicked.connect(self.launch_web_dashboard)
-        sidebar_layout.addWidget(self.btn_web_sim)
+        self.btn_copy_sec.clicked.connect(self.copy_security_info)
+        btn_layout.addWidget(self.btn_copy_sec)
+        
+        sec_info_layout.addLayout(btn_layout)
+        
+        sidebar_layout.addWidget(sec_info_frame)
         
         splitter.addWidget(self.sidebar)
         
@@ -735,7 +739,6 @@ class MultiTrackPlayer(QMainWindow):
             self.lbl_sec_geo.setText("地理國家: 載入中...")
             self.lbl_sec_decision.setText("決策路徑: 載入中...")
             self.lbl_sec_trust.setText("信任等級: 載入中...")
-            self.lbl_stego_checksum.setText("檔案 MD5: 計算中...")
         
         self.extraction_start_time = time.time()
         self.last_reported_frame = 0
@@ -845,9 +848,9 @@ class MultiTrackPlayer(QMainWindow):
         history_lang = settings.value("preferred_language", None)
         
         from pyinstaller_utils import get_resource_path
-        db_path = get_resource_path(os.path.join("for_ip", "i18n_security", "data", "dbip-country-lite.mmdb"))
+        db_path = get_resource_path(os.path.join("src", "data", "dbip-country-lite.mmdb"))
         if not os.path.exists(db_path):
-            db_path = get_resource_path(os.path.join("for_ip", "i18n_security", "data", "dbip-city-lite.mmdb"))
+            db_path = get_resource_path(os.path.join("src", "data", "dbip-city-lite.mmdb"))
             
         session_id = self.video_path
         
@@ -890,18 +893,53 @@ class MultiTrackPlayer(QMainWindow):
         }
         trust_level = trust_map.get(result.source, "🟡 中置信度")
         
+        # Check Zero-Trust Proxy Warning
+        proxy_warning = meta.get("proxy_warning", False)
+        if proxy_warning:
+            trust_level = "🔴 高風險 (疑似位置偽裝)"
+        
         # Populate UI labels
         self.lbl_sec_ip.setText(f"客戶端 IP: {client_ip}")
         self.lbl_sec_proxy.setText(f"本機代理: {proxy_status_str}")
         self.lbl_sec_geo.setText(f"地理國家: {country}")
-        self.lbl_sec_decision.setText(f"決策路徑: {result.source}")
+        
+        # 顯示完整鏈狀決策路徑
+        decision_chain = meta.get("decision_chain", result.source)
+        self.lbl_sec_decision.setText(f"決策路徑:\n{decision_chain}")
+        
         self.lbl_sec_trust.setText(f"信任等級: {trust_level}")
         
-        # Calculate/retrieve MD5 checksum from background worker
-        file_md5 = self.extract_thread.file_md5 if (self.extract_thread and hasattr(self.extract_thread, "file_md5")) else "Unknown"
-        self.lbl_stego_checksum.setText(f"檔案 MD5: {file_md5[:10]}...")
-        self.lbl_stego_checksum.setToolTip(f"完整檔案 MD5:\n{file_md5}")
+        # Set trust label styling dynamically based on proxy warning
+        if proxy_warning:
+            self.lbl_sec_trust.setStyleSheet("color: #EF4444; font-size: 11px; font-family: Consolas, monospace; font-weight: bold;")
+        else:
+            self.lbl_sec_trust.setStyleSheet("color: #94A3B8; font-size: 11px; font-family: Consolas, monospace;")
         
+    def copy_security_info(self):
+        client_ip = self.lbl_sec_ip.text()
+        proxy = self.lbl_sec_proxy.text()
+        geo = self.lbl_sec_geo.text()
+        decision = self.lbl_sec_decision.text()
+        trust = self.lbl_sec_trust.text()
+        
+        report_text = (
+            "=== 多音軌安全取證報告 ===\n"
+            f"{client_ip}\n"
+            f"{proxy}\n"
+            f"{geo}\n"
+            f"{decision}\n"
+            f"{trust}\n"
+            f"取證時間: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+            "========================="
+        )
+        
+        QApplication.clipboard().setText(report_text)
+        self.append_log("成功將取證報告複製至剪貼簿！", "SUCCESS")
+        
+        # Show a brief status tip on the icon button
+        self.btn_copy_sec.setText("✅")
+        QTimer.singleShot(2000, lambda: self.btn_copy_sec.setText("📋"))
+
         # 2. Update track selection
         if self.user_manually_selected:
             self.append_log("使用者已手動指定音軌，忽略背景自動偵測結果。", "INFO")
@@ -1135,42 +1173,6 @@ class MultiTrackPlayer(QMainWindow):
                 print(f"⚠️ 清除臨時音軌失敗: {e}")
         self.temp_dir = None
 
-    def launch_web_dashboard(self):
-        import subprocess
-        import webbrowser
-        self.append_log("正在啟動 Smart i18n 零信任安全模擬控制台...", "PROCESS")
-        
-        # Paths to run_dashboard.bat
-        from pyinstaller_utils import get_resource_path
-        bat_path = get_resource_path(os.path.join("for_ip", "run_dashboard.bat"))
-        
-        # Check if bat file exists
-        if os.path.exists(bat_path):
-            try:
-                # Spawn bat file in background (non-blocking)
-                startupinfo = None
-                creation_flags = 0
-                if os.name == 'nt':
-                    startupinfo = subprocess.STARTUPINFO()
-                    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                    startupinfo.wShowWindow = 0  # SW_HIDE
-                    creation_flags = subprocess.CREATE_NO_WINDOW
-                
-                # Start dashboard script
-                subprocess.Popen(
-                    [bat_path], 
-                    cwd=os.path.dirname(bat_path),
-                    creationflags=creation_flags, 
-                    startupinfo=startupinfo
-                )
-                self.append_log("儀表板伺服器已於背景啟動。", "SUCCESS")
-            except Exception as e:
-                self.append_log(f"無法啟動儀表板伺服器批次檔: {e}，嘗試直接呼叫瀏覽器...", "WARNING")
-        else:
-            self.append_log("未偵測到批次檔，嘗試直接連結預設埠...", "WARNING")
-            
-        # We can wait 1.5s for server startup, then open browser
-        QTimer.singleShot(1500, lambda: webbrowser.open("http://127.0.0.1:8000"))
 
     def closeEvent(self, event):
         # Stop background extraction if active

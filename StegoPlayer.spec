@@ -17,12 +17,12 @@ dll_files = glob.glob(os.path.join(pyside6_dir, '*140*.dll'))
 vc_binaries = [(dll, '.') for dll in dll_files]
 
 db_files = []
-country_db = os.path.join('for_ip', 'i18n_security', 'data', 'dbip-country-lite.mmdb')
+country_db = os.path.join('src', 'data', 'dbip-country-lite.mmdb')
 if os.path.exists(country_db):
-    db_files.append((country_db, 'for_ip/i18n_security/data'))
-city_db = os.path.join('for_ip', 'i18n_security', 'data', 'dbip-city-lite.mmdb')
+    db_files.append((country_db, 'src/data'))
+city_db = os.path.join('src', 'data', 'dbip-city-lite.mmdb')
 if os.path.exists(city_db):
-    db_files.append((city_db, 'for_ip/i18n_security/data'))
+    db_files.append((city_db, 'src/data'))
 
 datas = numba_datas + llvmlite_datas + cv2_datas + ffmpeg_datas + db_files
 binaries = vc_binaries + numba_binaries + llvmlite_binaries + cv2_binaries + ffmpeg_binaries
