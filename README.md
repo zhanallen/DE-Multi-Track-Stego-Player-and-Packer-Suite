@@ -1,5 +1,5 @@
 # DE Multi-Track Stego Player & Packer Suite
-## 基於無損預測誤差擴張 (PEE) 的多音軌影音隱寫播放與封裝套件
+## 無損預測誤差擴張多音軌封裝套件
 
 本專案是一套融合 **資訊安全 (Information Security)**、**數位取證 (Digital Forensics)** 與 **可逆資料隱寫 (Reversible Data Hiding, RDH)** 技術的影音藏密封裝與解碼播放軟體套件。
 
@@ -54,6 +54,25 @@ DE/
 │   ├── pee_stego.py            # PEE Steganography 核心演算法庫 (Numba 加速)
 │   ├── i18n_detector.py        # 智慧語系與 GeoIP 定位核心檢測器
 │   └── pyinstaller_utils.py    # PyInstaller 打包路徑與可移植性工具
+│
+├── docs/                       # 📄 論文初稿、範本與實驗測試報告
+│   ├── papers/                 # 會議論文初稿、參考文獻與稿件範本
+│   └── reports/                # Benchmark 測試報告 (Word, PDF, Markdown)
+│
+├── benchmarks/                 # 🧪 實驗與基準測試工具庫 (Benchmark Suites)
+│   ├── stego_image_benchmark.py
+│   ├── stego_video_benchmark.py
+│   ├── generate_docx_report.py
+│   └── generate_video_docx_report.py
+│
+├── data/                       # 📊 實驗數據與測試影音檔
+│   ├── results/                # 實驗數據 JSON 檔
+│   └── test_media/             # 測試用原始影音檔
+│
+├── for_ip/                     # 🌍 智慧語系與 IP 安全性管理模組 (FastAPI 儀表板)
+│   ├── i18n_security/          # 核心安全性中介軟體 (防偽造與語系判定)
+│   ├── main.py                 # FastAPI Web API 與監控儀表板主入口
+│   └── run_dashboard.bat       # 一鍵啟動 Web 儀表板監控介面腳本
 │
 ├── MultiAudioDownloader.spec   # 多音軌下載器的 PyInstaller 打包設定檔
 ├── StegoPacker.spec            # 封裝器的 PyInstaller 打包設定檔
@@ -136,6 +155,15 @@ pip install -r requirements.txt
 *   **啟動下載器 (MultiAudioDownloader)**：`python src/download_app.py`
 *   **啟動封裝器 (StegoPacker)**：`python src/embed_app.py`
 *   **啟動播放器 (StegoPlayer)**：`python src/player_app.py`
+*   **啟動智慧語系與 IP 安全監控儀表板 (FastAPI Dashboard)**：
+    *   **方法一**：在 Windows 下直接雙擊執行 `for_ip/run_dashboard.bat`。
+    *   **方法二**：安裝 Web 依賴後啟動 FastAPI：
+        ```bash
+        pip install -r for_ip/requirements_web.txt
+        cd for_ip
+        python main.py
+        ```
+        啟動後開啟瀏覽器訪問 `http://127.0.0.1:8000`。
 
 ---
 

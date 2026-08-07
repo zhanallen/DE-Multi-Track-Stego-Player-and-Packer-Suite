@@ -3,34 +3,36 @@ import sys
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QPushButton, QLineEdit, QLabel, QListWidget, QProgressBar,
-    QFileDialog, QMessageBox, QFrame, QGroupBox
+    QFileDialog, QMessageBox, QFrame, QGroupBox, QComboBox
 )
 from PySide6.QtCore import Qt, QThread, Signal, QTimer
 from PySide6.QtGui import QFont
 
-# Import our PEE steganography core
-from pee_stego import encode_video_multi, estimate_capacity, get_payload_size
+# Import unified Stego Facade core
+from stego_facade import encode_video_multi, estimate_capacity, get_payload_size, ALGORITHMS
 
 class EmbeddingThread(QThread):
     progress_signal = Signal(int, int) # current_frame, total_frames
     finished_signal = Signal()
     error_signal = Signal(str)
-    
-    def __init__(self, video_path, audio_paths, output_path):
+
+    def __init__(self, video_path, audio_paths, output_path, method="coltuc_pee"):
         super().__init__()
         self.video_path = video_path
         self.audio_paths = audio_paths
         self.output_path = output_path
-        
+        self.method = method
+
     def run(self):
         try:
             def progress_cb(current_frame, total_frames, current_bits, total_bits):
                 self.progress_signal.emit(current_frame, total_frames)
-                
+
             encode_video_multi(
-                self.video_path, 
-                self.audio_paths, 
-                self.output_path, 
+                self.video_path,
+                self.audio_paths,
+                self.output_path,
+                method=self.method,
                 progress_callback=progress_cb
             )
             self.finished_signal.emit()
@@ -40,32 +42,51 @@ class EmbeddingThread(QThread):
 class StegoEmbedApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("醫療/鑑識級 - 極速無損 PEE 藏密封裝系統")
-        self.resize(600, 680)
-        
+        self.setWindowTitle("醫療/鑑識級 - 雙演算法 (PEE vs 2D HS) 影音藏密封裝系統")
+        self.resize(640, 720)
+
         self.video_path = ""
         self.audio_paths = []
         self.output_path = ""
         self.estimated_capacity = 0
         self.total_payload_size = 0
-        
+        self.selected_method = "coltuc_pee"
+
         self.init_ui()
         self.apply_stylesheet()
-        
+
     def init_ui(self):
         central_widget = QWidget()
         central_widget.setObjectName("CentralWidget")
         self.setCentralWidget(central_widget)
-        
+
         layout = QVBoxLayout(central_widget)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(15)
-        
+
         # Header title
-        title_label = QLabel("🛡️ PEE Steganography Multi-Audio Packer")
+        title_label = QLabel("🛡️ Video RDH Steganography Multi-Audio Packer")
         title_label.setObjectName("TitleLabel")
         layout.addWidget(title_label)
-        
+
+        # 0. Algorithm Selector Group
+        algo_group = QGroupBox("⚙️ Steganography Algorithm Selection (藏密演算法選擇)")
+        algo_layout = QVBoxLayout()
+
+        self.combo_algo = QComboBox()
+        self.combo_algo.addItem("🔷 Coltuc 2x2 Low-Distortion PEE (空間域預測誤差擴張 / 超高速、高容量)", "coltuc_pee")
+        self.combo_algo.addItem("🟣 Zhang-Zeng-Ou 2D HS + Matrix Embedding (Signal Processing 2026 SOTA / 頂刊高 PSNR 畫質)", "zhang_zeng_ou_hs")
+        self.combo_algo.currentIndexChanged.connect(self.on_algo_changed)
+        algo_layout.addWidget(self.combo_algo)
+
+        self.lbl_algo_desc = QLabel(ALGORITHMS["coltuc_pee"]["description"])
+        self.lbl_algo_desc.setWordWrap(True)
+        self.lbl_algo_desc.setStyleSheet("color: #94A3B8; font-size: 11px; font-style: italic;")
+        algo_layout.addWidget(self.lbl_algo_desc)
+
+        algo_group.setLayout(algo_layout)
+        layout.addWidget(algo_group)
+
         # 1. Video Selection Group
         video_group = QGroupBox("🎬 Carrier Video Selection (載體影片選擇)")
         video_layout = QHBoxLayout()
@@ -73,14 +94,14 @@ class StegoEmbedApp(QMainWindow):
         self.video_edit.setPlaceholderText("Select a video file (.mp4, .webm)...")
         self.video_edit.setReadOnly(True)
         video_layout.addWidget(self.video_edit)
-        
+
         btn_browse_video = QPushButton("Browse")
         btn_browse_video.setObjectName("BrowseButton")
         btn_browse_video.clicked.connect(self.browse_video)
         video_layout.addWidget(btn_browse_video)
         video_group.setLayout(video_layout)
         layout.addWidget(video_group)
-        
+
         # Capacity display
         self.lbl_capacity = QLabel("Estimated Carrier Capacity: Select a video file first")
         self.lbl_capacity.setObjectName("CapacityLabel")
@@ -294,10 +315,18 @@ class StegoEmbedApp(QMainWindow):
             # Run estimate in background QThread or Timer (since 10 frames check is very fast)
             QTimer.singleShot(100, self.estimate_capacity_async)
 
+    def on_algo_changed(self, index):
+        self.selected_method = self.combo_algo.currentData()
+        self.lbl_algo_desc.setText(ALGORITHMS[self.selected_method]["description"])
+        if self.video_path:
+            self.lbl_capacity.setText("Estimated Carrier Capacity: 🔍 Re-estimating capacity...")
+            self.lbl_capacity.setStyleSheet("color: #F59E0B;")
+            QTimer.singleShot(100, self.estimate_capacity_async)
+
     def estimate_capacity_async(self):
         try:
-            # Estimate capacity using 15 frames
-            cap_bytes = estimate_capacity(self.video_path, sample_size=15)
+            # Estimate capacity using selected algorithm method
+            cap_bytes = estimate_capacity(self.video_path, method=self.selected_method)
             self.estimated_capacity = cap_bytes
             cap_mb = cap_bytes / (1024 * 1024)
             self.lbl_capacity.setText(f"Estimated Carrier Capacity: ✅ {cap_mb:.2f} MB ({cap_bytes} bytes)")
@@ -358,26 +387,25 @@ class StegoEmbedApp(QMainWindow):
         )
         if file_path:
             self.output_path = file_path
-            self.output_edit.setText(file_path)
+            self.output_edit.setText(self.output_path)
 
     def start_embedding(self):
         if not self.video_path:
-            QMessageBox.warning(self, "Warning", "Please select a carrier video file.")
-            return
-        if not self.audio_paths:
-            QMessageBox.warning(self, "Warning", "Please add at least one audio track to embed.")
-            return
-        if not self.output_path:
-            QMessageBox.warning(self, "Warning", "Please specify where to save the output video.")
+            QMessageBox.warning(self, "Warning", "Please select a carrier video first!")
             return
             
-        # Capacity check (allow slight tolerance but warning if exceeded)
+        if not self.audio_paths:
+            QMessageBox.warning(self, "Warning", "Please add at least one audio track to hide!")
+            return
+            
+        if not self.output_path:
+            QMessageBox.warning(self, "Warning", "Please specify an output file path!")
+            return
+            
         if self.total_payload_size > self.estimated_capacity:
-            reply = QMessageBox.question(
-                self, "Capacity Warning", 
-                "💥 The total size of selected audio tracks exceeds the estimated capacity of the video frames.\n\n"
-                "Do you want to force embedding anyway? (This might cause truncation or failure)",
-                QMessageBox.Yes | QMessageBox.No
+            QMessageBox.critical(
+                self, "Error", 
+                f"Audio payload ({self.total_payload_size / (1024*1024):.2f} MB) exceeds video carrier capacity ({self.estimated_capacity / (1024*1024):.2f} MB)!"
             )
             if reply == QMessageBox.No:
                 return

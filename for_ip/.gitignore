@@ -1,0 +1,5 @@
+# Ignore local database files
+i18n_security/data/dbip-city-lite.mmdb
+i18n_security/data/dbip-city-lite.mmdb.gz
+i18n_security/data/dbip-country-lite.mmdb
+i18n_security/data/dbip-country-lite.mmdb.gz
