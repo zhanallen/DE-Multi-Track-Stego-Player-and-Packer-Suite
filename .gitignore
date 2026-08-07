@@ -47,15 +47,34 @@ node/
 # Scratch folder
 scratch/
 
+# HEVC RDH new version: HM reference codec is large and cloned locally.
+# Track our own RDH patches/docs separately (see hevc_rdh/codec/patches/), not the whole HM tree.
+hevc_rdh/codec/HM/
+hevc_rdh/codec/*.log
+
 # Local tests directory (Holds non-core demo files, test assets, scratch code)
 local_tests/
 
-# PDF and Word document exclusions
 *.pdf
 *.docx
+~$*.docx
+*.doc
 stego_charts/
 backup/
 src/test/file/
-基於無損預測誤差擴張之多音軌影音隱寫系統會議論文初稿.md
-error.log
-
+docs/
+benchmarks/
+data/
+hevc_rdh/
+image_paper_charts/
+video_paper_charts/
+build_exact_ncs_template_docx.py
+generate_conference_paper_docx.py
+generate_contest_proposal_docx.py
+generate_refactored_paper.py
+generate_rs_chart.py
+generate_split_flowcharts.py
+deep_inspect_template_style.py
+inspect_ncs_details.py
+inspect_template_xml.py
+make_diagrams.py

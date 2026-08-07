@@ -326,7 +326,6 @@ def decode_video_multi_cb(video_path, total_bits, frame_metas, width, height):
 
 def run_benchmarks():
     print("🚀 Starting Steganography Benchmark Suite...")
-    os.makedirs("scratch", exist_ok=True)
     
     video_configs = [
         # (Type, Duration, Path)
@@ -800,13 +799,13 @@ def generate_markdown_report(results, raw_rounds):
         f.write("## 5. 效能與品質視覺化圖表\n\n")
         f.write("為了便於直觀對比，我們產生了以下的高解析度統計圖表。這些圖表亦存放於統一目錄 `stego_charts` 中：\n\n")
         f.write("### 1) 最大容量對比\n")
-        f.write("![最大隱藏容量對比](file:///C:/Users/allen/.gemini/antigravity/brain/caf36a33-8c88-4d67-9af5-c0671066ca0e/stego_charts/max_capacity_comparison.png)\n\n")
+        f.write("![最大隱藏容量對比](./stego_charts/max_capacity_comparison.png)\n\n")
         f.write("### 2) PSNR 視覺品質對比\n")
-        f.write("![PSNR 視覺品質對比](file:///C:/Users/allen/.gemini/antigravity/brain/caf36a33-8c88-4d67-9af5-c0671066ca0e/stego_charts/psnr_comparison.png)\n\n")
+        f.write("![PSNR 視覺品質對比](./stego_charts/psnr_comparison.png)\n\n")
         f.write("### 3) 嵌入與解密速度對比 (FPS)\n")
-        f.write("![編解密速度對比 (FPS)](file:///C:/Users/allen/.gemini/antigravity/brain/caf36a33-8c88-4d67-9af5-c0671066ca0e/stego_charts/speed_comparison.png)\n\n")
+        f.write("![編解密速度對比 (FPS)](./stego_charts/speed_comparison.png)\n\n")
         f.write("### 4) H.265 壓縮體積增幅對比\n")
-        f.write("![H.265 壓縮後檔案大小增加百分比](file:///C:/Users/allen/.gemini/antigravity/brain/caf36a33-8c88-4d67-9af5-c0671066ca0e/stego_charts/file_size_change_comparison.png)\n\n")
+        f.write("![H.265 壓縮後檔案大小增加百分比](./stego_charts/file_size_change_comparison.png)\n\n")
         
         f.write("## 6. 綜合評估與詳細結論\n\n")
         f.write("本測試針對「基於無損預測誤差擴張（PEE）之多音軌影音隱寫系統」進行了多維度、多輪次的統計基準測試，深入對比了本專案採用的 **Coltuc PEE（低失真法）** 與傳統的 **Checkerboard PEE（棋盤法）**。以下為基於數據的綜合分析與實務部署結論：\n\n")
