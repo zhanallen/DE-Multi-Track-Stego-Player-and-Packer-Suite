@@ -2,7 +2,9 @@ import cv2
 import numpy as np
 import struct
 import os
+import time
 import zlib
+import json
 import imageio_ffmpeg
 import subprocess
 import re
@@ -15,12 +17,18 @@ os.environ['NUMBA_CACHE_DIR'] = numba_temp
 
 from numba import njit
 
+from audio_chunker import split_audio_into_chunks, concatenate_chunks, parse_track_lang
+
+# Protocol Constants
+CHUNK_MAGIC_STREAM = b'DECK'  # Magic header for Chunked Stego Stream
+CHUNK_MAGIC_BLOCK  = b'CHNK'  # Magic header for each Chunk block
+
 # ==========================================
 # --- 1. 二進制極速向量化轉換 ---
 # ==========================================
 def files_to_bits(file_paths):
     """
-    Packs multiple files into a single bit array.
+    Packs multiple files into a single bit array (Legacy Monolithic format).
     Structure:
         uint16: number of files
         For each file:
@@ -30,7 +38,7 @@ def files_to_bits(file_paths):
             bytes: file content
     Then zlib compresses the entire structure, and prepends the 4-byte payload size header.
     """
-    print(f"📦 讀取並封裝多個檔案: {file_paths}")
+    print(f"📦 讀取並封裝多個檔案 (傳統單體模式): {file_paths}")
     payload_body = bytearray()
     
     # 寫入檔案數量
@@ -54,6 +62,97 @@ def files_to_bits(file_paths):
     
     print(f"  -> 多檔案轉為二進制完畢，總長度: {len(bits_array)} bits ({payload_size} bytes)")
     return bits_array
+
+def files_to_chunked_bits(file_paths, initial_sec=6.0):
+    """
+    Packs multiple audio files into a chunked streaming bit array with pre-positioned manifest.
+    Enables:
+      1. Immediate Manifest resolution in Frame 0 (<0.05s) for instant sidebar population.
+      2. Initial 3-sec Chunk 0 resolution in Frame 4~8 (<0.3s) for instant audio playback with zero silence.
+      3. Background streaming decode for remaining Chunk 1 with instant hot-swapping.
+    """
+    print(f"⚡ 讀取並以串流切片方式封裝多個音訊 (首塊 {initial_sec}s): {len(file_paths)} 軌")
+    temp_cut_dir = tempfile.mkdtemp(prefix="de_chunk_pack_")
+    
+    try:
+        tracks_meta = []
+        chunk0_files = []
+        chunk1_files = []
+        
+        for fp in file_paths:
+            fname = os.path.basename(fp)
+            lang = parse_track_lang(fname)
+            ext = os.path.splitext(fp)[1].lower()
+            if not ext: ext = ".mp3"
+            
+            tracks_meta.append({
+                "id": lang,
+                "filename": fname,
+                "ext": ext
+            })
+            
+            # Split into Chunk 0 (0 ~ initial_sec) and Chunk 1 (initial_sec ~ end)
+            c0, c1 = split_audio_into_chunks(fp, initial_sec=initial_sec, output_dir=temp_cut_dir)
+            chunk0_files.append((lang, fname, ext, c0))
+            chunk1_files.append((lang, fname, ext, c1))
+            
+        # 1. Manifest Block
+        manifest_dict = {
+            "protocol": "DE_CHUNK_V1",
+            "version": 1,
+            "initial_sec": float(initial_sec),
+            "total_chunks": 2,
+            "tracks": tracks_meta
+        }
+        manifest_json_bytes = json.dumps(manifest_dict, ensure_ascii=False).encode('utf-8')
+        manifest_comp = zlib.compress(manifest_json_bytes, level=9)
+        manifest_block = CHUNK_MAGIC_STREAM + struct.pack('>HI', 1, len(manifest_comp)) + manifest_comp
+        
+        # 2. Chunk 0 Block (Initial buffer for all tracks)
+        c0_body = bytearray()
+        c0_body.extend(struct.pack('>H', len(chunk0_files)))
+        for lang, fname, ext, c0_path in chunk0_files:
+            lang_bytes = lang.encode('utf-8')
+            fname_bytes = fname.encode('utf-8')
+            with open(c0_path, 'rb') as f:
+                c0_data = f.read()
+            c0_body.extend(struct.pack('>H', len(lang_bytes)) + lang_bytes)
+            c0_body.extend(struct.pack('>H', len(fname_bytes)) + fname_bytes)
+            c0_body.extend(struct.pack('>I', len(c0_data)) + c0_data)
+        c0_comp = zlib.compress(bytes(c0_body), level=9)
+        chunk0_block = CHUNK_MAGIC_BLOCK + struct.pack('>HBI', 0, 0, len(c0_comp)) + c0_comp
+        
+        # 3. Chunk 1 Block (Remaining duration for all tracks)
+        c1_body = bytearray()
+        c1_body.extend(struct.pack('>H', len(chunk1_files)))
+        for lang, fname, ext, c1_path in chunk1_files:
+            lang_bytes = lang.encode('utf-8')
+            fname_bytes = fname.encode('utf-8')
+            with open(c1_path, 'rb') as f:
+                c1_data = f.read()
+            c1_body.extend(struct.pack('>H', len(lang_bytes)) + lang_bytes)
+            c1_body.extend(struct.pack('>H', len(fname_bytes)) + fname_bytes)
+            c1_body.extend(struct.pack('>I', len(c1_data)) + c1_data)
+        c1_comp = zlib.compress(bytes(c1_body), level=9)
+        chunk1_block = CHUNK_MAGIC_BLOCK + struct.pack('>HBI', 1, 1, len(c1_comp)) + c1_comp
+        
+        full_stream_payload = manifest_block + chunk0_block + chunk1_block
+        total_payload_size = len(full_stream_payload)
+        
+        final_data = struct.pack('>I', total_payload_size) + full_stream_payload
+        byte_array = np.frombuffer(final_data, dtype=np.uint8)
+        bits_array = np.unpackbits(byte_array)
+        
+        print(f"  -> 切片串流封裝完畢！Manifest ({len(manifest_comp)} B), Chunk0 ({len(c0_comp)} B), Chunk1 ({len(c1_comp)} B)")
+        print(f"  -> 總長度: {len(bits_array)} bits ({total_payload_size} bytes)")
+        return bits_array
+    finally:
+        import shutil
+        if os.path.exists(temp_cut_dir):
+            try:
+                shutil.rmtree(temp_cut_dir)
+            except Exception:
+                pass
 
 def bits_to_bytes(bits_array):
     return np.packbits(bits_array).tobytes()
@@ -108,6 +207,11 @@ def decode_multi_files(compressed_bytes, output_dir):
 # --- 2. 容量與預測 ---
 # ==========================================
 def get_payload_size(file_path):
+    if isinstance(file_path, (list, tuple)):
+        total = 0
+        for fp in file_path:
+            total += get_payload_size(fp)
+        return total
     if not os.path.exists(file_path): return 0
     with open(file_path, "rb") as f: file_bytes = f.read()
     filename = os.path.basename(file_path)
@@ -455,8 +559,13 @@ def coltuc_decode_frame(frame, Y_size, h, w):
 # ==========================================
 # --- 4. 記憶體管線化多檔案編碼 ---
 # ==========================================
-def encode_video_multi(video_path, file_paths, output_path, progress_callback=None):
-    bits_array = files_to_bits(file_paths)
+def encode_video_multi(video_path, file_paths, output_path, chunked=True, initial_sec=6.0, progress_callback=None):
+    if not os.path.exists(video_path):
+        raise FileNotFoundError(f"Carrier video file does not exist: {video_path}")
+    if chunked:
+        bits_array = files_to_chunked_bits(file_paths, initial_sec=initial_sec)
+    else:
+        bits_array = files_to_bits(file_paths)
     total_bits = len(bits_array)
 
     cap = cv2.VideoCapture(video_path)
@@ -581,8 +690,8 @@ def encode_video_multi(video_path, file_paths, output_path, progress_callback=No
 # ==========================================
 # --- 5. 零內存極速解密多檔案 ---
 # ==========================================
-def decode_video_multi(video_path, output_dir, progress_callback=None):
-    print(f"🔓 啟動 PEE Numba JIT 多檔案極速還原: {video_path}")
+def decode_video_multi(video_path, output_dir, progress_callback=None, on_manifest_ready=None, on_chunk_ready=None):
+    print(f"🔓 啟動 PEE 多檔案解碼還原 (支援串流切片): {video_path}")
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
         
@@ -625,6 +734,15 @@ def decode_video_multi(video_path, output_dir, progress_callback=None):
     target_bits = 0
     finished_extracting = False
 
+    # Streaming state machine variables
+    is_chunked_stream = None # None: pending check, True: chunked protocol, False: legacy
+    manifest_resolved = False
+    manifest_info = None
+    stream_state = "READ_MAGIC"
+    chunk_read_offset = 0 # bit index in bit_buffer where current segment/chunk begins
+    chunk0_tracks = {}
+    full_tracks = {}
+
     import threading
     from queue import Queue
     read_queue = Queue(maxsize=60)
@@ -652,6 +770,10 @@ def decode_video_multi(video_path, output_dir, progress_callback=None):
         if frame is None:
             break
         frame_count += 1
+
+        # Cooperative yield to prevent 100% CPU starvation of video/audio playback thread
+        if frame_count % 8 == 0:
+            time.sleep(0.001)
 
         if not finished_extracting:
             # 🌟 Coltuc 引擎：自本幀提取 payload 段並就地還原像素 (skip-map 確定性判定)
@@ -686,6 +808,127 @@ def decode_video_multi(video_path, output_dir, progress_callback=None):
                     new_buffer[:bit_idx] = bit_buffer[:bit_idx]
                     bit_buffer = new_buffer
 
+            # ⚡ 檢查是否為新版切片串流協議 (前 32 bits 是總長度，第 32~64 bits 是 Magic)
+            if is_chunked_stream is None and bit_idx >= 64:
+                magic_bytes = np.packbits(bit_buffer[32:64]).tobytes()
+                if magic_bytes == CHUNK_MAGIC_STREAM:
+                    is_chunked_stream = True
+                    stream_state = "READ_MANIFEST_HDR"
+                    print("⚡ [串流解碼] 偵測到 DE_CHUNK_V1 切片串流隱寫格式！啟動即時串流管線...")
+                else:
+                    is_chunked_stream = False
+                    print("ℹ️ [串流解碼] 偵測到傳統單體封裝格式，切換至相容全幀解碼模式。")
+
+            # 🚀 切片串流狀態機解析 (邊掃描邊解出 Manifest 與 Chunk 0/1)
+            if is_chunked_stream:
+                # 1. 讀取 Manifest Header (version: 2B, len: 4B -> 48 bits, offset 64~112)
+                if stream_state == "READ_MANIFEST_HDR" and bit_idx >= 112:
+                    m_hdr_bytes = np.packbits(bit_buffer[64:112]).tobytes()
+                    ver, m_len = struct.unpack('>HI', m_hdr_bytes)
+                    m_end_bit = 112 + m_len * 8
+                    stream_state = "READ_MANIFEST_BODY"
+                    
+                # 2. 讀取 Manifest JSON Body
+                if stream_state == "READ_MANIFEST_BODY" and bit_idx >= m_end_bit:
+                    m_comp_bytes = np.packbits(bit_buffer[112:m_end_bit]).tobytes()
+                    m_json = zlib.decompress(m_comp_bytes).decode('utf-8')
+                    manifest_info = json.loads(m_json)
+                    manifest_resolved = True
+                    print(f"🎉 [串流解碼] 第 {frame_count} 幀即時解出語系清冊 Manifest！共 {len(manifest_info.get('tracks', []))} 軌")
+                    if on_manifest_ready:
+                        try:
+                            on_manifest_ready(manifest_info)
+                        except Exception as e:
+                            print(f"⚠️ on_manifest_ready 回呼異常: {e}")
+                    chunk_read_offset = m_end_bit
+                    stream_state = "READ_CHUNK_HDR"
+
+                # 3. 讀取 Chunk Header (MAGIC: 4B, idx: 2B, last: 1B, len: 4B -> 11B = 88 bits)
+                if stream_state == "READ_CHUNK_HDR" and bit_idx >= chunk_read_offset + 88:
+                    hdr_bits = bit_buffer[chunk_read_offset : chunk_read_offset + 88]
+                    hdr_bytes = np.packbits(hdr_bits).tobytes()
+                    c_magic, c_idx, c_last, c_len = struct.unpack('>4sHBI', hdr_bytes)
+                    if c_magic != CHUNK_MAGIC_BLOCK:
+                        print(f"⚠️ 預期 CHNK 標頭，實際讀到 {c_magic}，串流提早結束或結束符。")
+                        finished_extracting = True
+                    else:
+                        c_body_end_bit = chunk_read_offset + 88 + c_len * 8
+                        stream_state = "READ_CHUNK_BODY"
+
+                # 4. 讀取 Chunk Payload Body
+                if stream_state == "READ_CHUNK_BODY" and bit_idx >= c_body_end_bit:
+                    chunk_bits = bit_buffer[chunk_read_offset + 88 : c_body_end_bit]
+                    c_comp = np.packbits(chunk_bits).tobytes()
+                    c_raw = zlib.decompress(c_comp)
+                    
+                    # 解析該 Chunk 的各軌音訊片段
+                    offset = 0
+                    num_tracks = struct.unpack('>H', c_raw[offset:offset+2])[0]
+                    offset += 2
+                    
+                    parsed_tracks = []
+                    for _ in range(num_tracks):
+                        t_len = struct.unpack('>H', c_raw[offset:offset+2])[0]
+                        offset += 2
+                        lang = c_raw[offset:offset+t_len].decode('utf-8')
+                        offset += t_len
+                        
+                        fn_len = struct.unpack('>H', c_raw[offset:offset+2])[0]
+                        offset += 2
+                        fname = c_raw[offset:offset+fn_len].decode('utf-8')
+                        offset += fn_len
+                        
+                        data_len = struct.unpack('>I', c_raw[offset:offset+4])[0]
+                        offset += 4
+                        data_bytes = c_raw[offset:offset+data_len]
+                        offset += data_len
+                        parsed_tracks.append((lang, fname, data_bytes))
+
+                    extracted_chunk_files = {}
+                    if c_idx == 0:
+                        for lang, fname, data_bytes in parsed_tracks:
+                            ext = os.path.splitext(fname)[1] or ".mp3"
+                            out_file = os.path.join(output_dir, f"{lang}_chunk0{ext}")
+                            with open(out_file, "wb") as f:
+                                f.write(data_bytes)
+                            chunk0_tracks[lang] = out_file
+                            extracted_chunk_files[lang] = out_file
+                    else:
+                        from concurrent.futures import ThreadPoolExecutor
+
+                        def _concat_worker(item):
+                            t_lang, t_fname, t_data = item
+                            ext = os.path.splitext(t_fname)[1] or ".mp3"
+                            out_file = os.path.join(output_dir, f"{t_lang}_chunk1{ext}")
+                            with open(out_file, "wb") as f:
+                                f.write(t_data)
+                            full_file = os.path.join(output_dir, f"{t_lang}{ext}")
+                            if t_lang in chunk0_tracks:
+                                concatenate_chunks([chunk0_tracks[t_lang], out_file], full_file)
+                            else:
+                                with open(full_file, "wb") as f:
+                                    f.write(t_data)
+                            return t_lang, full_file
+
+                        max_workers = min(3, os.cpu_count() or 2)
+                        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+                            for t_lang, full_file in pool.map(_concat_worker, parsed_tracks):
+                                full_tracks[t_lang] = full_file
+                                extracted_chunk_files[t_lang] = full_file
+
+                    print(f"🎉 [串流解碼] 第 {frame_count} 幀解出 Chunk {c_idx} (共 {len(extracted_chunk_files)} 軌, is_last={bool(c_last)})！")
+                    if on_chunk_ready:
+                        try:
+                            on_chunk_ready(c_idx, extracted_chunk_files, bool(c_last))
+                        except Exception as e:
+                            print(f"⚠️ on_chunk_ready 回呼異常: {e}")
+
+                    chunk_read_offset = c_body_end_bit
+                    if c_last:
+                        finished_extracting = True
+                    else:
+                        stream_state = "READ_CHUNK_HDR"
+
             if target_bits > 0 and bit_idx >= target_bits:
                 finished_extracting = True
 
@@ -699,12 +942,16 @@ def decode_video_multi(video_path, output_dir, progress_callback=None):
             stop_event.set()
             break
 
-    if target_bits > 0 and bit_idx >= target_bits:
+    # 回傳最終音軌字典
+    if is_chunked_stream:
+        final_tracks = full_tracks if full_tracks else chunk0_tracks
+        print(f"🎉 串流切片音訊完美還原成功！共解出 {len(final_tracks)} 個多語音軌。")
+        return final_tracks
+    elif target_bits > 0 and bit_idx >= target_bits:
         payload_bits = bit_buffer[32: target_bits]
         compressed_bytes = bits_to_bytes(payload_bits)
-
         try:
-            print("  -> 進行多檔案 zlib 解壓縮還原...")
+            print("  -> 進行傳統多檔案 zlib 解壓縮還原...")
             extracted_paths = decode_multi_files(compressed_bytes, output_dir)
             print(f"🎉 逆向多檔案完美還原成功！共還原 {len(extracted_paths)} 個音訊軌。")
             return extracted_paths
