@@ -20,25 +20,32 @@ except ImportError:
 
 # Mapping of country codes to candidate language codes (preferred order)
 COUNTRY_LANGS = {
-    "TW": ["zh-TW", "zh", "ja", "en-US"],
-    "CN": ["zh-CN", "zh", "en-US"],
-    "HK": ["zh-TW", "zh", "en-US"],
-    "MO": ["zh-TW", "zh", "en-US"],
-    "SG": ["zh-CN", "zh", "en-US"],
-    "JP": ["ja", "en-US"],
-    "US": ["en-US", "en"],
-    "GB": ["en-US", "en"],
-    "CA": ["en-US", "en", "fr-FR"],
-    "FR": ["fr-FR", "fr", "en-US"],
-    "DE": ["de-DE", "de", "en-US"],
-    "ES": ["es-US", "es", "en-US"],
-    "ID": ["id", "en-US"],
-    "IT": ["it", "en-US"],
-    "BR": ["pt-BR", "en-US"],
-    "PT": ["pt-BR", "en-US"],
-    "UA": ["uk", "en-US"],
-    "IN": ["hi", "ml", "en-US"],
-    "PL": ["pl", "en-US"]
+    "TW": ["zh-TW", "zh-HK", "zh", "en-US", "en", "ja"],
+    "CN": ["zh-CN", "zh", "en-US", "en"],
+    "HK": ["zh-TW", "zh-HK", "zh", "en-US", "en"],
+    "MO": ["zh-TW", "zh", "en-US", "en"],
+    "SG": ["zh-CN", "zh", "en-US", "en"],
+    "JP": ["ja", "en-US", "en"],
+    "KR": ["ko", "en-US", "en"],
+    "US": ["en-US", "en", "es-US"],
+    "GB": ["en", "en-US"],
+    "CA": ["en-US", "en", "fr-FR", "fr"],
+    "FR": ["fr-FR", "fr", "en-US", "en"],
+    "DE": ["de-DE", "de", "en-US", "en"],
+    "ES": ["es-US", "es", "en-US", "en"],
+    "IT": ["it", "en-US", "en"],
+    "NL": ["nl-NL", "nl", "en-US", "en"],
+    "PL": ["pl", "en-US", "en"],
+    "RU": ["ru", "en-US", "en"],
+    "UA": ["uk", "ru", "en-US", "en"],
+    "BR": ["pt-BR", "pt", "en-US", "en"],
+    "PT": ["pt-BR", "pt", "en-US", "en"],
+    "ID": ["id", "en-US", "en"],
+    "IN": ["hi", "bn", "ta", "te", "ml", "en-US", "en"],
+    "IL": ["iw", "he", "en-US", "en"],
+    "SA": ["ar", "en-US", "en"],
+    "AE": ["ar", "en-US", "en"],
+    "EG": ["ar", "en-US", "en"],
 }
 
 @dataclass
@@ -179,6 +186,76 @@ def match_track_fuzzy(locale_candidate, available_tracks) -> Optional[str]:
     return None
 
 
+_CACHED_GEO_CONTEXT = None
+
+def get_client_geo_context(db_path: Optional[str] = None, force_refresh: bool = False) -> Dict[str, Any]:
+    """
+    獲取客戶端當前之公網 IP、地理國家代碼與代理狀態。
+    具備模組層快取 (Module-level cache)，可隨時安全預熱呼叫。
+    """
+    global _CACHED_GEO_CONTEXT
+    if _CACHED_GEO_CONTEXT is not None and not force_refresh:
+        return _CACHED_GEO_CONTEXT
+
+    client_ip = None
+    country = None
+
+    # 1. 快速聯網檢測 (400ms 超時)
+    if is_online(timeout=0.40):
+        client_ip, country = get_online_geoip(timeout=1.5)
+
+    # 2. 本地離線資料庫查詢 (若線上無法取得國家代碼但有 IP，或離線查詢)
+    if client_ip and (not country or country == "LOCAL") and db_path and os.path.exists(db_path) and maxminddb:
+        try:
+            with maxminddb.open_database(db_path, maxminddb.MODE_MEMORY) as reader:
+                geo_data = reader.get(client_ip)
+                if geo_data:
+                    c = geo_data.get("country", {}).get("iso_code")
+                    if c:
+                        country = c.upper()
+        except Exception:
+            pass
+
+    # 3. 若仍無法判定國家，以時區消除歧義保底
+    if not country or country == "LOCAL":
+        country = get_local_country_by_timezone() or "TW"
+
+    # 4. 偵測本機代理伺服器
+    proxy_info = get_system_proxy_info()
+
+    _CACHED_GEO_CONTEXT = {
+        "ip": client_ip or "127.0.0.1",
+        "country": country.upper() if country else "TW",
+        "proxy_detected": proxy_info.get("proxy_detected", False),
+        "details": proxy_info.get("details", "Direct Connection")
+    }
+    return _CACHED_GEO_CONTEXT
+
+def get_allowed_tracks_for_country(country: str, available_tracks: List[str]) -> List[str]:
+    """
+    根據當前地理國家與可用音軌，計算該地區允許播放之音軌白名單。
+    """
+    country_upper = (country or "").upper()
+    cands = COUNTRY_LANGS.get(country_upper, ["en-US", "en"])
+    allowed = []
+    for cand in cands:
+        for t in available_tracks:
+            if match_track_exact(cand, [t]) or match_track_fuzzy(cand, [t]):
+                if t not in allowed:
+                    allowed.append(t)
+    if not allowed and available_tracks:
+        allowed = [available_tracks[0]]
+    return allowed
+
+def is_track_allowed_by_ip(track_key: str, client_country: str, available_tracks: List[str]) -> bool:
+    """
+    檢查指定音軌是否在當前 IP 國家的授權播放名單內。
+    """
+    allowed = get_allowed_tracks_for_country(client_country, available_tracks)
+    return track_key in allowed
+
+
+
 # =====================================================================
 # --- STRATEGY PATTERN FOR DECISION TREE ---
 # =====================================================================
@@ -188,6 +265,52 @@ class I18nStrategy(ABC):
     def detect(self, available_tracks: List[str]) -> Optional[DetectionResult]:
         """執行該層決策邏輯，成功匹配則回傳 DetectionResult，否則回傳 None 讓下一層處理"""
         pass
+
+
+class IpLockStrategy(I18nStrategy):
+    """【P0】 自動 IP 鎖定策略 (強制依公網 IP / 地理位置決策，享有最高優先級)"""
+    def __init__(self, db_path: Optional[str]):
+        self.db_path = db_path
+
+    def detect(self, available_tracks: List[str]) -> Optional[DetectionResult]:
+        geo_info = get_client_geo_context(self.db_path)
+        client_ip = geo_info.get("ip", "127.0.0.1")
+        country = geo_info.get("country", "TW")
+        allowed_tracks = get_allowed_tracks_for_country(country, available_tracks)
+        candidates = COUNTRY_LANGS.get(country, ["en-US", "en"])
+        
+        matched = None
+        for cand in candidates:
+            m = match_track_exact(cand, available_tracks)
+            if not m:
+                m = match_track_fuzzy(cand, available_tracks)
+            if m:
+                matched = m
+                break
+                
+        if not matched and available_tracks:
+            m_en = match_track_exact("en-US", available_tracks) or match_track_fuzzy("en", available_tracks)
+            matched = m_en if m_en else available_tracks[0]
+            
+        if matched:
+            detail = f"【IP 鎖定】已強制鎖定地理音軌：{country} ({client_ip}) -> 匹配音軌 [{matched}]"
+            cands = [matched] + [t for t in available_tracks if t != matched]
+            return DetectionResult(
+                track_key=matched,
+                source="P0 IP_LOCK_ENFORCED",
+                confidence=1.0,
+                detail=detail,
+                candidates=cands,
+                metadata={
+                    "ip": client_ip,
+                    "country": country,
+                    "ip_locked": True,
+                    "allowed_tracks": allowed_tracks,
+                    "proxy_detected": geo_info.get("proxy_detected", False),
+                    "details": geo_info.get("details", "Direct Connection")
+                }
+            )
+        return None
 
 
 class ExplicitHistoryStrategy(I18nStrategy):
@@ -404,36 +527,58 @@ def detect_best_locale(
     available_tracks: List[str],
     system_languages: Optional[List[str]] = None,
     history_language: Optional[str] = None,
-    db_path: Optional[str] = None
+    db_path: Optional[str] = None,
+    ip_lock_mode: bool = False
 ) -> DetectionResult:
     """
     外部調用便捷函數。以依賴注入方式接受系統偏好、歷史設定及資料庫路徑，內部執行策略鏈比對。
+    若 ip_lock_mode=True，則執行 P0 IP 鎖定策略，強制依公網 IP 地理位置決策，覆蓋歷史紀錄與 OS 語言。
     """
-    if system_languages is None:
-        system_languages = []
-        try:
-            import locale
-            default_loc = locale.getdefaultlocale()[0]
-            if default_loc:
-                system_languages.append(default_loc)
-        except Exception:
-            pass
+    if ip_lock_mode:
+        strategies = [
+            IpLockStrategy(db_path),
+            DefaultFallbackStrategy()
+        ]
+    else:
+        if system_languages is None:
+            system_languages = []
+            try:
+                import locale
+                default_loc = locale.getdefaultlocale()[0]
+                if default_loc:
+                    system_languages.append(default_loc)
+            except Exception:
+                pass
 
-    # V6 決策鏈順序：精確匹配 (P2a) -> 時區消除歧義 (P4a) -> 模糊匹配 (P2b) -> 地理定位 (P4b/P4c) -> 兜底 (P5)
-    strategies = [
-        ExplicitHistoryStrategy(history_language),
-        OsLanguagesExactStrategy(system_languages),
-        TimezoneDisambiguationStrategy(system_languages),
-        OsLanguagesFuzzyStrategy(system_languages),
-        GeoIpStrategy(db_path),
-        DefaultFallbackStrategy()
-    ]
+        # V6 決策鏈順序：精確匹配 (P2a) -> 時區消除歧義 (P4a) -> 模糊匹配 (P2b) -> 地理定位 (P4b/P4c) -> 兜底 (P5)
+        strategies = [
+            ExplicitHistoryStrategy(history_language),
+            OsLanguagesExactStrategy(system_languages),
+            TimezoneDisambiguationStrategy(system_languages),
+            OsLanguagesFuzzyStrategy(system_languages),
+            GeoIpStrategy(db_path),
+            DefaultFallbackStrategy()
+        ]
+
     detector = I18nDetector(strategies)
     res = detector.execute(available_tracks)
     
-    # Enrich metadata with client-side Zero-Trust proxy info
-    proxy_info = get_system_proxy_info()
-    res.metadata.update(proxy_info)
+    # Enrich metadata with client-side Zero-Trust proxy & GeoIP info
+    geo_context = get_client_geo_context(db_path)
+    if not res.metadata:
+        res.metadata = {}
+    if "ip" not in res.metadata:
+        res.metadata["ip"] = geo_context.get("ip", "127.0.0.1")
+    if "country" not in res.metadata:
+        res.metadata["country"] = geo_context.get("country", "TW")
+    if "proxy_detected" not in res.metadata:
+        res.metadata["proxy_detected"] = geo_context.get("proxy_detected", False)
+    if "details" not in res.metadata:
+        res.metadata["details"] = geo_context.get("details", "Direct Connection")
+    if "allowed_tracks" not in res.metadata:
+        res.metadata["allowed_tracks"] = get_allowed_tracks_for_country(res.metadata["country"], available_tracks)
+    if "ip_locked" not in res.metadata:
+        res.metadata["ip_locked"] = ip_lock_mode
     
     return res
 

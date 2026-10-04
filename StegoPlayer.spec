@@ -23,14 +23,18 @@ if os.path.exists(country_db):
 city_db = os.path.join('for_ip', 'i18n_security', 'data', 'dbip-city-lite.mmdb')
 if os.path.exists(city_db):
     db_files.append((city_db, 'for_ip/i18n_security/data'))
+if os.path.exists('for_ip/main.py'):
+    db_files.append(('for_ip/main.py', 'for_ip'))
+if os.path.exists('for_ip/run_dashboard.bat'):
+    db_files.append(('for_ip/run_dashboard.bat', 'for_ip'))
 
 datas = numba_datas + llvmlite_datas + cv2_datas + ffmpeg_datas + db_files
 binaries = vc_binaries + numba_binaries + llvmlite_binaries + cv2_binaries + ffmpeg_binaries
-hiddenimports = ['pee_stego', 'pyinstaller_utils', 'PySide6.QtMultimedia', 'PySide6.QtMultimediaWidgets'] + numba_hiddenimports + llvmlite_hiddenimports + cv2_hiddenimports + ffmpeg_hiddenimports
+hiddenimports = ['stego_facade', 'audio_chunker', 'pee_stego', 'pyinstaller_utils', 'i18n_detector', 'maxminddb', 'requests', 'ipaddress', 'PySide6.QtMultimedia', 'PySide6.QtMultimediaWidgets'] + numba_hiddenimports + llvmlite_hiddenimports + cv2_hiddenimports + ffmpeg_hiddenimports
 
 a = Analysis(
     ['src/player_app.py'],
-    pathex=[],
+    pathex=['src'],
     binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,

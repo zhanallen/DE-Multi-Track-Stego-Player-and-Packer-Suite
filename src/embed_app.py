@@ -3,7 +3,7 @@ import sys
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QPushButton, QLineEdit, QLabel, QListWidget, QProgressBar,
-    QFileDialog, QMessageBox, QFrame, QGroupBox, QComboBox
+    QFileDialog, QMessageBox, QFrame, QGroupBox, QComboBox, QCheckBox
 )
 from PySide6.QtCore import Qt, QThread, Signal, QTimer
 from PySide6.QtGui import QFont
@@ -16,12 +16,14 @@ class EmbeddingThread(QThread):
     finished_signal = Signal()
     error_signal = Signal(str)
 
-    def __init__(self, video_path, audio_paths, output_path, method="coltuc_pee"):
+    def __init__(self, video_path, audio_paths, output_path, method="coltuc_pee", chunked=True, initial_sec=6.0):
         super().__init__()
         self.video_path = video_path
         self.audio_paths = audio_paths
         self.output_path = output_path
         self.method = method
+        self.chunked = chunked
+        self.initial_sec = initial_sec
 
     def run(self):
         try:
@@ -33,6 +35,8 @@ class EmbeddingThread(QThread):
                 self.audio_paths,
                 self.output_path,
                 method=self.method,
+                chunked=self.chunked,
+                initial_sec=self.initial_sec,
                 progress_callback=progress_cb
             )
             self.finished_signal.emit()
@@ -149,6 +153,12 @@ class StegoEmbedApp(QMainWindow):
         output_layout.addWidget(btn_browse_output)
         output_group.setLayout(output_layout)
         layout.addWidget(output_group)
+        
+        # 3b. Streaming Stego Options
+        self.chk_chunked = QCheckBox("⚡ 啟用音訊串流切片封裝 (支援播放器 3 秒內緩衝開播、背景解碼中隨意切換音軌)")
+        self.chk_chunked.setChecked(True)
+        self.chk_chunked.setStyleSheet("color: #38BDF8; font-weight: bold; font-size: 12px; margin: 4px 0;")
+        layout.addWidget(self.chk_chunked)
         
         # 4. Progress and Start Group
         progress_group = QFrame()
@@ -416,7 +426,13 @@ class StegoEmbedApp(QMainWindow):
         self.lbl_status.setText("Status: Starting stego packaging...")
         
         # Start worker thread
-        self.thread = EmbeddingThread(self.video_path, self.audio_paths, self.output_path)
+        self.thread = EmbeddingThread(
+            self.video_path,
+            self.audio_paths,
+            self.output_path,
+            method=self.selected_method,
+            chunked=self.chk_chunked.isChecked()
+        )
         self.thread.progress_signal.connect(self.on_progress)
         self.thread.finished_signal.connect(self.on_finished)
         self.thread.error_signal.connect(self.on_error)

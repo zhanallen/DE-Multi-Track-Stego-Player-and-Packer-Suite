@@ -18,11 +18,11 @@ vc_binaries = [(dll, '.') for dll in dll_files]
 
 datas = numba_datas + llvmlite_datas + cv2_datas + ffmpeg_datas
 binaries = vc_binaries + numba_binaries + llvmlite_binaries + cv2_binaries + ffmpeg_binaries
-hiddenimports = ['pee_stego', 'pyinstaller_utils'] + numba_hiddenimports + llvmlite_hiddenimports + cv2_hiddenimports + ffmpeg_hiddenimports
+hiddenimports = ['stego_facade', 'audio_chunker', 'pee_stego', 'pyinstaller_utils'] + numba_hiddenimports + llvmlite_hiddenimports + cv2_hiddenimports + ffmpeg_hiddenimports
 
 a = Analysis(
     ['src/embed_app.py'],
-    pathex=[],
+    pathex=['src'],
     binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,

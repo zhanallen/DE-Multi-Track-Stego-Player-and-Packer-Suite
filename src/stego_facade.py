@@ -51,19 +51,21 @@ def get_payload_size(file_paths):
     """Calculates total packaged secret payload size in bytes."""
     return pee_stego.get_payload_size(file_paths)
 
-def encode_video_multi(video_path, file_paths, output_path, method="coltuc_pee", progress_callback=None):
+def encode_video_multi(video_path, file_paths, output_path, method="coltuc_pee", chunked=True, initial_sec=6.0, progress_callback=None):
     """
     Encodes secret files into cover video using specified algorithm method.
+    Supports chunked audio streaming (manifest pre-position + initial segment) by default.
     """
-    print(f"🚀 [StegoFacade] Starting encoding using method: '{method}' ({ALGORITHMS.get(method, {}).get('name', method)})")
+    print(f"🚀 [StegoFacade] Starting encoding using method: '{method}' (Chunked={chunked}, {initial_sec}s)")
     if method == "zhang_zeng_ou_hs" and HAS_HEVC_RDH:
         return hevc_rdh_core.encode_video_multi(video_path, file_paths, output_path, progress_callback=progress_callback)
     else:
-        return pee_stego.encode_video_multi(video_path, file_paths, output_path, progress_callback=progress_callback)
+        return pee_stego.encode_video_multi(video_path, file_paths, output_path, chunked=chunked, initial_sec=initial_sec, progress_callback=progress_callback)
 
-def decode_video_multi(stego_video_path, output_dir, method="auto", progress_callback=None):
+def decode_video_multi(stego_video_path, output_dir, method="auto", progress_callback=None, on_manifest_ready=None, on_chunk_ready=None):
     """
     Extracts secret files from stego video using specified or auto-detected algorithm method.
+    Supports on_manifest_ready and on_chunk_ready streaming callbacks.
     """
     print(f"🚀 [StegoFacade] Starting decoding using method: '{method}'...")
 
@@ -71,16 +73,16 @@ def decode_video_multi(stego_video_path, output_dir, method="auto", progress_cal
         if HAS_HEVC_RDH:
             return hevc_rdh_core.decode_video_multi(stego_video_path, output_dir, progress_callback=progress_callback)
         else:
-            return pee_stego.decode_video_multi(stego_video_path, output_dir, progress_callback=progress_callback)
+            return pee_stego.decode_video_multi(stego_video_path, output_dir, progress_callback=progress_callback, on_manifest_ready=on_manifest_ready, on_chunk_ready=on_chunk_ready)
 
     elif method == "coltuc_pee":
-        return pee_stego.decode_video_multi(stego_video_path, output_dir, progress_callback=progress_callback)
+        return pee_stego.decode_video_multi(stego_video_path, output_dir, progress_callback=progress_callback, on_manifest_ready=on_manifest_ready, on_chunk_ready=on_chunk_ready)
 
     else:
         # "auto" detection mode: try Coltuc PEE first; if failed, try Zhang-Zeng-Ou 2D HS
         try:
             print("  🔍 Auto-detecting algorithm: Trying Coltuc 2x2 PEE extraction...")
-            res = pee_stego.decode_video_multi(stego_video_path, output_dir, progress_callback=progress_callback)
+            res = pee_stego.decode_video_multi(stego_video_path, output_dir, progress_callback=progress_callback, on_manifest_ready=on_manifest_ready, on_chunk_ready=on_chunk_ready)
             if res:
                 print("  ✓ Successfully extracted payload via Coltuc 2x2 PEE!")
                 return res

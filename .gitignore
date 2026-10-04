@@ -78,3 +78,15 @@ deep_inspect_template_style.py
 inspect_ncs_details.py
 inspect_template_xml.py
 make_diagrams.py
+
+# Local paper research & demo assets
+demo/
+extracted_draft.txt
+generate_flowcharts.py
+generate_video_thumbnails.py
+*.pptx
+*.ppt
+~$*.pptx
+~$*.ppt
+scripts/
+for_ip/
