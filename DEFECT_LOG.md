@@ -1,7 +1,27 @@
 # 缺陷紀錄 (Defect Log)
 
-嚴重度定義依 `SYSTEM_TEST_PLAN.md` §4.2：Blocker（崩潰/當機）、Critical（可逆性失敗/音軌損毀/畫質低於門檻）、Major（功能異常但不影響核心流程）、Minor。
+嚴重度定義依 `SYSTEM_TEST_PLAN.md` §4.3：Blocker（崩潰/當機）、Critical（可逆性失敗/payload 損毀/像素變動 > 1）、Major（功能或品質缺陷，核心流程仍可完成）、Minor。
 每筆缺陷的證據必須指向 repo 內可重現的驗證腳本與其 log。
+依決議 K-6，SRS 範圍內的缺陷另開 GitHub Issue（PEP 4.5，2026-10-27 建立 #18～#24），Issue 編號記於下表；範圍外缺陷不開 Issue。本檔保留完整證據，狀態須與 Issue 一致。
+
+## 總覽（對照 DE-SRS-001 v1.0）
+
+| ID | 嚴重度 | 狀態 | SRS 需求 | SRS TBD | 範圍（K-1） | 對應 TC（`TEST_CASES_SPECIFICATION.md` v2.0） | GitHub Issue |
+| :--- | :---: | :--- | :--- | :--- | :---: | :--- | :--- |
+| DEF-001 | Major | Fixed | REQ-CNT-006、007、REL-002 | TBD-03 | 內 | TC-CNT-006、007 | [#18](https://github.com/zhanallen/DE-Multi-Track-Stego-Player-and-Packer-Suite/issues/18) |
+| DEF-002 | Major | Open | REQ-PLY-002、005、006、008；PRF-007～010 | TBD-09（部分）、TBD-04、12 | 內 | TC-PLY-002、005、006、008；TC-PRF-007～010 | [#19](https://github.com/zhanallen/DE-Multi-Track-Stego-Player-and-Packer-Suite/issues/19) |
+| DEF-003 | Major | Open（暫緩） | — | — | **外** | OOS-I18N-003 | 不開（範圍外） |
+| DEF-004 | Minor | Open | REQ-PLY-006（間接） | — | 內 | TC-PLY-006 | [#20](https://github.com/zhanallen/DE-Multi-Track-Stego-Player-and-Packer-Suite/issues/20) |
+| DEF-005 | Major | Open（暫緩） | — | — | **外** | OOS-I18N-003 | 不開（範圍外） |
+| DEF-006 | Critical | Open | REQ-ALG-005、REL-002 | TBD-11 | 內 | TC-ALG-005 | [#21](https://github.com/zhanallen/DE-Multi-Track-Stego-Player-and-Packer-Suite/issues/21) |
+| DEF-007 | Minor | Fixed（待 PR 合併） | REQ-PCK-006 | TBD-08（SRS 評為 H） | 內 | TC-PCK-006 | [#22](https://github.com/zhanallen/DE-Multi-Track-Stego-Player-and-Packer-Suite/issues/22) |
+| DEF-008 | Minor | Open | REQ-PCK-006、011 | — | 內 | TC-PCK-002、006 | [#23](https://github.com/zhanallen/DE-Multi-Track-Stego-Player-and-Packer-Suite/issues/23) |
+| DEF-009 | Major | Open | REQ-PLY-014、REL-003 | — | 內 | TC-PLY-014、TC-REL-003 | [#24](https://github.com/zhanallen/DE-Multi-Track-Stego-Player-and-Packer-Suite/issues/24) |
+| DEF-010 | Major | Open | — | — | **外** | OOS-I18N-002 | 不開（範圍外） |
+| DEF-011 | Major | Open（暫緩） | — | — | **外** | OOS-DL-001、002 | 不開（範圍外） |
+| DEF-012 | Minor | Open | — | — | **外** | OOS-DL-002 | 不開（範圍外） |
+
+註：DEF-007 依本計畫嚴重度定義為 Minor（結果上未封裝），SRS 附錄 C 將 TBD-08 評為 H；PEP 6.2.4 要求 H 的 TBD 必須關閉，因此仍須在 11/04 前修正。
 
 ---
 
@@ -234,10 +254,10 @@ python src/test/verify/verify_zero_capacity_frames.py src/test/video/synthetic s
 | 欄位 | 內容 |
 | :--- | :--- |
 | 嚴重度 | **Minor** |
-| 狀態 | **Open** |
+| 狀態 | **Fixed**（分支 `qa/stp-v2-def001`，待 PR 合併；Issue #22） |
 | 模組 | MOD-PK — `src/embed_app.py:415-421` |
 | 引入版本 | `8b3e64d`（2026-06-16）或 `135d0af`（2026-08-07）（`git log -L` 顯示兩者皆改過此段） |
-| 證據 | 程式碼審查（未執行 GUI） |
+| 證據 | 程式碼審查；`src/test/video/packer/pck006_log.txt` — `src/test/verify/verify_pck006.py`（offscreen 執行 `start_embedding()`） |
 
 ### 現象與原因
 ```python
@@ -253,6 +273,11 @@ if self.total_payload_size > self.estimated_capacity:
 
 ### 限制
 未以 GUI 實際操作觸發；依程式碼語意判定。
+
+### 修正與驗證（2026-10-27）
+刪除 `if reply == QMessageBox.No:` 兩行，對話框後直接 `return`。`verify_pck006.py` 以 offscreen 模式攔截對話框與封裝執行緒：
+- 修正前：`NameError: name 'reply' is not defined`（實際執行重現，非僅程式碼審查）
+- 修正後：critical 對話框 1 次、文字符合 REQ-PCK-006、無例外、未建立封裝執行緒；payload ≤ 容量的對照組正常建立執行緒
 
 ---
 
@@ -333,3 +358,50 @@ get_local_country_by_timezone(['en-US']) = None
 ### 限制
 - 只在繁中 Windows 實測；其他語系 Windows 依程式碼推論同樣失效。
 - 六層邏輯本身（以注入的時區國碼測試）全部通過，見同一 log 的 `[L]` 區段。
+
+---
+
+## DEF-011　鎖定的 yt-dlp 2026.3.17 已無法取得 YouTube 多語配音音軌，下載器核心功能失效
+
+| 欄位 | 內容 |
+| :--- | :--- |
+| 嚴重度 | **Major**（MOD-DL 核心功能失效） |
+| 狀態 | **Open** |
+| 模組 | MOD-DL — `requirements.txt`（`yt-dlp==2026.3.17`）、`src/download_app.py`（`FetchInfoThread`、`DownloadThread`） |
+| 發現日期 | 2026-10-27 |
+| 測試對象 | https://www.youtube.com/watch?v=xzyhqtLrEd4（Made by Google「Google Pixel 10 \| Switch like Jimmy Butler」，30 s） |
+| 證據 | `src/test/video/downloader/downloader_log.txt`（2026.3.17）、`src/test/video/downloader/ytdlp_2026.8.19/downloader_log.txt`（對照）— `src/test/verify/verify_downloader.py` |
+
+### 現象
+- yt-dlp 2026.3.17：只列出 `en`、`en-US` 兩種語系；要求的 ja、fr-FR、de-DE 全部取不到。
+- 開啟警告後：`web`、`web_safari` 用戶端回報「Only images are available」、`tv` 回報「The page needs to be reloaded」、`mweb` 需要 GVS PO Token；唯一可用的 `android_vr` 用戶端不提供配音音軌。
+- 對照：同一 URL 以 yt-dlp **2026.8.19**（發布超過兩週）列出 13 種語系，下載 3 種語系皆成功；2026.10.26 列出 14 種。
+
+### 根本原因
+YouTube 端的變更使舊版 yt-dlp 無法透過 web 類用戶端取得完整格式清單（RSK-02 實際發生）；`requirements.txt` 鎖定的版本已過時約 7 個月。
+
+### 修正方向
+將 `yt-dlp` 鎖定版本更新為已驗證可用的版本（建議 2026.8.19，或審查後採用更新的版本），並以 `verify_downloader.py` 重驗 TC-DL-01、02；同時在 Python 3.10 環境確認可安裝。由於此依賴會隨 YouTube 變動，建議把 TC-DL-01 列為發布前必跑的檢查。
+
+### 限制
+只測了一支影片；未測需要登入或有地區限制的影片。
+
+---
+
+## DEF-012　要求的語系不存在時，下載器靜默略過並回報成功
+
+| 欄位 | 內容 |
+| :--- | :--- |
+| 嚴重度 | **Minor** |
+| 狀態 | **Open** |
+| 模組 | MOD-DL — `src/download_app.py`（`DownloadThread.run` 的 `if not lang_formats: continue`） |
+| 證據 | `src/test/video/downloader/downloader_log.txt` |
+
+### 現象
+要求下載 ja、fr-FR、de-DE，但格式清單中沒有這些語系：`DownloadThread` 逐一 `continue` 略過，最後仍發出 `finished_signal`；輸出資料夾只有影片本體，沒有任何 mp3，也沒有錯誤或警告。
+
+### 影響
+GUI 只會列出清單中存在的語系，一般操作不易觸發；但在 DEF-011 這類「語系清單與實際可下載不一致」的情況下，使用者會以為下載成功。
+
+### 建議驗收
+任何要求的語系下載失敗時，應回報哪些語系失敗（例如在完成訊息中列出），且不以「完全成功」結束。

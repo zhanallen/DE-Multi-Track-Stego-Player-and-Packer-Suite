@@ -41,6 +41,7 @@ test.mp4
 src/test/video/**
 !src/test/video/**/
 !src/test/video/**/*.txt
+!src/test/video/**/summary.md
 src/test/video/**/extracted/
 
 # Downloader downloads temp

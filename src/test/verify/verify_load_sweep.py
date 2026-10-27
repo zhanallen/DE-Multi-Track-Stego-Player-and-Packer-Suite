@@ -156,14 +156,18 @@ def run_method(name, frames, w, h, loads, payload_kib, do_encode, base_size):
                 rpos += k
             if not np.array_equal(s, f):
                 restore_fail += 1
-        payload_ok &= rpos == nbits
+        # 區分「已嵌入的位元全部正確取回」與「payload 沒有全部嵌入」（容量隨資料內容變動時可能發生）
+        embedded = min(pos, nbits)
+        extracted_ok = payload_ok and rpos == embedded
+        payload_ok = extracted_ok and embedded == nbits
         nused = len(emb_idx)
         capped = [100.0 if m == 0 else psnr(m) for m in mses]
         step = max(1, n // 5)
         q = list(range(0, n, step))[:5]
         pf = [psnr(mses[i]) for i in emb_idx if mses[i] > 0]
         line = (f"[{name}] {label}  bits={nbits} ({100 * nbits / C:.1f}% of capacity)  payload_frames={nused}/{n} (alpha_video={nused / n:.3f})  "
-                f"bpp_payload={nbits / max(1, nused * ys):.4f}  restore_fail={restore_fail}  payload_ok={payload_ok}\n"
+                f"bpp_payload={nbits / max(1, nused * ys):.4f}  restore_fail={restore_fail}  payload_ok={payload_ok}  "
+                f"embedded_bits={embedded}  extracted_ok={extracted_ok}\n"
                 f"          PSNR old(5f,100cap)={np.mean([capped[i] for i in q]):.4f}  meandB(all,100cap)={np.mean(capped):.4f}  "
                 f"MSEfirst(all)={psnr(np.mean(mses)):.4f}  "
                 f"MSEfirst(payload)={psnr(np.mean([mses[i] for i in emb_idx])) if emb_idx else float('nan'):.4f}  "
