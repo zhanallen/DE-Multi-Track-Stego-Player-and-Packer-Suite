@@ -1,0 +1,30 @@
+# script  : src/test/verify/verify_audio.py  (sha256 945ec9e96ce3e949)
+# args    : src/test/video/pixel_jimmy
+# commit  : 40160716e4f79de5bb34eed4550aa2387701f4cd
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 02:09:24 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+# sha256 chunked_stego.mp4 = bf43b09dd113b01f0ba152890b0b9c5a59ed3f5a71a22224c56f62a13efb48e7
+[E] decoder log:
+    🔓 啟動 PEE 多檔案解碼還原 (支援串流切片): src/test/video/pixel_jimmy\chunked_stego.mp4
+    🔄 偵測到目標容量 80725184 bits，正在動態擴容緩衝區...
+    ⚡ [串流解碼] 偵測到 DE_CHUNK_V1 切片串流隱寫格式！啟動即時串流管線...
+    🎉 [串流解碼] 第 1 幀即時解出語系清冊 Manifest！共 14 軌
+    🎉 [串流解碼] 第 18 幀解出 Chunk 0 (共 14 軌, is_last=False)！
+    🎉 [串流解碼] 第 179 幀解出 Chunk 1 (共 14 軌, is_last=True)！
+    🎉 串流切片音訊完美還原成功！共解出 14 個多語音軌。
+[E] lang | orig_size extr_size | file_sha_equal | pcm_equal (orig_samples vs extr_samples) | first_diff_byte
+    de-DE  | 724887 725410 | False | False (1329152 vs 1330484) | 12976
+    en     | 723633 724783 | False | False (1327104 vs 1328436) | 8542
+    en-US  | 723633 724783 | False | False (1327104 vs 1328436) | 8542
+    es-US  | 724887 725410 | False | False (1329152 vs 1330484) | 12976
+    fr-FR  | 724887 725410 | False | False (1329152 vs 1330484) | 12976
+    hi     | 724887 725410 | False | False (1329152 vs 1330484) | 12976
+    id     | 724887 725410 | False | False (1329152 vs 1330484) | 12976
+    it     | 724887 725410 | False | False (1329152 vs 1330484) | 12976
+    ja     | 724887 725410 | False | False (1329152 vs 1330484) | 12976
+    ml     | 724887 725410 | False | False (1329152 vs 1330484) | 12976
+    nl-NL  | 724887 725410 | False | False (1329152 vs 1330484) | 12976
+    pl     | 724887 725410 | False | False (1329152 vs 1330484) | 12976
+    pt-BR  | 724887 725410 | False | False (1329152 vs 1330484) | 12976
+    uk     | 724887 725410 | False | False (1329152 vs 1330484) | 12976

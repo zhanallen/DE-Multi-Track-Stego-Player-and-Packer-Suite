@@ -37,6 +37,13 @@ dist/
 Meet_Google_Pixel_9_stego.mp4
 test.mp4
 
+# Test carrier media (copyrighted / large): keep only *.txt logs and SOURCES.txt
+src/test/video/**
+!src/test/video/**/
+!src/test/video/**/*.txt
+!src/test/video/**/summary.md
+src/test/video/**/extracted/
+
 # Downloader downloads temp
 downloads/
 temp_extracted_tracks/

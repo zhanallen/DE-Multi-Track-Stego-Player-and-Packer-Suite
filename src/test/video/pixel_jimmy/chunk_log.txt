@@ -1,0 +1,35 @@
+# script  : src/test/verify/verify_chunks.py  (sha256 b64bdccdf7898b4e)
+# args    : src/test/video/pixel_jimmy --initial-sec 6.0
+# commit  : 40160716e4f79de5bb34eed4550aa2387701f4cd
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 02:10:31 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+[F] original mp3 sha256 (dedup check):
+    7120707c137b33d4… x1: ['de-DE']
+    ccf1326292180e4e… x2: ['en-US', 'en']
+    d4eb76b2bdf27f92… x1: ['es-US']
+    444e55bb3700f14f… x1: ['fr-FR']
+    1be94b237a2c3c61… x1: ['hi']
+    8cbe6121926b09ea… x1: ['id']
+    f6fc83add959f289… x1: ['it']
+    4389883ae19c2a15… x1: ['ja']
+    9045437837742486… x1: ['ml']
+    cb0b44643d94cefa… x1: ['nl-NL']
+    007a376e6b948738… x1: ['pl']
+    72728c7df421c03d… x1: ['pt-BR']
+    f3723286fbd6a429… x1: ['uk']
+[F] re-split originals locally with audio_chunker (initial_sec=6.0) and compare to extracted chunks/full files:
+    de-DE  chunk0_equal=False chunk1_equal=False concat_equal=False
+    en-US  chunk0_equal=False chunk1_equal=False concat_equal=False
+    en     chunk0_equal=False chunk1_equal=False concat_equal=False
+    es-US  chunk0_equal=False chunk1_equal=False concat_equal=False
+    fr-FR  chunk0_equal=False chunk1_equal=False concat_equal=False
+    hi     chunk0_equal=False chunk1_equal=False concat_equal=False
+    id     chunk0_equal=False chunk1_equal=False concat_equal=False
+    it     chunk0_equal=False chunk1_equal=False concat_equal=False
+    ja     chunk0_equal=False chunk1_equal=False concat_equal=False
+    ml     chunk0_equal=False chunk1_equal=False concat_equal=False
+    nl-NL  chunk0_equal=False chunk1_equal=False concat_equal=False
+    pl     chunk0_equal=False chunk1_equal=False concat_equal=False
+    pt-BR  chunk0_equal=False chunk1_equal=False concat_equal=False
+    uk     chunk0_equal=False chunk1_equal=False concat_equal=False

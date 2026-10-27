@@ -1,0 +1,25 @@
+# script  : src/test/verify/verify_packer_edges.py  (sha256 62eab839b3e2f29a)
+# args    : --carriers src/test/video/synthetic/synthetic_shapes_1920x1080_24f.y4m src/test/video/synthetic/zero_cap/shapes2_black2_shapes.y4m src/test/video/synthetic/synthetic_noise_1920x1080_24f.y4m src/test/video/pixel_jimmy/cover.webm --mp3 src/test/video/pixel_jimmy/audio_de-DE.mp3 --tracks src/test/video/pixel_jimmy/audio_de-DE.mp3 src/test/video/pixel_jimmy/audio_en-US.mp3 src/test/video/pixel_jimmy/audio_en.mp3 src/test/video/pixel_jimmy/audio_es-US.mp3 src/test/video/pixel_jimmy/audio_fr-FR.mp3 src/test/video/pixel_jimmy/audio_hi.mp3 src/test/video/pixel_jimmy/audio_id.mp3 src/test/video/pixel_jimmy/audio_it.mp3 src/test/video/pixel_jimmy/audio_ja.mp3 src/test/video/pixel_jimmy/audio_ml.mp3 src/test/video/pixel_jimmy/audio_nl-NL.mp3 src/test/video/pixel_jimmy/audio_pl.mp3 src/test/video/pixel_jimmy/audio_pt-BR.mp3 src/test/video/pixel_jimmy/audio_uk.mp3 --work src/test/video/packer/work
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:17:23 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+# sha256 src/test/video/synthetic/synthetic_shapes_1920x1080_24f.y4m = 9334f2f59bdcb2ab1881d4255f5e83f72ac404226edacb44a2a1344825035597
+# sha256 src/test/video/synthetic/zero_cap/shapes2_black2_shapes.y4m = 2964e039b6c98ec9f68e794363e1d963c653d0081741408bbfc6bf8fd41a89ba
+# sha256 src/test/video/synthetic/synthetic_noise_1920x1080_24f.y4m = 6984e73515b5d86903624e32a427607064b24316fc742d0c0c4d413bd7b3f902
+# sha256 src/test/video/pixel_jimmy/cover.webm = 4db53cee6176d86d9433f2e19e70a86d3e8a565151071cb09bfd89bec2e6e852
+[PK-04a] estimate_capacity() vs actual (bytes)
+    synthetic_shapes_1920x1080_24f.y4m       frames=  24 zero-capacity frames=   0  estimate=  1,427,848  actual=  1,547,856  estimate error=-7.8%
+    shapes2_black2_shapes.y4m                frames=  26 zero-capacity frames=   2  estimate=  1,546,835  actual=  1,547,856  estimate error=-0.1%
+    synthetic_noise_1920x1080_24f.y4m        frames=  24 zero-capacity frames=  24  estimate=          0  actual=          0  estimate error=+0.0%
+    cover.webm                               frames= 720 zero-capacity frames=   0  estimate= 35,705,195  actual= 41,701,774  estimate error=-14.4%
+[PK-04b] API overflow: carrier=synthetic_shapes_1920x1080_24f.y4m actual capacity=1,547,856 B, payload≈10,076,671 B (14 tracks)
+    exception: ValueError: 💥 容量嚴重不足！還有 68234536 bits 未寫入。
+    output file left behind after failure: True (4,613,913 bytes)
+[PK-05] case | exception | path | chunk0/chunk1 bytes | concat decodable (samples) | chunk0 samples
+    MPEG-2 Layer III 22.05 kHz           | none | byte-split       | 24805/217130 | 1329152 | 132574
+    100 random bytes inserted mid-file   | none | byte-split       | 73497/651490 | 1328000 | 132527
+    100 random bytes inserted at 5%      | none | ffmpeg re-encode | 72871/652789 | 1329332 | 131148
+    WAV renamed to .mp3                  | none | ffmpeg re-encode | 73394/652686 | 1330484 | 132300
+    truncated mid-frame at 60%           | none | byte-split       | 73497/361442 | 797231 | 132527
+    ID3v1 tag appended                   | none | byte-split       | 73497/651518 | 1329152 | 132527

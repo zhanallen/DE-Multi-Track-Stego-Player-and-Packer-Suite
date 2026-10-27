@@ -1,0 +1,14 @@
+# script  : src/test/verify/verify_load_sweep.py  (sha256 630688d656a21be5)
+# args    : src/test/video/synthetic/synthetic_black_1920x1080_24f.y4m --loads 10 40 80 100 --payload-kib 256 1024 --encode
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:17:15 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+# sha256 src/test/video/synthetic/synthetic_black_1920x1080_24f.y4m = e0f93441fab8c0e547a6fe7aa85c6d1b07d95b3fbc861f2cc2aaa8c608314d72  size=74649789
+# frames used: 24  1920x1080  random payload seed 20261027+load
+[size] source file=74649789  lossless baseline (unembedded, 24 frames)=10240
+       note: source→baseline is only meaningful when all source frames are used (no --max-frames)
+[coltuc] capacity: total=0 bits (0.0 KiB)  per-frame min=0 max=0  bpp(avg)=0.0000
+[coltuc] zero capacity (every frame skipped) → no load cases
+[checkerboard] capacity: total=0 bits (0.0 KiB)  per-frame min=0 max=0  bpp(avg)=0.0000
+[checkerboard] zero capacity (every frame skipped) → no load cases

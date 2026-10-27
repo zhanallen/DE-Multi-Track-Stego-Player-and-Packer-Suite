@@ -1,0 +1,10 @@
+⚠️ Warning: HEVC RDH core (Zhang-Zeng-Ou 2D HS) load warning: No module named 'hevc_rdh_core'
+# script  : src/test/verify/verify_pck006.py  (sha256 4c928bad11540eaf)
+# args    : 
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:15:43 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+[overflow] exception=None  dialogs=[('critical', 'Audio payload (10.00 MB) exceeds video carrier capacity (1.00 MB)!')]  embedding_threads=0  -> PASS
+[control ] exception=None  dialogs=[]  embedding_threads=1  -> PASS
+[RESULT] PASS

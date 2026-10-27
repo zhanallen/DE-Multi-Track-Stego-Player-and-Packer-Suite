@@ -1,0 +1,51 @@
+# script  : src/test/verify/verify_mp3_split.py  (sha256 37a7469811ab293b)
+# args    : src/test/video/pixel_jimmy
+# commit  : 40160716e4f79de5bb34eed4550aa2387701f4cd
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 02:10:46 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+[J] lang | sec | cut_byte/size | bytes_equal concat_sha_equal | chunk1_sync | chunk0_samples (>=target) | chunk0_pcm_is_prefix | original_samples
+    de-DE  | 3.0 | 73497/724887 | True True | True | 132527 (True) | True | 1329152
+    de-DE  | 6.0 | 145595/724887 | True True | True | 265007 (True) | True | 1329152
+    en-US  | 3.0 | 73497/723633 | True True | True | 132527 (True) | True | 1327104
+    en-US  | 6.0 | 145595/723633 | True True | True | 265007 (True) | True | 1327104
+    en     | 3.0 | 73497/723633 | True True | True | 132527 (True) | True | 1327104
+    en     | 6.0 | 145595/723633 | True True | True | 265007 (True) | True | 1327104
+    es-US  | 3.0 | 73497/724887 | True True | True | 132527 (True) | True | 1329152
+    es-US  | 6.0 | 145595/724887 | True True | True | 265007 (True) | True | 1329152
+    fr-FR  | 3.0 | 73497/724887 | True True | True | 132527 (True) | True | 1329152
+    fr-FR  | 6.0 | 145595/724887 | True True | True | 265007 (True) | True | 1329152
+    hi     | 3.0 | 73497/724887 | True True | True | 132527 (True) | True | 1329152
+    hi     | 6.0 | 145595/724887 | True True | True | 265007 (True) | True | 1329152
+    id     | 3.0 | 73497/724887 | True True | True | 132527 (True) | True | 1329152
+    id     | 6.0 | 145595/724887 | True True | True | 265007 (True) | True | 1329152
+    it     | 3.0 | 73497/724887 | True True | True | 132527 (True) | True | 1329152
+    it     | 6.0 | 145595/724887 | True True | True | 265007 (True) | True | 1329152
+    ja     | 3.0 | 73497/724887 | True True | True | 132527 (True) | True | 1329152
+    ja     | 6.0 | 145595/724887 | True True | True | 265007 (True) | True | 1329152
+    ml     | 3.0 | 73497/724887 | True True | True | 132527 (True) | True | 1329152
+    ml     | 6.0 | 145595/724887 | True True | True | 265007 (True) | True | 1329152
+    nl-NL  | 3.0 | 73497/724887 | True True | True | 132527 (True) | True | 1329152
+    nl-NL  | 6.0 | 145595/724887 | True True | True | 265007 (True) | True | 1329152
+    pl     | 3.0 | 73497/724887 | True True | True | 132527 (True) | True | 1329152
+    pl     | 6.0 | 145595/724887 | True True | True | 265007 (True) | True | 1329152
+    pt-BR  | 3.0 | 73497/724887 | True True | True | 132527 (True) | True | 1329152
+    pt-BR  | 6.0 | 145595/724887 | True True | True | 265007 (True) | True | 1329152
+    uk     | 3.0 | 73497/724887 | True True | True | 132527 (True) | True | 1329152
+    uk     | 6.0 | 145595/724887 | True True | True | 265007 (True) | True | 1329152
+[K] backward compatibility: legacy chunks in extracted/ (re-encoded, start with ID3) -> ffmpeg concat path, compare with previous full file:
+    de-DE  chunk1_is_continuation=False (expect False) same_as_previous=True
+    en-US  chunk1_is_continuation=False (expect False) same_as_previous=True
+    en     chunk1_is_continuation=False (expect False) same_as_previous=True
+    es-US  chunk1_is_continuation=False (expect False) same_as_previous=True
+    fr-FR  chunk1_is_continuation=False (expect False) same_as_previous=True
+    hi     chunk1_is_continuation=False (expect False) same_as_previous=True
+    id     chunk1_is_continuation=False (expect False) same_as_previous=True
+    it     chunk1_is_continuation=False (expect False) same_as_previous=True
+    ja     chunk1_is_continuation=False (expect False) same_as_previous=True
+    ml     chunk1_is_continuation=False (expect False) same_as_previous=True
+    nl-NL  chunk1_is_continuation=False (expect False) same_as_previous=True
+    pl     chunk1_is_continuation=False (expect False) same_as_previous=True
+    pt-BR  chunk1_is_continuation=False (expect False) same_as_previous=True
+    uk     chunk1_is_continuation=False (expect False) same_as_previous=True
+[RESULT] PASS

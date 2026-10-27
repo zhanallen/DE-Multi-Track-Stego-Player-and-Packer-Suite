@@ -1,0 +1,59 @@
+# script  : src/test/verify/verify_zero_capacity_frames.py  (sha256 dd4589e48310fc40)
+# args    : src/test/video/synthetic src/test/video/pixel_jimmy/audio_de-DE.mp3 src/test/video/synthetic/zero_cap
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:17:19 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+# carrier: frames 0-1 shapes, 2-3 black, 4-25 shapes; sha256=2964e039b6c98ec9f68e794363e1d963c653d0081741408bbfc6bf8fd41a89ba
+# audio: src/test/video/pixel_jimmy/audio_de-DE.mp3 sha256=7120707c137b33d462d2c15918b563043b07d1d2f6ad6f44c8e06dd915b21e40 size=724887
+[monolithic] RESULT FAIL  exception: ValueError: 💥 致命失敗：Error -5 while decompressing data: incomplete or truncated stream 影片可能無嵌入資訊或已被壓縮失真！
+    Traceback (most recent call last):
+      File "D:\專題\PEEby宇\src\pee_stego.py", line 781, in decode_video_multi
+        payload_chunk = coltuc_decode_frame(frame, Y_size, height, width)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "D:\專題\PEEby宇\src\pee_stego.py", line 544, in coltuc_decode_frame
+        sm = np.unpackbits(np.frombuffer(zlib.decompress(cmap), dtype=np.uint8))[:nblocks].astype(np.int8)
+                                         ^^^^^^^^^^^^^^^^^^^^^
+    zlib.error: Error -5 while decompressing data: incomplete or truncated stream
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "D:\專題\PEEby宇\src\test\verify\verify_zero_capacity_frames.py", line 68, in main
+        tracks = pee_stego.decode_video_multi(stego, out)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "D:\專題\PEEby宇\src\pee_stego.py", line 784, in decode_video_multi
+        raise ValueError(f"💥 致命失敗：{e} 影片可能無嵌入資訊或已被壓縮失真！")
+    ValueError: 💥 致命失敗：Error -5 while decompressing data: incomplete or truncated stream 影片可能無嵌入資訊或已被壓縮失真！
+[monolithic] pipeline log tail:
+    📦 讀取並封裝多個檔案 (傳統單體模式): ['src/test/video/synthetic/zero_cap\\clip_audio_xx.mp3']
+      -> 多檔案轉為二進制完畢，總長度: 5756560 bits (719566 bytes)
+    🎉 多檔案編碼寫入無損影片成功！
+    🔓 啟動 PEE 多檔案解碼還原 (支援串流切片): src/test/video/synthetic/zero_cap\zero_cap_stego.mp4
+    ℹ️ [串流解碼] 偵測到傳統單體封裝格式，切換至相容全幀解碼模式。
+[chunked] RESULT FAIL  exception: ValueError: 💥 致命失敗：Error -5 while decompressing data: incomplete or truncated stream 影片可能無嵌入資訊或已被壓縮失真！
+    Traceback (most recent call last):
+      File "D:\專題\PEEby宇\src\pee_stego.py", line 781, in decode_video_multi
+        payload_chunk = coltuc_decode_frame(frame, Y_size, height, width)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "D:\專題\PEEby宇\src\pee_stego.py", line 544, in coltuc_decode_frame
+        sm = np.unpackbits(np.frombuffer(zlib.decompress(cmap), dtype=np.uint8))[:nblocks].astype(np.int8)
+                                         ^^^^^^^^^^^^^^^^^^^^^
+    zlib.error: Error -5 while decompressing data: incomplete or truncated stream
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "D:\專題\PEEby宇\src\test\verify\verify_zero_capacity_frames.py", line 68, in main
+        tracks = pee_stego.decode_video_multi(stego, out)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "D:\專題\PEEby宇\src\pee_stego.py", line 784, in decode_video_multi
+        raise ValueError(f"💥 致命失敗：{e} 影片可能無嵌入資訊或已被壓縮失真！")
+    ValueError: 💥 致命失敗：Error -5 while decompressing data: incomplete or truncated stream 影片可能無嵌入資訊或已被壓縮失真！
+[chunked] pipeline log tail:
+      -> 總長度: 5758616 bits (719823 bytes)
+    🎉 多檔案編碼寫入無損影片成功！
+    🔓 啟動 PEE 多檔案解碼還原 (支援串流切片): src/test/video/synthetic/zero_cap\zero_cap_stego.mp4
+    ⚡ [串流解碼] 偵測到 DE_CHUNK_V1 切片串流隱寫格式！啟動即時串流管線...
+    🎉 [串流解碼] 第 1 幀即時解出語系清冊 Manifest！共 1 軌
+    🎉 [串流解碼] 第 2 幀解出 Chunk 0 (共 1 軌, is_last=False)！

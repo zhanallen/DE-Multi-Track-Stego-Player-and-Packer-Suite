@@ -1,0 +1,11 @@
+# script  : src/test/verify/verify_load_sweep.py  (sha256 630688d656a21be5)
+# args    : src/test/video/xiph/crowd_run_1080p50.y4m --methods checkerboard --loads 100
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:18:49 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+# sha256 src/test/video/xiph/crowd_run_1080p50.y4m = e056e01fc13906dd9a84f5cc686a36888436379476577965a0866821caaf55c8  size=1555203036
+# frames used: 500  1920x1080  random payload seed 20261027+load
+[checkerboard] capacity: total=314805772 bits (38428.4 KiB)  per-frame min=572862 max=731572  bpp(avg)=0.3036
+[checkerboard] load=100%  bits=314805772 (100.0% of capacity)  payload_frames=500/500 (alpha_video=1.000)  bpp_payload=0.3036  restore_fail=0  payload_ok=False  embedded_bits=314799777  extracted_ok=True
+          PSNR old(5f,100cap)=43.1980  meandB(all,100cap)=43.1841  MSEfirst(all)=43.1838  MSEfirst(payload)=43.1838  per-frame[min,max]=[43.0729, 43.3882]

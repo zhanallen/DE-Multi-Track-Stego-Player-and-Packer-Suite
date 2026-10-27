@@ -1,0 +1,23 @@
+# script  : src/test/verify/verify_i18n_layers.py  (sha256 46f76e0f63fe43f4)
+# args    : 
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:17:50 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+[TZ] machine: datetime tzname='台北標準時間'  time.tzname=('台北標準時間', '台北日光節約時間')  utcoffset=8:00:00
+     get_local_country_by_timezone(['zh-TW']) = None
+     get_local_country_by_timezone(['en-US']) = None
+[L] case | expect layer | resolved_by | track | PASS/FAIL
+    L1 history ja                  | L1 | EXPLICIT_HISTORY             | ja     | PASS
+    L2 OS exact fr-FR              | L2 | OS_LANGS_EXACT               | fr-FR  | PASS
+    L3 zh + tz TW                  | L3 | TIMEZONE_CROSS               | zh-TW  | PASS
+    L3 zh + tz CN                  | L3 | TIMEZONE_CROSS               | zh-CN  | PASS
+    L4 OS fuzzy en-GB              | L4 | OS_LANGS_FUZZY               | en-US  | PASS
+    L6 smart default (ko-KR)       | L6 | DEFAULT_FALLBACK_SMART       | en-US  | PASS
+    L6 first track (ko-KR)         | L6 | DEFAULT_FALLBACK_FIRST_TRACK | ml     | PASS
+    history not available -> L2    | L2 | OS_LANGS_EXACT               | it     | PASS
+[IP-LOCK] detect_best_locale(..., ip_lock_mode=True)  (DEF-003 reproduction)
+    EXCEPTION TypeError: DetectionResult.__init__() got an unexpected keyword argument 'confidence'
+    return DetectionResult(
+[NOTE] layer 5 (GeoIP) not exercised: requires network + MMDB (db_path=None here)
+[RESULT] six-layer chain PASS

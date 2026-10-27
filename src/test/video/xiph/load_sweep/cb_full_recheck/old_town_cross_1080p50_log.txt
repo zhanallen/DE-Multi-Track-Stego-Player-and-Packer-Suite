@@ -1,0 +1,11 @@
+# script  : src/test/verify/verify_load_sweep.py  (sha256 630688d656a21be5)
+# args    : src/test/video/xiph/old_town_cross_1080p50.y4m --methods checkerboard --loads 100
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:19:45 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+# sha256 src/test/video/xiph/old_town_cross_1080p50.y4m = 6ffe76b98ba0d7a46dd66259591848fd96202f3f95a2659019a5e6be71d8ea89  size=1555203036
+# frames used: 500  1920x1080  random payload seed 20261027+load
+[checkerboard] capacity: total=292885508 bits (35752.6 KiB)  per-frame min=556019 max=673549  bpp(avg)=0.2825
+[checkerboard] load=100%  bits=292885508 (100.0% of capacity)  payload_frames=500/500 (alpha_video=1.000)  bpp_payload=0.2825  restore_fail=0  payload_ok=False  embedded_bits=292884313  extracted_ok=True
+          PSNR old(5f,100cap)=43.1013  meandB(all,100cap)=43.0969  MSEfirst(all)=43.0968  MSEfirst(payload)=43.0968  per-frame[min,max]=[43.0414, 43.2636]

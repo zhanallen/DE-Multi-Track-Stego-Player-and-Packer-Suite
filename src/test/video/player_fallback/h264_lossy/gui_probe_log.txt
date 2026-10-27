@@ -1,0 +1,29 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'D:/專題/PEEby宇/src/test/video/player_fallback/media_h264/e2e_stego_h264_crf23_10s.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:10.01, start: 0.000000, bitrate: 2735 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1920x1080, 2595 kb/s, 23.98 fps, 23.98 tbr, 24k tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 libx264
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 132 kb/s (default)
+      Metadata:
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+⚠️ Warning: HEVC RDH core (Zhang-Zeng-Ou 2D HS) load warning: No module named 'hevc_rdh_core'
+# script  : src/test/verify/gui_handoff_probe.py  (sha256 78ed7250140b554e)
+# args    : src/test/video/player_fallback/media_h264/e2e_stego_h264_crf23_10s.mp4 src/test/video/player_fallback/h264_lossy --timeout 25
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:18:25 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+🚀 [StegoFacade] Starting decoding using method: 'auto'...
+  🔍 Auto-detecting algorithm: Trying Coltuc 2x2 PEE extraction...
+🔓 啟動 PEE 多檔案解碼還原 (支援串流切片): D:\專題\PEEby宇\src\test\video\player_fallback\media_h264\e2e_stego_h264_crf23_10s.mp4
+  ℹ️ Coltuc 2x2 PEE extraction attempt info: 💥 致命失敗：Error -3 while decompressing data: incorrect header check 影片可能無嵌入資訊或已被壓縮失真！
+🔓 啟動 PEE 多檔案解碼還原 (支援串流切片): D:\專題\PEEby宇\src\test\video\player_fallback\media_h264\e2e_stego_h264_crf23_10s.mp4
+🧹 成功清除臨時解密音軌。

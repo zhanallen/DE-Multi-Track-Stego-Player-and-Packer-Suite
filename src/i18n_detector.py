@@ -18,6 +18,33 @@ try:
 except ImportError:
     maxminddb = None
 
+# =====================================================================
+# --- STRATEGY REFERENCE TABLE (策略層級參考對照表) ---
+# --- 注意：此表為開發者與維運人員查閱參考用，不參與執行時數值運算與決策門檻 ---
+# =====================================================================
+CONFIDENCE_WEIGHTS = {
+    # P1: [極高可信] 使用者過去在播放器明確手動挑選的偏好，代表最強主觀意圖
+    "EXPLICIT_HISTORY": 1.0,
+    # P2a: [高可信] 系統偏好語言與可用音軌完美精確匹配 (例: zh-TW == zh-TW)，客觀本機訊號
+    "OS_LANGS_EXACT": 0.85,
+    # P2a (中性中文): [中高可信] 系統為中文但未標區域，時區輔助命中中性音軌
+    "OS_LANGS_NEUTRAL_ZH": 0.80,
+    # P4a: [中高可信] 時區與系統語言交叉比對 (消除區域歧義)
+    "TIMEZONE_CROSS": 0.80,
+    # P2b: [中可信] 系統語言截斷前綴後的模糊匹配 (例: zh-TW 降級匹配 zh)，前綴容錯
+    "OS_LANGS_FUZZY": 0.65,
+    # P4c: [高可信] 線上 GeoIP 與離線 MaxMind DB 雙重一致驗證 (且通過 VPN 交叉檢驗)
+    "GEOIP_VERIFIED": 0.95,
+    # P4b: [中高可信] 離線資料庫或 API 單側備援定位 (且通過 VPN 交叉檢驗)
+    "GEOIP_SINGLE_SOURCE": 0.85,
+    # P5: [低可信/兜底] 無任何高優先特徵時，採用 zh-TW/en-US 等常見語系兜底
+    "DEFAULT_FALLBACK_SMART": 0.15,
+    # P5: [極低可信/最後防線] 完全無法匹配時，直接採用影片預設第一音軌
+    "DEFAULT_FALLBACK_FIRST_TRACK": 0.05,
+    # FALLBACK: [未命中] 策略鏈皆未命中之終極保底
+    "FALLBACK": 0.0,
+}
+
 # Mapping of country codes to candidate language codes (preferred order)
 COUNTRY_LANGS = {
     "TW": ["zh-TW", "zh-HK", "zh", "en-US", "en", "ja"],
@@ -51,11 +78,17 @@ COUNTRY_LANGS = {
 @dataclass
 class DetectionResult:
     track_key: str                        # 最佳匹配音軌，例如 "zh-TW"
-    source: str                           # 判定決策源
-    confidence: float                     # 置信度 (0.0 ~ 1.0)
+    source: str                           # 判定決策源 (Friendly Description)
+    resolved_by: str                      # 策略識別代碼 (對應 CONFIDENCE_WEIGHTS 的 Key)
     detail: str                           # 用於儀表板輸出的日誌
     candidates: List[str] = field(default_factory=list) # 排序後的推薦音軌列表 (由優至劣)
     metadata: Dict[str, Any] = field(default_factory=dict) # 預留給未來擴充層的元數據
+
+    @property
+    def confidence(self) -> float:
+        """向後相容屬性：供舊有 UI/Log 存取參考可信度數值 (非決策計算用)"""
+        return CONFIDENCE_WEIGHTS.get(self.resolved_by, 0.0)
+
 
 def is_online(host="8.8.8.8", port=53, timeout=0.40):
     """
@@ -156,6 +189,32 @@ def normalize_locale(locale_str):
     if not locale_str:
         return ""
     return locale_str.replace("_", "-").lower().strip()
+
+
+def extract_country_from_locale(locale_str: Optional[str]) -> Optional[str]:
+    """
+    從語言代碼 (如 'zh-TW', 'en_US', 'ja') 提取所屬 ISO-3166-1 國家/地區代碼。
+    若無明確區域後綴，則嘗試常見母語國家映射。
+    """
+    if not locale_str:
+        return None
+    norm = normalize_locale(locale_str)
+    parts = norm.split("-")
+    if len(parts) >= 2 and len(parts[-1]) == 2:
+        return parts[-1].upper()
+    
+    lang_to_default_country = {
+        "ja": "JP",
+        "ko": "KR",
+        "de": "DE",
+        "fr": "FR",
+        "it": "IT",
+        "pl": "PL",
+        "uk": "UA",
+        "id": "ID",
+    }
+    return lang_to_default_country.get(parts[0])
+
 
 def match_track_exact(locale_candidate, available_tracks) -> Optional[str]:
     """
@@ -328,7 +387,11 @@ class ExplicitHistoryStrategy(I18nStrategy):
         if matched:
             detail = f"偵測到歷史選擇偏好：{self.history_lang} -> 完美匹配音軌 [{matched}]"
             cands = [matched] + [t for t in available_tracks if t != matched]
-            return DetectionResult(matched, "P1 EXPLICIT_HISTORY", 1.0, detail, candidates=cands)
+            return DetectionResult(
+                matched, "P1 EXPLICIT_HISTORY", 
+                "EXPLICIT_HISTORY", 
+                detail, candidates=cands
+            )
         return None
 
 
@@ -345,20 +408,25 @@ class OsLanguagesExactStrategy(I18nStrategy):
             if matched:
                 detail = f"依據系統語言優先級精確匹配：{lang} -> 匹配音軌 [{matched}]"
                 cands = [matched] + [t for t in available_tracks if t != matched]
-                return DetectionResult(matched, "P2a OS_UI_LANGS_EXACT", 0.85, detail, candidates=cands)
+                return DetectionResult(
+                    matched, "P2a OS_UI_LANGS_EXACT", 
+                    "OS_LANGS_EXACT", 
+                    detail, candidates=cands
+                )
         return None
 
 
 class TimezoneDisambiguationStrategy(I18nStrategy):
     """【P4a】 時區區域歧義消除策略 (離線 0ms, 當精確比對失敗，利用時區優先判斷區域音軌)"""
-    def __init__(self, system_languages: List[str]):
+    def __init__(self, system_languages: List[str], tz_country: Optional[str] = None):
         self.system_languages = system_languages
+        self.tz_country = tz_country
 
     def detect(self, available_tracks: List[str]) -> Optional[DetectionResult]:
         if not self.system_languages:
             return None
             
-        tz_country = get_local_country_by_timezone(self.system_languages)
+        tz_country = self.tz_country or get_local_country_by_timezone(self.system_languages)
         
         # 處理歐盟等模糊時區
         if tz_country == "EU" or not tz_country:
@@ -369,20 +437,20 @@ class TimezoneDisambiguationStrategy(I18nStrategy):
         if tz_country and tz_country != "EU":
             candidates = COUNTRY_LANGS.get(tz_country, [])
             for cand in candidates:
-                # 優先使用精確匹配找出最適區域版本
                 matched = match_track_exact(cand, available_tracks)
                 if not matched:
                     matched = match_track_fuzzy(cand, available_tracks)
                     
                 if matched:
-                    # 交叉檢查系統語言是否包含該語系 (例如使用者支援 zh 且處於 TW 時區，則匹配 zh-TW)
                     os_primary = [l.split("-")[0].split("_")[0].lower() for l in self.system_languages]
                     cand_primary = cand.split("-")[0].split("_")[0].lower()
                     if cand_primary in os_primary:
                         detail = f"時區偏好消除歧義成功 (時區國家: {tz_country} × 語言: {cand_primary}) -> 匹配音軌 [{matched}]"
                         cands = [matched] + [t for t in available_tracks if t != matched]
                         return DetectionResult(
-                            matched, "P4a TIMEZONE_CROSS", 0.80, detail, 
+                            matched, "P4a TIMEZONE_CROSS", 
+                            "TIMEZONE_CROSS", 
+                            detail, 
                             candidates=cands, 
                             metadata={"country": tz_country}
                         )
@@ -403,24 +471,46 @@ class OsLanguagesFuzzyStrategy(I18nStrategy):
             if matched:
                 detail = f"依據系統語言模糊比對：{primary_lang} -> 匹配音軌 [{matched}]"
                 cands = [matched] + [t for t in available_tracks if t != matched]
-                return DetectionResult(matched, "P2b OS_UI_LANGS_FUZZY", 0.65, detail, candidates=cands)
+                return DetectionResult(
+                    matched, "P2b OS_UI_LANGS_FUZZY", 
+                    "OS_LANGS_FUZZY", 
+                    detail, candidates=cands
+                )
         return None
 
 
+
 class GeoIpStrategy(I18nStrategy):
-    """【P4b & P4c】 本地 MMDB 離線地理查詢與線上 API 交叉驗證"""
-    def __init__(self, db_path: Optional[str]):
+    """【P4b & P4c】 本地 MMDB 離線地理查詢與線上 API 交叉驗證 (支援 VPN 交叉驗證二元過濾)"""
+    def __init__(
+        self, 
+        db_path: Optional[str], 
+        system_languages: Optional[List[str]] = None, 
+        tz_country: Optional[str] = None
+    ):
         self.db_path = db_path
+        self.system_languages = system_languages or []
+        self.tz_country = tz_country
+
+    def _is_geoip_reliable(self, geo_country: str) -> bool:
+        """
+        二元判斷：
+        當 OS 語言所屬地區 == 裝置時區所屬地區 (本地雙訊號高度吻合)，
+        但 GeoIP 查出來的國家與兩者皆不一致時，判定 GeoIP 訊號受 VPN 污染不可靠。
+        """
+        if not self.system_languages or not self.tz_country:
+            return True
+        os_country = extract_country_from_locale(self.system_languages[0])
+        if os_country and (os_country == self.tz_country) and (geo_country != self.tz_country):
+            return False
+        return True
 
     def detect(self, available_tracks: List[str]) -> Optional[DetectionResult]:
         if not self.db_path or not os.path.exists(self.db_path) or not maxminddb:
             return None
             
-        # 快速聯網檢測 (400ms 超時)
         online = is_online(timeout=0.40)
-        
         if online and requests:
-            # P4c: 線上 API 與本地資料庫交叉比對
             public_ip, api_country = get_online_geoip(timeout=1.5)
             if public_ip and api_country:
                 try:
@@ -435,6 +525,10 @@ class GeoIpStrategy(I18nStrategy):
                             
                         # 一致性校驗
                         if api_country == local_country:
+                            # 進行二元可靠度檢查 (VPN 偵測)
+                            if not self._is_geoip_reliable(api_country):
+                                return None  # 判定為 VPN 污染，跳過 GeoIP 降級到下一層
+                                
                             candidates = COUNTRY_LANGS.get(api_country, [])
                             for cand in candidates:
                                 matched = match_track_exact(cand, available_tracks)
@@ -445,13 +539,18 @@ class GeoIpStrategy(I18nStrategy):
                                     detail = f"地理定位安全驗證成功：聯網檢測與離線資料庫一致 (IP: {public_ip} -> {api_country}) -> 匹配音軌 [{matched}]"
                                     cands = [matched] + [t for t in available_tracks if t != matched]
                                     return DetectionResult(
-                                        matched, "P4c GEOIP_VERIFIED", 0.95, detail, 
+                                        matched, "P4c GEOIP_VERIFIED", 
+                                        "GEOIP_VERIFIED", 
+                                        detail, 
                                         candidates=cands, 
                                         metadata={"ip": public_ip, "country": api_country}
                                     )
                                     
                         # 不一致：以本地資料庫為準降級 (P4b)
                         query_country = local_country if local_country else api_country
+                        if not self._is_geoip_reliable(query_country):
+                            return None  # 判定為 VPN 污染，跳過 GeoIP 降級到下一層
+                            
                         candidates = COUNTRY_LANGS.get(query_country, [])
                         for cand in candidates:
                             matched = match_track_exact(cand, available_tracks)
@@ -462,23 +561,29 @@ class GeoIpStrategy(I18nStrategy):
                                 detail = f"地理定位查詢成功 (API/本地數據不吻合或使用備援結果: {query_country}) -> 匹配音軌 [{matched}]"
                                 cands = [matched] + [t for t in available_tracks if t != matched]
                                 return DetectionResult(
-                                    matched, "P4b LOCAL_DB_ONLY", 0.85, detail, 
+                                    matched, "P4b LOCAL_DB_ONLY", 
+                                    "GEOIP_SINGLE_SOURCE", 
+                                    detail, 
                                     candidates=cands, 
                                     metadata={"ip": public_ip, "country": query_country, "local_db": True}
                                 )
                 except Exception as e:
-                    # 本地資料庫異常 fallback
+                    if not self._is_geoip_reliable(api_country):
+                        return None
+                        
                     candidates = COUNTRY_LANGS.get(api_country, [])
                     for cand in candidates:
                         matched = match_track_exact(cand, available_tracks)
                         if not matched:
                             matched = match_track_fuzzy(cand, available_tracks)
-                            
+                        
                         if matched:
                             detail = f"線上地理定位查詢成功 (本地資料庫讀取異常, 採用 API 資料: {api_country}) -> 匹配音軌 [{matched}]"
                             cands = [matched] + [t for t in available_tracks if t != matched]
                             return DetectionResult(
-                                matched, "P4b LOCAL_DB_ONLY", 0.85, detail, 
+                                matched, "P4b LOCAL_DB_ONLY", 
+                                "GEOIP_SINGLE_SOURCE", 
+                                detail, 
                                 candidates=cands, 
                                 metadata={"ip": public_ip, "country": api_country, "local_db_error": str(e)}
                             )
@@ -486,24 +591,28 @@ class GeoIpStrategy(I18nStrategy):
 
 
 class DefaultFallbackStrategy(I18nStrategy):
-    """【P5】 系統預設語系 (en-US) / 影片首軌"""
+    """【P5】 系統預設語系 (zh-TW / en-US) / 影片首軌"""
     def detect(self, available_tracks: List[str]) -> Optional[DetectionResult]:
-        matched = match_track_exact("en-US", available_tracks)
-        if not matched:
-            matched = match_track_fuzzy("en-US", available_tracks)
-        if not matched:
-            matched = match_track_exact("en", available_tracks)
-        if not matched:
-            matched = match_track_fuzzy("en", available_tracks)
+        for l in ["zh-TW", "zh", "en-US", "en"]:
+            matched = match_track_exact(l, available_tracks)
+            if not matched:
+                matched = match_track_fuzzy(l, available_tracks)
+            if matched:
+                detail = f"無高優先級匹配，採用智慧兜底語系 ({l}) -> 匹配音軌 [{matched}]"
+                cands = [matched] + [t for t in available_tracks if t != matched]
+                return DetectionResult(
+                    matched, "P5 SYSTEM_DEFAULT", 
+                    "DEFAULT_FALLBACK_SMART", 
+                    detail, candidates=cands
+                )
             
-        if matched:
-            detail = f"無高優先級匹配，採用系統預設語系 (en-US) -> 匹配音軌 [{matched}]"
-            cands = [matched] + [t for t in available_tracks if t != matched]
-            return DetectionResult(matched, "P5 SYSTEM_DEFAULT", 0.10, detail, candidates=cands)
-            
-        ultimate_fallback = available_tracks[0]
+        ultimate_fallback = available_tracks[0] if available_tracks else "en-US"
         detail = f"無任何匹配，降級採用影片預設首軌 -> 匹配音軌 [{ultimate_fallback}]"
-        return DetectionResult(ultimate_fallback, "P5 SYSTEM_DEFAULT", 0.05, detail, candidates=available_tracks)
+        return DetectionResult(
+            ultimate_fallback, "P5 SYSTEM_DEFAULT", 
+            "DEFAULT_FALLBACK_FIRST_TRACK", 
+            detail, candidates=available_tracks
+        )
 
 
 # =====================================================================
@@ -520,7 +629,7 @@ class I18nDetector:
             if res is not None:
                 return res
         fallback_track = available_tracks[0] if available_tracks else "en-US"
-        return DetectionResult(fallback_track, "FALLBACK", 0.0, "策略鏈皆未命中，採用首軌。", candidates=available_tracks)
+        return DetectionResult(fallback_track, "FALLBACK", "FALLBACK", "策略鏈皆未命中，採用首軌。", candidates=available_tracks)
 
 
 def detect_best_locale(
@@ -532,31 +641,35 @@ def detect_best_locale(
 ) -> DetectionResult:
     """
     外部調用便捷函數。以依賴注入方式接受系統偏好、歷史設定及資料庫路徑，內部執行策略鏈比對。
-    若 ip_lock_mode=True，則執行 P0 IP 鎖定策略，強制依公網 IP 地理位置決策，覆蓋歷史紀錄與 OS 語言。
+    若 ip_lock_mode=True，則執行 P0 IP 鎖定策略，強制依公網 IP 地理位置決策。
+    在正常播放器模式下，遵循以使用者主觀偏好最優先的 6 層短路責任鏈。
     """
+    if system_languages is None:
+        system_languages = []
+        try:
+            import locale
+            default_loc = locale.getdefaultlocale()[0]
+            if default_loc:
+                system_languages.append(default_loc)
+        except Exception:
+            pass
+
+    # 事先計算本地時區國碼
+    tz_country = get_local_country_by_timezone(system_languages)
+
     if ip_lock_mode:
         strategies = [
             IpLockStrategy(db_path),
             DefaultFallbackStrategy()
         ]
     else:
-        if system_languages is None:
-            system_languages = []
-            try:
-                import locale
-                default_loc = locale.getdefaultlocale()[0]
-                if default_loc:
-                    system_languages.append(default_loc)
-            except Exception:
-                pass
-
-        # V6 決策鏈順序：精確匹配 (P2a) -> 時區消除歧義 (P4a) -> 模糊匹配 (P2b) -> 地理定位 (P4b/P4c) -> 兜底 (P5)
+        # 六層決策鏈：手動歷史 (P1) -> 精確匹配 (P2a) -> 時區消除歧義 (P4a) -> 模糊匹配 (P2b) -> 地理定位 (P4b/P4c) -> 兜底 (P5)
         strategies = [
             ExplicitHistoryStrategy(history_language),
             OsLanguagesExactStrategy(system_languages),
-            TimezoneDisambiguationStrategy(system_languages),
+            TimezoneDisambiguationStrategy(system_languages, tz_country=tz_country),
             OsLanguagesFuzzyStrategy(system_languages),
-            GeoIpStrategy(db_path),
+            GeoIpStrategy(db_path, system_languages=system_languages, tz_country=tz_country),
             DefaultFallbackStrategy()
         ]
 
@@ -579,30 +692,60 @@ def detect_best_locale(
         res.metadata["allowed_tracks"] = get_allowed_tracks_for_country(res.metadata["country"], available_tracks)
     if "ip_locked" not in res.metadata:
         res.metadata["ip_locked"] = ip_lock_mode
+    if tz_country:
+        res.metadata["tz_country"] = tz_country
     
     return res
 
 
 if __name__ == "__main__":
-    print("🧪 啟動 i18n_detector.py 單體測試 (V6 策略消除歧義版)...")
+    print("🧪 啟動 i18n_detector.py 單體測試 (策略識別 resolved_by 版)...")
     
-    # 測試案例 1：時區消除歧義測試 (模擬地區中立的 OS 語言 'zh')
-    # 若有 ['zh-CN', 'zh-TW'] 音軌，且時區為台灣，應正確消除歧義選擇 'zh-TW'
+    # 測試案例 1：時區消除歧義測試 (OS 語言 'zh'，時區台灣，命中 zh-TW)
     test_tracks = ["zh-CN", "zh-TW"]
     sim_sys_langs = ["zh"]
-    sim_history = None
-    
-    # 模擬台灣時區環境
-    print(f"模擬可用音軌: {test_tracks} | OS 優先語言: {sim_sys_langs} | 本地時區: 台北")
-    res = detect_best_locale(
+    res1 = detect_best_locale(
         available_tracks=test_tracks,
         system_languages=sim_sys_langs,
-        history_language=sim_history,
+        history_language=None,
         db_path=None
     )
-    print("\n--- 決策樹輸出結果 ---")
-    print(f"匹配音軌 Key: {res.track_key}")
-    print(f"決策來源 Source: {res.source}")
-    print(f"置信度 Confidence: {res.confidence}")
-    print(f"詳細分析 Detail: {res.detail}")
-    print(f"排序候選列表 Candidates: {res.candidates}")
+    print("\n[測試 1] 時區消除歧義：")
+    print(f"  匹配音軌: {res1.track_key} (期望: zh-TW)")
+    print(f"  策略識別: {res1.resolved_by} (期望: TIMEZONE_CROSS)")
+    assert res1.track_key == "zh-TW", "測試 1 失敗！"
+    assert res1.resolved_by == "TIMEZONE_CROSS", "測試 1 策略識別錯誤！"
+
+    # 測試案例 2：二元 VPN 檢驗 - OS 語言 (zh-TW) 與時區 (TW) 高度吻合，但 GeoIP 為 US
+    # 預期：GeoIPStrategy 判定不可靠直接跳過，由兜底邏輯挑選最佳音軌
+    print("\n[測試 2] 二元 VPN 訊號過濾測試 (本地 zh-TW + TW 時區，模擬 GeoIP 偏移至 US)：")
+    geo_strat = GeoIpStrategy(
+        db_path=None, 
+        system_languages=["zh-TW"], 
+        tz_country="TW"
+    )
+    is_reliable_us = geo_strat._is_geoip_reliable("US")
+    is_reliable_tw = geo_strat._is_geoip_reliable("TW")
+    print(f"  GeoIP 查出 US 之可靠性判定: {is_reliable_us} (期望: False，判定受 VPN 污染)")
+    print(f"  GeoIP 查出 TW 之可靠性判定: {is_reliable_tw} (期望: True，判定可靠)")
+    assert is_reliable_us is False, "測試 2 (US) 失敗！應判定為不可靠"
+    assert is_reliable_tw is True, "測試 2 (TW) 失敗！應判定為可靠"
+
+    # 測試案例 3：端到端整合測試 (端到端驗證)
+    # 模擬影片音軌包含 ["ja-JP", "zh-TW"]
+    # 使用者本地為繁中 (zh-TW) 且時區為台灣 (TW)
+    # 由本機精確匹配正確選出 zh-TW，策略識別為 OS_LANGS_EXACT
+    print("\n[測試 3] 端到端整合測試 (本地 zh-TW + TW 時區，音軌包含 ja-JP 與 zh-TW)：")
+    res3 = detect_best_locale(
+        available_tracks=["ja-JP", "zh-TW"],
+        system_languages=["zh-TW"],
+        history_language=None,
+        db_path=None
+    )
+    print(f"  最終決策命中音軌: {res3.track_key} (期望: zh-TW)")
+    print(f"  策略識別: {res3.resolved_by} (期望: OS_LANGS_EXACT)")
+    assert res3.track_key == "zh-TW", "測試 3 失敗！未能選出正確的 zh-TW"
+    assert res3.resolved_by == "OS_LANGS_EXACT", "測試 3 策略識別不符合預期"
+
+    print("\n✅ 所有單元測試全部通過！")
+
