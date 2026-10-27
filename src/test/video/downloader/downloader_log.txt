@@ -1,0 +1,16 @@
+[download]   0.0% of    3.67MiB at  366.03KiB/s ETA 00:10# script  : src/test/verify/verify_downloader.py  (sha256 a14f351105a9e3b3)
+# args    : https://www.youtube.com/watch?v=xzyhqtLrEd4 src/test/video/downloader --langs ja fr-FR de-DE --ref src/test/video/pixel_jimmy
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:17:52 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+# yt-dlp=2026.03.17  node=node
+[DL-01] title='Google Pixel 10 | Switch like Jimmy Butler' uploader='Made by Google' duration=30s
+[DL-01] languages (2): en, en-US
+[DL-01] RESULT FAIL (requested but missing: ['ja', 'fr-FR', 'de-DE'])
+[download]   0.1% of    3.67MiB at  898.84KiB/s ETA 00:04[download]   0.2% of    3.67MiB at    2.05MiB/s ETA 00:01[download]   0.4% of    3.67MiB at    2.74MiB/s ETA 00:01[download]   0.8% of    3.67MiB at    5.66MiB/s ETA 00:00[download]   1.7% of    3.67MiB at    8.36MiB/s ETA 00:00[download]   3.4% of    3.67MiB at   16.85MiB/s ETA 00:00[download]   6.8% of    3.67MiB at   33.82MiB/s ETA 00:00[download]  13.6% of    3.67MiB at   17.06MiB/s ETA 00:00[download]  27.2% of    3.67MiB at   19.12MiB/s ETA 00:00[download]  54.5% of    3.67MiB at   16.77MiB/s ETA 00:00[download] 100.0% of    3.67MiB at   11.23MiB/s ETA 00:00[download] 100% of    3.67MiB in 00:00:00 at 5.11MiB/s                                                         [download]   0.2% of  447.66KiB at  Unknown B/s ETA Unknown[download]   0.7% of  447.66KiB at  Unknown B/s ETA Unknown[download]   1.6% of  447.66KiB at  Unknown B/s ETA Unknown[download]   3.4% of  447.66KiB at  Unknown B/s ETA Unknown[download]   6.9% of  447.66KiB at  Unknown B/s ETA Unknown[download]  14.1% of  447.66KiB at  Unknown B/s ETA Unknown[download]  28.4% of  447.66KiB at  Unknown B/s ETA Unknown[download]  57.0% of  447.66KiB at   15.42MiB/s ETA 00:00  [download] 100.0% of  447.66KiB at   25.49MiB/s ETA 00:00[download] 100% of  447.66KiB in 00:00:00 at 16.54MiB/s                                                         [DL-02] target dir: src\test\video\downloader\Google Pixel 10 Switch like Jimmy Butler
+    file: Google Pixel 10 Switch like Jimmy Butler.webm  size=4299601  sha256=6a0cf12553fb3317…
+    ja: FAIL no *_audio_ja.mp3
+    fr-FR: FAIL no *_audio_fr-FR.mp3
+    de-DE: FAIL no *_audio_de-DE.mp3
+[DL-02] RESULT FAIL (3)

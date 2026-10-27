@@ -1,0 +1,56 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'D:/專題/PEEby宇/src/test/video/player_fallback/media_zero_cap/zero_cap_stego.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:01.08, start: 0.000000, bitrate: 18115 kb/s
+  Stream #0:0[0x1](und): Video: hevc (Main) (hvc1 / 0x31637668), yuv420p(tv, progressive), 1920x1080, 18089 kb/s, 24 fps, 24 tbr, 12288 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 libx265
+Traceback (most recent call last):
+  File "D:\專題\PEEby宇\src\player_app.py", line 1093, in on_manifest_received
+    pre_res = detect_best_locale(
+              ^^^^^^^^^^^^^^^^^^^
+  File "D:\專題\PEEby宇\src\i18n_detector.py", line 677, in detect_best_locale
+    res = detector.execute(available_tracks)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\專題\PEEby宇\src\i18n_detector.py", line 628, in execute
+    res = strategy.detect(available_tracks)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\專題\PEEby宇\src\i18n_detector.py", line 357, in detect
+    return DetectionResult(
+           ^^^^^^^^^^^^^^^^
+TypeError: DetectionResult.__init__() got an unexpected keyword argument 'confidence'
+[mp3 @ 000001FF12747DC0] filesize and duration do not match (growing file?)
+Input #0, mp3, from 'C:/Users/ryan/AppData/Local/Temp/temp_extracted_tracks/xx_chunk0.mp3':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:30.17, start: 0.025057, bitrate: 19 kb/s
+  Stream #0:0: Audio: mp3 (mp3float), 44100 Hz, stereo, fltp, 192 kb/s
+      Metadata:
+        encoder         : Lavc61.19
+[mp3float @ 000001FF1278A300] Could not update timestamps for skipped samples.
+⚠️ Warning: HEVC RDH core (Zhang-Zeng-Ou 2D HS) load warning: No module named 'hevc_rdh_core'
+# script  : src/test/verify/gui_handoff_probe.py  (sha256 78ed7250140b554e)
+# args    : src/test/video/player_fallback/media_zero_cap/zero_cap_stego.mp4 src/test/video/player_fallback/zero_cap_clean --timeout 25
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:18:12 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+🚀 [StegoFacade] Starting decoding using method: 'auto'...
+  🔍 Auto-detecting algorithm: Trying Coltuc 2x2 PEE extraction...
+🔓 啟動 PEE 多檔案解碼還原 (支援串流切片): D:\專題\PEEby宇\src\test\video\player_fallback\media_zero_cap\zero_cap_stego.mp4
+⚡ [串流解碼] 偵測到 DE_CHUNK_V1 切片串流隱寫格式！啟動即時串流管線...
+🎉 [串流解碼] 第 1 幀即時解出語系清冊 Manifest！共 1 軌
+🎉 [串流解碼] 第 2 幀解出 Chunk 0 (共 1 軌, is_last=False)！
+  ℹ️ Coltuc 2x2 PEE extraction attempt info: 💥 致命失敗：Error -5 while decompressing data: incomplete or truncated stream 影片可能無嵌入資訊或已被壓縮失真！
+🔓 啟動 PEE 多檔案解碼還原 (支援串流切片): D:\專題\PEEby宇\src\test\video\player_fallback\media_zero_cap\zero_cap_stego.mp4
+⚡ [串流解碼] 偵測到 DE_CHUNK_V1 切片串流隱寫格式！啟動即時串流管線...
+🎉 [串流解碼] 第 1 幀即時解出語系清冊 Manifest！共 1 軌
+🎉 [串流解碼] 第 2 幀解出 Chunk 0 (共 1 軌, is_last=False)！

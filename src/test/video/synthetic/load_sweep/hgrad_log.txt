@@ -1,0 +1,48 @@
+# script  : src/test/verify/verify_load_sweep.py  (sha256 630688d656a21be5)
+# args    : src/test/video/synthetic/synthetic_hgrad_1920x1080_24f.y4m --loads 10 40 80 100 --payload-kib 256 1024 --encode
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:16:09 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+# sha256 src/test/video/synthetic/synthetic_hgrad_1920x1080_24f.y4m = 01e0f0cf312f2e74f1121de4239b921645743dd5d963702f0952dd90b1eb8240  size=74649789
+# frames used: 24  1920x1080  random payload seed 20261027+load
+[size] source file=74649789  lossless baseline (unembedded, 24 frames)=229385
+       note: source→baseline is only meaningful when all source frames are used (no --max-frames)
+[coltuc] capacity: total=12399360 bits (1513.6 KiB)  per-frame min=516640 max=516640  bpp(avg)=0.2492
+[coltuc] load= 10%  bits=1239936 (10.0% of capacity)  payload_frames=3/24 (alpha_video=0.125)  bpp_payload=0.1993  restore_fail=0  payload_ok=True  embedded_bits=1239936  extracted_ok=True
+          PSNR old(5f,100cap)=91.4316  meandB(all,100cap)=94.8109  MSEfirst(all)=67.1637  MSEfirst(payload)=58.1328  per-frame[min,max]=[57.1578, 61.1284]
+          size: stego=468032  vs lossless baseline 229385: +104.04%
+[coltuc] load= 40%  bits=4959744 (40.0% of capacity)  payload_frames=10/24 (alpha_video=0.417)  bpp_payload=0.2392  restore_fail=0  payload_ok=True  embedded_bits=4959744  extracted_ok=True
+          PSNR old(5f,100cap)=74.2935  meandB(all,100cap)=82.2413  MSEfirst(all)=61.1374  MSEfirst(payload)=57.3353  per-frame[min,max]=[57.1548, 59.3569]
+          size: stego=1774914  vs lossless baseline 229385: +673.77%
+[coltuc] load= 80%  bits=9919488 (80.0% of capacity)  payload_frames=20/24 (alpha_video=0.833)  bpp_payload=0.2392  restore_fail=0  payload_ok=True  embedded_bits=9919488  extracted_ok=True
+          PSNR old(5f,100cap)=57.1641  meandB(all,100cap)=64.5915  MSEfirst(all)=58.1323  MSEfirst(payload)=57.3405  per-frame[min,max]=[57.1549, 64.0798]
+          size: stego=3522334  vs lossless baseline 229385: +1435.56%
+[coltuc] load=100%  bits=12399360 (100.0% of capacity)  payload_frames=24/24 (alpha_video=1.000)  bpp_payload=0.2492  restore_fail=0  payload_ok=True  embedded_bits=12399360  extracted_ok=True
+          PSNR old(5f,100cap)=57.1625  meandB(all,100cap)=57.1614  MSEfirst(all)=57.1614  MSEfirst(payload)=57.1614  per-frame[min,max]=[57.1467, 57.1740]
+          size: stego=4380384  vs lossless baseline 229385: +1809.62%
+[coltuc] payload=256KiB  bits=2097152 (16.9% of capacity)  payload_frames=5/24 (alpha_video=0.208)  bpp_payload=0.2023  restore_fail=0  payload_ok=True  embedded_bits=2097152  extracted_ok=True
+          PSNR old(5f,100cap)=85.2680  meandB(all,100cap)=91.5765  MSEfirst(all)=64.8803  MSEfirst(payload)=58.0679  per-frame[min,max]=[57.1631, 69.1685]
+          size: stego=773114  vs lossless baseline 229385: +237.04%
+[coltuc] payload=1024KiB  bits=8388608 (67.7% of capacity)  payload_frames=17/24 (alpha_video=0.708)  bpp_payload=0.2380  restore_fail=0  payload_ok=True  embedded_bits=8388608  extracted_ok=True
+          PSNR old(5f,100cap)=58.4041  meandB(all,100cap)=69.9165  MSEfirst(all)=58.8603  MSEfirst(payload)=57.3627  per-frame[min,max]=[57.1542, 63.3733]
+          size: stego=2984275  vs lossless baseline 229385: +1200.99%
+[checkerboard] capacity: total=49622496 bits (6057.4 KiB)  per-frame min=2067604 max=2067604  bpp(avg)=0.9971
+[checkerboard] load= 10%  bits=4962249 (10.0% of capacity)  payload_frames=3/24 (alpha_video=0.125)  bpp_payload=0.7977  restore_fail=0  payload_ok=True  embedded_bits=4962249  extracted_ok=True
+          PSNR old(5f,100cap)=90.0534  meandB(all,100cap)=93.9178  MSEfirst(all)=60.1311  MSEfirst(payload)=51.1002  per-frame[min,max]=[50.2626, 53.4971]
+          size: stego=1211618  vs lossless baseline 229385: +428.20%
+[checkerboard] load= 40%  bits=19848998 (40.0% of capacity)  payload_frames=10/24 (alpha_video=0.417)  bpp_payload=0.9572  restore_fail=0  payload_ok=True  embedded_bits=19848998  extracted_ok=True
+          PSNR old(5f,100cap)=70.1548  meandB(all,100cap)=79.3459  MSEfirst(all)=54.2049  MSEfirst(payload)=50.4028  per-frame[min,max]=[50.2559, 51.9667]
+          size: stego=4484530  vs lossless baseline 229385: +1855.02%
+[checkerboard] load= 80%  bits=39697996 (80.0% of capacity)  payload_frames=20/24 (alpha_video=0.833)  bpp_payload=0.9572  restore_fail=0  payload_ok=True  embedded_bits=39697996  extracted_ok=True
+          PSNR old(5f,100cap)=50.2621  meandB(all,100cap)=58.8109  MSEfirst(all)=51.2212  MSEfirst(payload)=50.4294  per-frame[min,max]=[50.2548, 56.5140]
+          size: stego=8798801  vs lossless baseline 229385: +3735.82%
+[checkerboard] load=100%  bits=49622496 (100.0% of capacity)  payload_frames=24/24 (alpha_video=1.000)  bpp_payload=0.9971  restore_fail=0  payload_ok=True  embedded_bits=49622496  extracted_ok=True
+          PSNR old(5f,100cap)=50.2592  meandB(all,100cap)=50.2600  MSEfirst(all)=50.2600  MSEfirst(payload)=50.2600  per-frame[min,max]=[50.2526, 50.2657]
+          size: stego=10931810  vs lossless baseline 229385: +4665.70%
+[checkerboard] payload=256KiB  bits=2097152 (4.2% of capacity)  payload_frames=2/24 (alpha_video=0.083)  bpp_payload=0.5057  restore_fail=0  payload_ok=True  embedded_bits=2097152  extracted_ok=True
+          PSNR old(5f,100cap)=90.0524  meandB(all,100cap)=96.5899  MSEfirst(all)=63.9901  MSEfirst(payload)=53.1983  per-frame[min,max]=[50.2622, 67.8954]
+          size: stego=506785  vs lossless baseline 229385: +120.93%
+[checkerboard] payload=1024KiB  bits=8388608 (16.9% of capacity)  payload_frames=5/24 (alpha_video=0.208)  bpp_payload=0.8091  restore_fail=0  payload_ok=True  embedded_bits=8388608  extracted_ok=True
+          PSNR old(5f,100cap)=82.4421  meandB(all,100cap)=90.1250  MSEfirst(all)=57.9704  MSEfirst(payload)=51.1580  per-frame[min,max]=[50.2586, 61.9518]
+          size: stego=1900671  vs lossless baseline 229385: +728.59%

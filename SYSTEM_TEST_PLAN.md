@@ -367,7 +367,7 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 3. **REQ-PRF-004 不成立**：唯一能達到約 0.20 bpp 的 sintel，滿載時膨脹 +35.88%（門檻 ≤ 3%）；SVT 只到 +1.2～1.5%，但無法達到 0.20 bpp。
 4. **REQ-PRF-001**：只有 sintel 能達到約 0.22 bpp，此時嵌入幀 MSE-first 55.51 dB（≥ 55）；SVT 無法在 0.20 bpp 量測。
 5. **Coltuc vs Checkerboard（同 payload）**：全片 PSNR 互有高低（−1.15～+0.77 dB）；檔案膨脹 4/4 為 Coltuc 較大。單幀 PSNR Coltuc 高約 8 dB（51.7 vs 43.2），但同 payload 需分散到更多幀。**不支持「Coltuc 全面優於 Checkerboard」**。
-6. **Checkerboard 100% 負載**：crowd_run、old_town_cross 的 payload_ok = False，但 restore_fail = 0（全部幀正確還原）。推測其容量隨嵌入資料改變，以另一組隨機位元量得的容量在滿載時塞不下；屬量測工具問題，待腳本輸出實際嵌入位元數後確認。
+6. **Checkerboard 100% 負載**：crowd_run、old_town_cross 的 payload_ok = False，但 restore_fail = 0。以 `bf05120` 重查（`xiph/load_sweep/cb_full_recheck/`）：實際嵌入 314,799,777／314,805,772 與 292,884,313／292,885,508 位元（約 99.998%），已嵌入者全部正確取回（extracted_ok = True）。**確認為 Checkerboard 容量隨嵌入資料變動所致，非可逆性失敗。**
 7. **限制**：sintel 只用前 500 幀，「來源→基準」一段（−95.37%）不可採用；Checkerboard 的 skip map 不存於影像內，比較對其有利。
 
 ---
