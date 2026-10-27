@@ -254,7 +254,7 @@ python src/test/verify/verify_zero_capacity_frames.py src/test/video/synthetic s
 | 欄位 | 內容 |
 | :--- | :--- |
 | 嚴重度 | **Minor** |
-| 狀態 | **Fixed**（分支 `qa/stp-v2-def001`，待 PR 合併；Issue #22） |
+| 狀態 | **Fixed**（分支 `bugfix/def-001-007-qa-suite`，待 PR 合併；Issue #22） |
 | 模組 | MOD-PK — `src/embed_app.py:415-421` |
 | 引入版本 | `8b3e64d`（2026-06-16）或 `135d0af`（2026-08-07）（`git log -L` 顯示兩者皆改過此段） |
 | 證據 | 程式碼審查；`src/test/video/packer/pck006_log.txt` — `src/test/verify/verify_pck006.py`（offscreen 執行 `start_embedding()`） |

@@ -5,7 +5,7 @@
 | :--- | :--- | :--- | :--- |
 | v0.2 | 2026-10-27 | `SYSTEM_TEST_PLAN.md` v3.0、`TEST_CASES_SPECIFICATION.md` v2.0、DE-SRS-001 v1.0 | **骨架**：期中狀態，標示 ⏳ 的段落待 S2～S5 完成後填寫 |
 
-所有數字皆引用 repo 內的原始 log（路徑相對於 `src/test/video/`）。測試分支：`qa/stp-v2-def001`（未 push）。
+所有數字皆引用 repo 內的原始 log（路徑相對於 `src/test/video/`）。測試分支：`bugfix/def-001-007-qa-suite`（未 push）。
 
 ---
 
