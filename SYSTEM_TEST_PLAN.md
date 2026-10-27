@@ -131,12 +131,12 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 
 | 項目 | 目前實測 | 門檻 |
 | :--- | :--- | :--- |
-| 管線封裝（720 幀 1080p，`e2e_log.txt`） | 205.5 s（約 3.5 FPS） | ⏳ |
-| 管線擷取至第 179 幀（`e2e_log.txt`，腳本環境） | 27.4 s（約 6.5 FPS） | ⏳ |
-| GUI 內擷取（`gui_probe_log.txt`） | 載入至第 179 幀 50.1 s（平均約 3.6 FPS，瞬時 1–3 FPS）；主執行緒停滯最長 6.5 s | ❌ 見 DEF-002 |
-| Chunk0 開播延遲 | 載入後 20.8 s 才收到 Chunk0；收到後 416 ms 進入 Playing 狀態，但音訊位置 9.9 s 後才開始前進 | ❌ 見 DEF-002 |
+| 管線封裝（720 幀 1080p） | 205.5 s（約 3.5 FPS，`pixel_jimmy/e2e_log.txt`，01:00 左右）；37.5 s（約 19 FPS，`py311_rerun/e2e_log.txt`，09:18） | ⏳ |
+| 管線擷取至第 179 幀（腳本環境） | 27.4 s（約 6.5 FPS）；4.7 s（約 38 FPS）；同上兩份 log | ⏳ |
+| GUI 內擷取 | 慢：載入至第 179 幀 50.1 s（約 3.6 FPS），主執行緒停滯最長 6.5 s（`pixel_jimmy/gui_probe/gui_probe_log.txt`）；快：6.4 s（約 28 FPS），最長停滯 0.45 s（`py310/gui_probe/gui_probe_log.txt`） | ❌ 見 DEF-002 |
+| Chunk0 開播延遲 | 慢：載入後 20.8 s 收到 Chunk0，再 9.9 s 音訊才前進；快：載入後 2.5 s 收到，再 1.5 s 音訊才前進（同上兩份 log） | ❌ 見 DEF-002 |
 
-**執行間變異**：同一機器、同一輸入的兩次執行，封裝 153.3 s → 205.5 s、擷取 19.4 s → 27.4 s，差異約 35–40%（前一次為 commit 前的執行，其 log 已被覆蓋、不可追溯，僅作變異參考；本文件正式數字以目前 log 為準）。效能門檻須以多次執行（⏳ 次數待定）的中位數判定，不得以單次數字驗收。
+**執行間變異（重大）**：同一機器、同一輸入、同一 commit，封裝耗時在 35.7～205.5 s、擷取在 4.7～27.4 s 之間，**相差約 6 倍**（`pixel_jimmy/e2e_log.txt`、`py311_rerun/e2e_log.txt`、`py310/e2e_log.txt`）。Python 3.11 在 09:18 重跑為 37.5 s，與 3.10 的 35.7 s 相近，確認差異來自機器狀態（電源模式、溫度或背景負載，⏳ 未查明），不是 Python 版本。因此：① 效能門檻須以多次執行的中位數判定（⏳ 次數待定），且量測前須固定電源模式（接上電源、最佳效能）並記錄於 log；② 單次效能數字不得用於驗收或論文。
 
 **量測機器**：所有效能數字一律在主要測試機（i7-1260P，視為最低支援規格）上量測；效能門檻在此機器上通過即視為達標。VM 只做功能驗收，不報效能數字。
 
@@ -211,7 +211,7 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 3. 正式載體集已建立（Q4-7）：Xiph derf 四支（crowd_run、park_joy、old_town_cross、sintel_trailer）與確定性合成影片，皆有 `SOURCES.txt` 與 SHA-256。
 4. `build.bat` 可在測試機產出 3 個 exe。
 5. 規格待確認項目已有結論（Q4-5 已於 2026-10-27 確認）。
-6. `requirements.txt` 已全部鎖版並加入 PyInstaller（✅ 已完成，相依解析於 3.10／3.11 皆通過）；Python 3.10 與 3.11 兩個環境皆實際安裝並通過 `src/test/verify/` 回歸測試（⏳ 3.10 環境待建立）（Q4-3）。
+6. `requirements.txt` 已全部鎖版並加入 PyInstaller（✅ 已完成，相依解析於 3.10／3.11 皆通過）；Python 3.10 與 3.11 兩個環境皆實際安裝並通過 `src/test/verify/` 回歸測試（✅ 2026-10-27，結果位元級一致）（Q4-3）。
 
 ### 4.2 退出／完成標準 (Exit Criteria)
 1. **Blocker、Critical 缺陷：0 個 Open。**
@@ -242,7 +242,7 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 | CPU | Intel Core i7-1260P（12 核 16 緒）——**最低支援規格**（Q4-2） | VM 依宿主機配置，不作效能量測 |
 | RAM | 15.7 GB | VM：≥ 8 GB |
 | GPU | Intel Iris Xe（內顯）。程式未使用 CUDA；GPU 僅負責影片解碼與顯示，不列為效能變因 | — |
-| Python | 3.11.5（必測）；**3.10.x（必測，⏳ 本機尚未安裝）** | 打包版不需 Python |
+| Python | 3.11.5（必測）；**3.10.11（必測）**：python.org NuGet 套件 `python.3.10.11.nupkg`（SHA-512 與 NuGet 目錄相符），免安裝解壓於 session 暫存區並建立 venv（⏳ 尚未建立持久位置） | 打包版不需 Python |
 | 主要套件 | numpy 2.4.2、numba 0.65.0、opencv-python 4.13.0、PySide6 6.11.1、imageio-ffmpeg 0.6.0、yt-dlp 2026.03.17、requests 2.32.3、maxminddb 3.1.1、PyInstaller 6.21.0 | 與主要測試機相同（鎖版） |
 | FFmpeg | ① imageio-ffmpeg 內附 ffmpeg 7.1（封裝、擷取、音訊分塊、下載合併）；② Qt Multimedia 後端 FFmpeg 7.1.3（播放）；③ **系統安裝的 FFmpeg**（Q4-4，版本 ⏳ 待選定） | 打包版內附 ①② |
 | x265 | build 213（4.0+6），由 stego 檔 SEI 讀出 | — |
@@ -257,7 +257,9 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
   - **查證（PyPI metadata）**：numpy 2.2.6（2025-05-17）`Requires-Python >=3.10`，有 `cp310-win_amd64` wheel，為 2.2 系列最後一版；2.3.0（2025-06-07）起改為 `>=3.11`。numba 0.65.0 要求 `numpy<2.5,>=1.22`；opencv-python 4.13.0.90 要求 `numpy>=2`（Python ≥ 3.9）。兩者皆與 2.2.6 相容。
   - **相依解析驗證**：以 `pip install --dry-run --only-binary=:all: --platform win_amd64` 分別對 Python 3.10、3.11 解析，兩者皆成功、各 23 個套件（3.10 → numpy 2.2.6；3.11 → numpy 2.4.2）。註：pip 的 `--python-version` 不會改變環境標記的判斷，3.10 解析是以標記展開後的等效清單模擬；標記本身已以 `packaging.markers` 驗證 3.10／3.11／3.12 的判斷正確。
   - 其他套件的 `Requires-Python` 皆涵蓋 3.10，使用同一組版本。
-  - **3.10 組合尚未實際安裝與執行**（本機沒有 Python 3.10），目前所有實測 log 皆為 Python 3.11.5 + numpy 2.4.2。以上只證明「可以安裝」，不證明「行為相同」，仍須完整回歸。
+  - **3.10 實測（2026-10-27，commit `2bedda9`）**：於 Python 3.10.11 venv 以 `requirements.txt` 安裝（numpy 自動選 2.2.6），重跑全部 7 支驗證腳本與 GUI 探針，log 於 `src/test/video/pixel_jimmy/py310/`。與 3.11 的 log 逐行比對（去除 `#` 標頭）：`verify`、`audio`、`chunk`×2、`boundary`、`mp3_split` **全部相同**；`e2e` 僅耗時一行不同，**封裝出的 stego SHA-256 完全相同**（`0e0898b4…`）。結論：numpy 2.2.6／Python 3.10 與 numpy 2.4.2／Python 3.11 的輸出位元級一致。
+  - **發現並修正**：Python 3.10.11 內附的 pip 23.0.1 以系統 locale（cp950）讀取 `requirements.txt`，原檔中的中文註解造成 `UnicodeDecodeError`，無法安裝；已將註解改為純 ASCII 並加註此限制（`4016071` 中的版本有此問題）。
+  - **間接依賴漂移實例**：同一份 `requirements.txt`，3.10 venv 裝到 `pyinstaller-hooks-contrib 2026.9`、`certifi 2026.10.23`，3.11 測試機為 `2026.6`；間接依賴未鎖定的風險屬 RSK-06。
 - ffmpeg／LAME 版本差異已實測會造成分塊位元組不同（RSK-06），因此 log 必須記錄 ffmpeg 版本。
 
 **外部 FFmpeg 測試方式（Q4-4a）**：`pee_stego.py`、`audio_chunker.py`、`download_app.py` 皆經 `imageio_ffmpeg.get_ffmpeg_exe()` 取得 ffmpeg，**不讀取系統 PATH**；但該函式支援以環境變數 `IMAGEIO_FFMPEG_EXE` 指定外部執行檔。測試案例：
@@ -316,7 +318,7 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 | S5 結案 | 11-26 ～ 11-27 | 測試總結報告、論文數據表 | 結案評審 |
 
 ### 7.2 估算依據
-- 管線封裝實測約 3.5 FPS（`e2e_log.txt`；見 3.2.2 執行間變異）：一支 500 幀 1080p 序列封裝約 2.4 分鐘；4 支載體 × 3 個負載點 × 2 種演算法，約 24 次封裝，純運算約 1 小時（不含擷取與 PSNR 計算）。
+- 管線封裝實測 3.5～19 FPS（見 3.2.2 執行間變異）：以最慢情況估，一支 500 幀 1080p 序列封裝約 2.4 分鐘；4 支載體 × 3 個負載點 × 2 種演算法約 24 次封裝，純運算最多約 1 小時（不含擷取與 PSNR 計算）。
 - DEF-002 牽涉分塊協議與播放器切換邏輯，修正工作量 ⏳ 待開發端評估；依 Q6b，S3 可延長、交付日順延。
 - Python 3.10 與 3.11 雙環境使回歸測試時間約加倍。
 

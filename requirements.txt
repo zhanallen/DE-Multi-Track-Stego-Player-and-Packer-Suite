@@ -1,5 +1,6 @@
 opencv-python==4.13.0.90
-# numpy 2.3.0 起需要 Python >= 3.11；3.10 使用 2.2 系列最後一版 2.2.6 (SYSTEM_TEST_PLAN Q4-3)
+# numpy >= 2.3 requires Python >= 3.11; Python 3.10 uses 2.2.6, the last 2.2.x (SYSTEM_TEST_PLAN Q4-3).
+# Keep this file ASCII-only: pip 23.0.1 (bundled with Python 3.10.11) decodes it with the locale codec (cp950).
 numpy==2.4.2; python_version >= "3.11"
 numpy==2.2.6; python_version < "3.11"
 numba==0.65.0

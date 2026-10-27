@@ -73,6 +73,13 @@ StegoPlayer 擷取出的完整音軌比原始 mp3 多 1,332 個取樣（44.1 kHz
 
 **先前執行（commit 前，log 已被覆蓋，不可追溯，僅供參考）**：另兩次執行分別觀察到「chunk0 解出時影片已超過切點、chunk0 完全未播出，暫停 14.0 s」與「主執行緒停滯 3.9 s、音訊落後 3.3 s、暫停 13.3 s、切換跳過約 1.95 s」。三次結果的數值差異大，但現象一致。
 
+**機器狀態較快時（`py310/gui_probe/gui_probe_log.txt`，commit `2bedda9`，Python 3.10.11）**：載入後 2.5 s 收到 chunk0、6.4 s 收到 chunk1（約 28 FPS），**影片未暫停**，最長停滯 0.45 s。但缺陷仍在、程度較輕：
+- 收到 chunk0 後 1.5 s 音訊位置才開始前進，chunk0 期間影片最多領先音訊 1.41 s；
+- 切換時舊播放器在 2,352 ms、新播放器從影片位置 3,003 ms 起播 → **約 0.65 s 音訊被跳過**；
+- 切換後音訊－影片差平均 +272 ms（n=278，min −92、max +332）。
+
+同一 commit 下腳本環境的擷取耗時在 4.7～27.4 s 之間變動（SYSTEM_TEST_PLAN 3.2.2），因此 DEF-002 的嚴重程度隨機器負載變化；修正後的驗收須同時在快、慢兩種狀態下通過。
+
 ### 初步分析（未經修正驗證）
 1. **影片不等待 chunk0**：影片載入完成即播放（推測經 `check_and_resume_playback`，`player_app.py:1631`），與 chunk0 是否就緒無關。
 2. **主執行緒停滯**：解碼執行緒期間 GUI 事件迴圈出現最長 6.5 s 的停滯；推測為解碼執行緒中持有 GIL 的步驟（zlib 解壓、NumPy 緩衝區操作、檔案寫出）。chunk0 期間 `sync_check` 刻意不重新對齊（`player_app.py:1677` 條件），落後無法自行修正。
@@ -123,7 +130,7 @@ TypeError: DetectionResult.__init__() got an unexpected keyword argument 'confid
 - 依 Q4-5 確認的規格（STP 1.2），IP 鎖定為選用功能、預設關閉；但現行程式預設開啟（DEF-005），因此**目前所有使用者一啟動播放器就會走到此路徑**。修正 DEF-005 後，影響範圍縮小為「手動開啟 IP 鎖定的使用者」，但本缺陷仍須修正。
 
 ### 重現
-在預設 `ip_lock_mode=True` 下以 StegoPlayer 載入任何分塊格式 stego 影片，或執行上述 `gui_handoff_probe.py`。
+在預設 `ip_lock_mode=True` 下以 StegoPlayer 載入任何分塊格式 stego 影片，或執行上述 `gui_handoff_probe.py`。Python 3.10.11 下同樣重現（`py310/gui_probe/gui_probe_log.txt`）。
 
 ---
 
