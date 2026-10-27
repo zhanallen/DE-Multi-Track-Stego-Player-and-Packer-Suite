@@ -62,8 +62,9 @@ def _is_vbr_info_frame(data, pos, frame_len):
     return any(tag in data[pos:pos + min(frame_len, 64)] for tag in (b"Xing", b"Info", b"VBRI"))
 
 def mp3_split_offset(data, initial_sec):
-    """回傳第一個累計音訊長度 >= initial_sec + 1 frame 的 frame 邊界位元組偏移；檔案短於此則回傳 len(data)。
-    多留 1 frame 餘量涵蓋編碼器延遲，確保 chunk0 解碼後至少有 initial_sec 秒。無法解析時拋出 ValueError。"""
+    """回傳第一個累計音訊長度 >= initial_sec + 1152 samples 的 frame 邊界位元組偏移；檔案短於此則回傳 len(data)。
+    1152 samples 餘量涵蓋 LAME 編碼器延遲（1105），確保 chunk0 解碼後至少有 initial_sec 秒；
+    MPEG-1 恰為 1 frame，MPEG-2/2.5（576 samples/frame）為 2 frames。無法解析時拋出 ValueError。"""
     pos = _id3v2_size(data)
     samples = 0
     target = None
@@ -76,7 +77,7 @@ def mp3_split_offset(data, initial_sec):
             raise ValueError(f"invalid MP3 frame header at byte {pos}")
         frame_len, spf, sr = info
         if target is None:
-            target = int(initial_sec * sr) + spf
+            target = int(initial_sec * sr) + 1152
         if samples >= target:
             return pos
         if not (first and _is_vbr_info_frame(data, pos, frame_len)):

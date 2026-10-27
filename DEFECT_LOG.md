@@ -37,6 +37,7 @@ StegoPlayer 擷取出的完整音軌比原始 mp3 多 1,332 個取樣（44.1 kHz
 - `src/test/video/pixel_jimmy/e2e_log.txt` — `verify_e2e_pack.py`：以修正後程式封裝 → 擷取，14/14 軌 SHA-256 與原檔相同
 
 ### 已知限制 / 後續
+- **後續修正（2026-10-27，未 commit）**：`verify_packer_edges.py`（TC-PK-05）發現 MPEG-2 Layer III（576 samples/frame）的 chunk0 解碼後比 `initial_sec` 短約 24 ms（131,422 < 132,300 samples），因原本只多留 1 frame，不足以涵蓋 LAME 編碼器延遲 1,105 samples。`mp3_split_offset` 的餘量改為固定 1,152 samples：MPEG-1 切點不變（`mp3_split_log.txt` 重跑後內容相同），MPEG-2 改為 2 frames（修正後 132,574 samples）。
 - `.m4a` / `.aac` 仍走重新編碼路徑，AAC priming（1,024–2,112 samples）預期造成同類問題，尚未驗證。
 - chunk0 保留原檔的 Xing/Info 標頭，其總 frame 數描述的是完整檔案，部分播放器可能顯示錯誤的總時長；StegoPlayer 以 EndOfMedia 與 `initial_sec` 邊界切換，不依賴此值，但未做 GUI 實測。
 - 既有以舊版封裝的 stego 檔（如雲端「已藏密」3 支）重新擷取時缺陷仍在，需以新版重新封裝。
@@ -187,3 +188,148 @@ chunk0 為原檔位元組前綴，保留了原檔的 Xing/Info 標頭；該標�
 
 ### 限制
 本缺陷由程式碼審查與規格確認得出，未單獨執行清除設定後的實測；DEF-003 的兩次 GUI 執行可佐證預設確實走 IP 鎖定路徑。
+
+---
+
+## DEF-006　payload 跨越容量為 0 的幀（如全黑幀）時，封裝顯示成功但擷取失敗，整段音軌無法取回
+
+| 欄位 | 內容 |
+| :--- | :--- |
+| 嚴重度 | **Critical**（payload 損毀，SYSTEM_TEST_PLAN 4.3） |
+| 狀態 | **Open** |
+| 模組 | MOD-ALG／MOD-PK／MOD-PL — `src/pee_stego.py:511-512`（`coltuc_embed_frame` 略過幀）、`src/pee_stego.py:781`（`decode_video_multi` 對每幀呼叫 `coltuc_decode_frame`） |
+| 發現日期 | 2026-10-27 |
+| 引入版本 | `f085fb2`（2026-06-30，Coltuc 引擎導入）；於 `c834aa9` 重現 |
+| 證據 | `src/test/video/synthetic/zero_cap_log.txt` — `src/test/verify/verify_zero_capacity_frames.py` |
+
+### 現象
+載體為 shapes ×2 → **black ×2** → shapes ×22（1920×1080，合成影片，可由 `gen_synthetic.py` 重現），封裝一軌 mp3（724,887 bytes）：
+- `encode_video_multi` 回報「🎉 多檔案編碼寫入無損影片成功！」，沒有任何警告。
+- `decode_video_multi` 在第一個黑幀拋出 `zlib.error: Error -5 while decompressing data: incomplete or truncated stream`，轉為 `ValueError: 💥 致命失敗…影片可能無嵌入資訊或已被壓縮失真！`。
+- 單體格式與分塊格式皆失敗；分塊格式下 Manifest 與 Chunk0 已在前 2 幀解出，Chunk1 永遠無法取得。
+
+### 根本原因
+- 封裝端：`coltuc_embed_frame` 在 `capacity <= nresv + 16`（容量連標頭都放不下）時直接 `return gpos, False`，**不寫入任何標頭**，該幀保持原樣，payload 移到下一幀繼續。
+- 擷取端：`decode_video_multi` 沒有「本幀是否有嵌入」的判定，在擷取完成前對每一幀都呼叫 `coltuc_decode_frame`，把原始像素的 LSB 當成標頭解析，得到垃圾的 `clen`／`nblocks`，zlib 解壓失敗。
+- 封裝端與擷取端對「略過的幀」沒有共同的約定。
+
+### 影響
+- 任何在 payload 範圍內含有全黑、全白或接近飽和（像素多落在 [2,253] 之外）幀的影片——例如淡入淡出、轉場黑場、片頭片尾——都會在封裝時看似成功、播放時無法取回音軌。StegoPlayer 只能走降級播放。
+- 封裝端不會發現，使用者要到播放時才知道。
+
+### 重現
+```
+python src/test/verify/gen_synthetic.py src/test/video/synthetic
+python src/test/verify/verify_zero_capacity_frames.py src/test/video/synthetic src/test/video/pixel_jimmy/audio_de-DE.mp3 src/test/video/synthetic/zero_cap > src/test/video/synthetic/zero_cap_log.txt
+```
+
+### 限制
+- 只以黑幀實際跑完封裝→擷取。另由負載掃描得知，**高雜訊畫面同樣是零容量**：合成 noise 圖樣（均勻隨機 Y）24 幀全部被 Coltuc 略過、容量 0（`src/test/video/synthetic/load_sweep/noise_log.txt`），white 亦為 0；因此雜訊重的畫面（例如顆粒、低光噪點）出現在 payload 範圍內時，預期也會觸發本缺陷，尚未以封裝→擷取實測。
+- 真實影片中觸發的頻率未量化；Pixel 廣告的前 179 幀未觸發（`verify_log.txt` 179/179 幀皆有嵌入），Xiph 載體尚未測試。
+
+---
+
+## DEF-007　容量不足時 StegoPacker 的錯誤處理引用未定義變數 `reply`（NameError）
+
+| 欄位 | 內容 |
+| :--- | :--- |
+| 嚴重度 | **Minor** |
+| 狀態 | **Open** |
+| 模組 | MOD-PK — `src/embed_app.py:415-421` |
+| 引入版本 | `8b3e64d`（2026-06-16）或 `135d0af`（2026-08-07）（`git log -L` 顯示兩者皆改過此段） |
+| 證據 | 程式碼審查（未執行 GUI） |
+
+### 現象與原因
+```python
+if self.total_payload_size > self.estimated_capacity:
+    QMessageBox.critical(self, "Error", f"Audio payload (...) exceeds video carrier capacity (...)!")
+    if reply == QMessageBox.No:      # ← reply 從未被賦值
+        return
+```
+`QMessageBox.critical(...)` 的回傳值沒有指定給 `reply`，因此 payload 超過估計容量時，顯示錯誤對話框後必然拋出 `NameError`。由於例外中斷了函式，結果「恰好」也是不封裝；但流程依賴例外，且 PySide6 會把 traceback 印到 console。
+
+### 影響
+目前行為對使用者而言等同「阻擋封裝」；但若有人把此處改成可選擇「仍要繼續」，或例外處理方式改變，行為會不可預期。
+
+### 限制
+未以 GUI 實際操作觸發；依程式碼語意判定。
+
+---
+
+## DEF-008　容量不足要等全片編碼完才報錯，並在輸出路徑留下無效的 stego 檔
+
+| 欄位 | 內容 |
+| :--- | :--- |
+| 嚴重度 | **Minor** |
+| 狀態 | **Open** |
+| 模組 | MOD-PK — `src/pee_stego.py`（`encode_video_multi` 結尾的 `if bit_idx < total_bits: raise ValueError(...)`） |
+| 證據 | `src/test/video/packer/packer_edges_log.txt` — `src/test/verify/verify_packer_edges.py` |
+
+### 現象
+以 API 對 24 幀合成影片（實際容量 1,547,856 B）封裝 14 軌（約 10,076,671 B）：
+- 全部 24 幀編碼完成後才拋出 `ValueError: 💥 容量嚴重不足！還有 68234536 bits 未寫入。`
+- 輸出路徑留下 **4,613,913 bytes 的 stego 檔**，外觀是正常影片，但 payload 不完整，播放時才會失敗。
+
+### 影響
+- GUI 會先以 `estimate_capacity()` 攔截；實測估計值都**低估**（−0.1% ～ −14.4%，見同一 log 的 PK-04a），因此 GUI 路徑目前偏安全。
+- 直接呼叫 API、或估計值高估時（例如影片頭尾有大量零容量幀，而估計只取中段 15 幀），使用者會得到一個看似成功的無效檔。
+
+### 建議驗收
+容量不足應在寫入前判定（或失敗時刪除輸出檔），且不留下可播放的殘缺檔。
+
+---
+
+## DEF-009　擷取在 chunk0 之後才失敗時，Player 停止播放、無法完成降級
+
+| 欄位 | 內容 |
+| :--- | :--- |
+| 嚴重度 | **Major** |
+| 狀態 | **Open** |
+| 模組 | MOD-PL — `src/player_app.py`（`on_extraction_error` 與分塊播放狀態） |
+| 證據 | `src/test/video/player_fallback/zero_cap_clean/gui_probe_log.txt`、對照組 `src/test/video/player_fallback/h264_lossy/gui_probe_log.txt` — `src/test/verify/gui_handoff_probe.py` |
+
+### 現象
+載入 DEF-006 產生的分塊 stego（Manifest 與 Chunk0 可解出、之後遇到零容量幀失敗），且同資料夾沒有外部音軌：
+- 8,655 ms 收到 chunk0 並開始播放；8,657 ms 擷取失敗，log 顯示「進行降級 (Fallback) 處理…」與「切換為『原生載體音訊播放模式』」。
+- 之後**影片停在 1,041 ms（Pause）、chunk0 播放器停在 Pause**，到探針結束（約 19 s）都沒有恢復。
+
+對照組：把 stego 有損轉碼為 H.264（標頭在第 0 幀就損毀）時，降級正常，影片完整播到 10,010 ms。
+
+### 初步分析（未經修正驗證）
+降級流程在「一開始就失敗」時正常，但在「已進入 chunk0 播放後才失敗」時，未重設 `is_playing_chunk0`／`is_buffering_chunk1` 等狀態、也未恢復影片播放。
+
+### 限制
+- 兩支探針的截圖未成功擷取到畫面（全黑），只能以播放器狀態時間線為證。
+- 載體原音是否真的出聲，探針無法量測，需人耳確認。
+- 早先一次執行時 stego 與原始 mp3 位於同一資料夾，Player 的「本地外部音軌搜尋」直接找到並播放該 mp3，不屬本缺陷情境，該次結果已捨棄。
+
+---
+
+## DEF-010　非英文 Windows 上時區無法判定國家，第 3 層時區消歧與 GeoIP 的 VPN 交叉檢查失效
+
+| 欄位 | 內容 |
+| :--- | :--- |
+| 嚴重度 | **Major** |
+| 狀態 | **Open** |
+| 模組 | MOD-PL — `src/i18n_detector.py:106-147`（`get_local_country_by_timezone`）；影響 `TimezoneDisambiguationStrategy`（第 3 層）與 `GeoIpStrategy._is_geoip_reliable`（第 5 層） |
+| 證據 | `src/test/video/env/i18n_layers_log.txt` — `src/test/verify/verify_i18n_layers.py` |
+
+### 現象
+繁體中文 Windows 11（本測試機，UTC+8）：
+```
+datetime tzname='台北標準時間'  time.tzname=('台北標準時間', '台北日光節約時間')
+get_local_country_by_timezone(['zh-TW']) = None
+get_local_country_by_timezone(['en-US']) = None
+```
+
+### 根本原因
+函式以英文關鍵字（`taipei`、`tst`、`tokyo`、`cst`…）比對 `tzname`；Windows 的 `tzname` 會依顯示語言在地化（例如「台北標準時間」），因此在非英文 Windows 上一律回傳 `None`。
+
+### 影響（依 STP 1.2 六層規格）
+- **第 3 層**：時區國碼為 `None` 時，只能用系統語言的主語言碼對照（`zh→TW`、`ja→JP`…）推測國家，等於沒有使用時區訊號。例如系統語言為無區域的 `zh`、實際在中國的使用者會被判為 `zh-TW`。
+- **第 5 層**：`_is_geoip_reliable` 在 `tz_country` 為 `None` 時直接回傳 `True`，**VPN 交叉檢查在非英文 Windows 上完全失效**。
+- 交接規格與 Q4-5 確認的「時區」訊號，在本專案主要目標使用者（繁中 Windows）上不起作用。
+
+### 限制
+- 只在繁中 Windows 實測；其他語系 Windows 依程式碼推論同樣失效。
+- 六層邏輯本身（以注入的時區國碼測試）全部通過，見同一 log 的 `[L]` 區段。

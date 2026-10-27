@@ -1,0 +1,25 @@
+Xiph.org Video Test Media (derf's collection) - formal carrier set (SYSTEM_TEST_PLAN Q4-7).
+Downloaded 2026-10-27 from https://media.xiph.org/video/derf/y4m/ ; media files are gitignored.
+File sizes match the server Content-Length; frame counts computed from the YUV4MPEG2 header and file size.
+
+file                           size_bytes   frames  header                                           sha256
+crowd_run_1080p50.y4m          1555203036   500     YUV4MPEG2 W1920 H1080 F50:1 Ip A1:1              e056e01fc13906dd9a84f5cc686a36888436379476577965a0866821caaf55c8
+park_joy_1080p50.y4m           1555203036   500     YUV4MPEG2 W1920 H1080 F50:1 Ip A1:1              fff79a02056bf94ef032394895ffb6354df961e6609693bf98ed77ef00a14886
+old_town_cross_1080p50.y4m     1555203036   500     YUV4MPEG2 W1920 H1080 F50:1 Ip A1:1              6ffe76b98ba0d7a46dd66259591848fd96202f3f95a2659019a5e6be71d8ea89
+sintel_trailer_2k_1080p24.y4m  3897338763   1253    YUV4MPEG2 C420jpeg W1920 H1080 F24:1 Ip A1:1     5359b4215c4308839d127f46beba972b7458cb03ea507196d6e93fc51b1d5209
+
+Origin and licensing (as stated on the Xiph page; verify before publication):
+- crowd_run, park_joy, old_town_cross: SVT (Sveriges Television) multi-format HD sequences, distributed via VQEG
+  (ftp://vqeg.its.bldrdoc.gov/HDTV/SVT_MultiFormat/, readme SVT_MultiFormat_v10.pdf). Converted by Xiph from 16-bit
+  linear RGB to Y'CbCr; Xiph notes exact output values depend on platform rounding. No copyright file is listed on
+  the Xiph page; the Xiph page says the collection is "believed to be freely redistributable".
+  License (checked 2026-10-27): 3GPP TR 26.955 annex C.3.1.3.3 states "The EBU & SVT Public Test Sequences are
+  licensed by the EBU under a Creative Commons Licence" - CC BY-NC-ND 4.0 (non-commercial, no derivatives). The EBU
+  conditions PDF (svt-multiformat-conditions-v10) itself was not retrieved. Consequence for this project: reporting
+  measured numbers is fine; do NOT publish stego/modified versions of these frames or files (derivatives).
+- sintel_trailer: Blender Foundation open movie "Sintel" (Durian project, http://durian.blender.org/). Converted by
+  Xiph from 8-bit RGB. The Xiph page itself states no license.
+  License (checked 2026-10-27, https://durian.blender.org/sharing/): Creative Commons Attribution 3.0.
+  Required attribution: "(c) copyright Blender Foundation | durian.blender.org" (or www.sintel.org).
+
+Header note: the SVT files have no C (colorspace) tag; YUV4MPEG2 defaults to 4:2:0 (C420jpeg). ffmpeg reads them as yuv420p.

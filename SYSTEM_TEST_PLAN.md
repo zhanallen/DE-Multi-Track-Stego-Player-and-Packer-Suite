@@ -65,10 +65,28 @@ $$PSNR_{video} = 10\log_{10}\frac{255^2}{\frac{1}{N}\sum_{i=1}^{N} MSE_i}$$
 
 **(3) 已廢止算法（僅作對照，不得作為驗收數字）**：`stego_bench.py` 取 5 幀（索引 0, ⌊N/5⌋, …），MSE = 0 時記為 100 dB，再對 dB 取算術平均。此算法會系統性高估 PSNR。
 
-**(4) 離散擴散失真模型** 🟡
-- Coltuc 2×2 離散整數配置下，單一區塊各像素修改量 uᵢ 滿足 **Σuᵢ² = |d|**，而非連續理論的 d²/4。
-- 期望失真 **D_exp = 1.0 − 0.5·q₀**；自然影像上 p = +1 與 p = −1 的對稱性差距 < 0.2%。
-- 狀態：據報已於前期分析驗證，**原始 log 不在 repo 內**，須以 `verify_distortion_model.py`（待撰寫）重驗，並在 log 中明列 q₀ 的定義（P3-7、P3-8）。
+**(4) 離散擴散失真模型** ✅（P3-7、P3-8，`src/test/video/images/distortion_model_log.txt`）
+
+由 `pee_stego.coltuc_embed_core_numba`（`pee_stego.py:421-450`）推導，並以 `verify_distortion_model.py` 逐區塊獨立驗證：
+- 預測誤差 p = x − (n + w − nw)。可擴張區塊（|p| ≤ 1）嵌入 1 bit b：P = 2p + b，修改量 d = P − p = p + b ∈ {−1, 0, 1, 2}；平移區塊（|p| > 1）：d = ±2。
+- d 分散到 2×2 區塊：u = (⌊d/4⌋, ⌊(d+1)/4⌋, ⌊(d+2)/4⌋, ⌊(d+3)/4⌋)。因 |d| ≤ 2，**區塊平方誤差 Σuᵢ² = |d|**（非連續理論的 d²/4），且每像素 |Δ| ≤ 1。
+- b 均勻隨機時，期望 |d|：p = 0 → 0.5；**p = +1 → 1.5**；p = −1 → 0.5；平移 → 2。
+- **每嵌入 1 bit 的期望失真（一般式）**：D_exp = 0.5·q₀ + 1.5·q₊ + 0.5·q₋，其中 q₀、q₊、q₋ 為可擴張區塊中 p = 0、+1、−1 的比例。
+- **對稱近似**：當 q₊ = q₋（p = ±1 出現次數相等；指次數對稱，不是失真對稱），化簡為 **D_exp = 1 − 0.5·q₀**。
+- **單幀 MSE** = (N_exp·D_exp + 2·N_shift + SSE_保留列) ÷ (W·H)。平移區塊不載資料卻貢獻失真。
+
+**實測（9 個樣本：Pixel cover 第 0/144/288/432/576 幀、cat.jpg、DE.jpg、PEE Stego.jpg、SEM_0420.JPG，隨機位元 seed 20261027，嵌滿單幀）**：
+| 項目 | 結果 |
+| :--- | :--- |
+| Σuᵢ² = \|d\|、u 分配式、max\|Δ\| ≤ 1 | 6,632,602 個處理區塊，**0 個不符** |
+| SSE 恆等式（實測 = Σ\|d\| + 保留列 LSB） | 9/9 逐位元相等 |
+| p = ±1 次數對稱差 \|q₊ − q₋\| ÷ (q₊ + q₋) | 0.048% ～ 0.672%（**並非全部 < 0.2%**：cat 0.36%、PEE Stego 0.49%、frame 576 0.45%、SEM 0.67%） |
+| D_exp 一般式 vs 實測 | 誤差 −0.51% ～ +0.33% |
+| D_exp = 1 − 0.5·q₀ vs 實測 | 誤差 −0.67% ～ +0.27% |
+| 由模型預測的單幀 PSNR vs 實測 | 差距 ≤ 0.01 dB（一般式 ≤ 0.0097 dB；對稱近似 ≤ 0.0094 dB） |
+| 平移區塊佔總 SSE 的比例 | 7.2% ～ 76.6%（紋理越多越高；cat 64%、DE 77%） |
+
+**結論**：Σuᵢ² = \|d\| 為恆等式，實測無例外；D_exp = 1 − 0.5·q₀ 在 9 個樣本上誤差 < 0.7%，但成立的前提是 q₊ ≈ q₋，論文應同時寫出一般式。交接資訊中「對稱差 < 0.2%」只對部分樣本成立，須更正為「< 0.7%（本實測範圍）」。另外，高紋理影像的失真有一半以上來自平移區塊，討論 Coltuc 的低失真優勢時須一併說明。
 
 **(5) 嵌入率**：bpp = payload 位元數 ÷（嵌入幀數 × W × H）；另報全片 bpp = payload 位元數 ÷（總幀數 × W × H）。負載比例 α_video = 嵌入幀數 ÷ 總幀數。
 
@@ -164,13 +182,20 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 | GUI 播放時間線 | 半自動化 | `gui_handoff_probe.py`（取樣 20 ms、自動截圖） |
 | 主觀聆聽、UI 操作 | 手動 | 人耳判斷斷音與音畫同步；不能由探針取代 |
 | 打包驗收 | 手動 | 乾淨 Windows 11 VM（VirtualBox／VMware，快照還原）；Win10 22H2 VM 參考測試 |
-| 待撰寫 | 自動化 | `verify_distortion_model.py`（P3-7、P3-8）、`verify_load_sweep.py`（P3-6、P3-9）、`verify_filesize.py`（P3-10） |
+| 失真模型 | 自動化 | `verify_distortion_model.py`（P3-7、P3-8） |
+| 負載掃描與檔案膨脹 | 自動化 | `verify_load_sweep.py`（P3-6、P3-9；`--encode` 量測 P3-10；`--payload-kib` 做跨方法同 payload 比較） |
+| 極端內容 | 自動化 | `verify_zero_capacity_frames.py`（TC-ALG-09） |
+| 封裝邊界 | 自動化 | `verify_packer_edges.py`（TC-PK-04、05） |
+| FFmpeg 來源 | 自動化 | `verify_ffmpeg_source.py`（TC-ENV-02；亦驗證 TC-ENV-01 的切換機制） |
+| 彙總 | 自動化 | `summarize_sweep.py`（負載掃描 log → 表格） |
+| 語系決策鏈 | 自動化 | `verify_i18n_layers.py`（TC-PL-06；重現 DEF-003） |
+| 合成載體 | 自動化 | `gen_synthetic.py`（7 種圖樣，位元級可重現） |
 
 自動化與手動的比例 ⏳ 待測試案例數量定案後計算（v1.0 的 65% / 35% 無依據，已刪除）。
 
 ### 3.4 測試案例清單（摘要）
 
-完整步驟與預期結果見交付物 `TEST_CASES_SPECIFICATION.md`（⏳ 待撰寫）。
+完整前置條件、步驟、預期結果與證據見 `TEST_CASES_SPECIFICATION.md`。
 
 | ID | 項目 | 狀態 | 證據 |
 | :--- | :--- | :---: | :--- |
@@ -179,26 +204,28 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 | TC-ALG-03 | 色度不變、非嵌入幀不變 | ✅（1 支） | 同上：0 幀不同 |
 | TC-ALG-04 | payload 位元相等 | ✅（1 支） | 同上：80,725,184 / 80,725,184 |
 | TC-ALG-05 | 無損編碼旗標 | ✅（1 支） | 同上：SEI 含 `lossless` |
-| TC-ALG-06 | 離散擴散失真模型 | 🟡 | P3-7、P3-8 |
+| TC-ALG-06 | 離散擴散失真模型 | ✅（9 樣本） | `images/distortion_model_log.txt` |
 | TC-ALG-07 | PSNR 對負載曲線 | ⏳ | P3-6、P3-9 |
 | TC-ALG-08 | 檔案膨脹（兩段式，Coltuc vs Checkerboard） | ⏳ | P3-10 |
 | TC-PK-01 | 端到端封裝 → 擷取，14 軌 SHA-256 相等 | ✅ | `pixel_jimmy/e2e_log.txt` |
 | TC-PK-02 | MP3 位元組分塊（initial_sec 3.0 / 6.0） | ✅ | `pixel_jimmy/mp3_split_log.txt`：28/28 |
 | TC-PK-03 | 舊分塊格式向下相容 | ✅ | 同上：14/14 |
-| TC-PK-04 | 容量不足攔截 | ⏳ | — |
-| TC-PK-05 | 非標準 MP3 退回重新編碼路徑 | ⏳ | — |
+| TC-PK-04 | 容量估計與容量不足攔截 | ❌ 部分 | DEF-007、DEF-008（`packer/packer_edges_log.txt`） |
+| TC-ALG-09 | payload 跨越容量為 0 的幀（全黑／全白）仍可擷取 | ❌ | DEF-006（`synthetic/zero_cap_log.txt`） |
+| TC-PK-05 | 非標準 MP3 分塊（6 種） | ✅ | `packer/packer_edges_log.txt` |
 | TC-PL-01 | Chunk0 立即開播 | ❌ | DEF-002（收到 Chunk0 後 9.9 s 音訊才前進） |
 | TC-PL-02 | 切點連續無斷音 | ❌ | DEF-002（跳過約 1.07 s） |
 | TC-PL-03 | 影音同步 | ❌ | DEF-002（落後最多約 4.0 s） |
 | TC-PL-04 | 切點靜音缺口 | ✅ | DEF-001 修正，`mp3_split_log.txt` |
-| TC-PL-05 | 有損轉碼 stego 平滑降級 | ⏳ | 素材：`drive_bw/`（12 支 `mp4v`，標頭已損毀） |
-| TC-PL-06 | 語系自動選軌（六層逐層命中） | ⏳ | 依 3.2.3 設計案例 |
+| TC-PL-05 | 損毀／有損轉碼 stego 平滑降級 | ❌ 部分 | H.264 轉碼降級正常；chunk0 後才失敗則卡住（DEF-009） |
+| TC-PL-06 | 語系自動選軌（六層逐層命中） | ❌ 部分 | 第 1–4、6 層 8/8 通過；本機時區判定失效（DEF-010）；`env/i18n_layers_log.txt` |
 | TC-PL-08 | IP 鎖定模式（預設關閉、手動開關、跨重啟保存） | ❌ | DEF-003、DEF-005 |
 | TC-PL-07 | 手動切軌、Seek | ⏳ | — |
 | TC-DL-01～03 | URL 解析、多軌下載、無 Node.js 降級 | ⏳ | — |
 | TC-CMP-01 | stego 檔以 Win11 媒體播放器播放（前置：HEVC 視訊擴充功能） | ⏳ | — |
 | TC-ENV-01 | 以 `IMAGEIO_FFMPEG_EXE` 指定系統 FFmpeg，封裝→擷取回歸 | ⏳ | — |
-| TC-ENV-02 | PATH 上有其他 ffmpeg 時，程式仍使用內附版本 | ⏳ | — |
+| TC-ENV-02 | PATH 上有其他 ffmpeg 時，程式仍使用內附版本 | ✅ | `env/ffmpeg_source_log.txt` |
+| TC-ENV-03 | Python 3.10 回歸 | ✅ | `pixel_jimmy/py310/`（與 3.11 除耗時外全同） |
 | TC-PKG-01～02 | `build.bat`、乾淨 VM | ⏳ | — |
 
 ---
@@ -214,8 +241,8 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 6. `requirements.txt` 已全部鎖版並加入 PyInstaller（✅ 已完成，相依解析於 3.10／3.11 皆通過）；Python 3.10 與 3.11 兩個環境皆實際安裝並通過 `src/test/verify/` 回歸測試（✅ 2026-10-27，結果位元級一致）（Q4-3）。
 
 ### 4.2 退出／完成標準 (Exit Criteria)
-1. **Blocker、Critical 缺陷：0 個 Open。**
-2. **Major 缺陷**：全部修正；未修正者須經 PM 書面核可並列入已知問題。**例外：DEF-002 為必修，不得以已知問題結案（Q6b）。** 目前 Open：DEF-002、DEF-003、DEF-005。
+1. **Blocker、Critical 缺陷：0 個 Open。**（目前 Open：DEF-006）
+2. **Major 缺陷**：全部修正；未修正者須經 PM 書面核可並列入已知問題。**例外：DEF-002 為必修，不得以已知問題結案（Q6b）。** 目前 Open：DEF-002、DEF-003、DEF-005、DEF-009、DEF-010。
 3. 3.2.1 所有「硬性」項目在**全部正式載體**上 100% 通過。
 4. 3.4 所有測試案例皆已執行（無 ⏳）。
 5. 文件與論文中引用的每一個數字，皆可對應到 commit 後產生的原始 log。
@@ -275,8 +302,8 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 | :--- | :--- | :--- | :--- |
 | Pixel 10「Switch like Jimmy Butler」：AV1 cover、14 軌 mp3、stego | `src/test/video/pixel_jimmy/` | 真實使用情境、端到端與 GUI 測試 | 可用；Google 廣告，**僅限內部測試，不得公開影格或音訊** |
 | 「測試用黑白片段」12 支 | `src/test/video/drive_bw/` | 負面測試（有損轉碼 stego） | `mp4v` 有損、每支 5 幀、標頭損毀，**不可作為可逆性載體** |
-| **正式載體集（Q4-7）**：Xiph derf 1080p 未壓縮 y4m — crowd_run（高紋理，500 幀）、park_joy（中高紋理，500 幀）、old_town_cross（平滑，500 幀）、sintel_trailer（CG，1253 幀），約 8.2 GB | ⏳ `src/test/video/xiph/` | P3-6、P3-9、P3-10 與論文數據 | 已決定，待下載 |
-| **確定性合成影片**：平坦色塊、線性漸層、全黑、全白（腳本以固定參數產生，位元級可重現） | ⏳ `src/test/video/synthetic/` | 控制組、RSK-01 極端內容 | 已決定，待撰寫生成腳本（腳本須 commit） |
+| **正式載體集（Q4-7）**：Xiph derf 1080p 未壓縮 y4m — crowd_run（高紋理，500 幀）、park_joy（中高紋理，500 幀）、old_town_cross（平滑，500 幀）、sintel_trailer（CG，1253 幀），共 8,562,947,871 bytes | `src/test/video/xiph/`（`SOURCES.txt` 記錄大小、幀數、y4m 標頭、SHA-256 與出處） | P3-6、P3-9、P3-10 與論文數據 | 已下載並驗證（2026-10-27）。授權：SVT 三支為 **CC BY-NC-ND 4.0**（EBU，依 3GPP TR 26.955；EBU 條款 PDF 本身未取得）；sintel 為 **CC BY 3.0**（Blender Foundation） |
+| **確定性合成影片**：flat128、hgrad、dgrad、shapes、noise、black、white，各 24 幀 1080p（`gen_synthetic.py`，兩次生成 SHA-256 相同） | `src/test/video/synthetic/`（`SOURCES.txt` 記錄指令與 SHA-256） | 控制組、RSK-01 極端內容、TC-ALG-09 | 已產生（腳本待 commit） |
 | v1.0 的 `real_*.mp4` / `synthetic_*.mp4` | 遺失 | — | 不可重現，歷史數字作廢 |
 
 **保存規則**：媒體檔一律不進 git（`.gitignore` 白名單只放行 `src/test/video/**/*.txt`）；repo 只保存 `SOURCES.txt`、SHA-256 與 log。
@@ -328,7 +355,7 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 
 | 編號 | 風險 | 嚴重度 | 機率 | 因應對策 |
 | :--- | :--- | :---: | :---: | :--- |
-| RSK-01 | 特定紋理或極端內容（全黑、全白、漸層）導致可逆性失效 | 極高 | 中 | 正式載體集納入極端內容；所有載體跑 TC-ALG-01～05 |
+| RSK-01 | 特定紋理或極端內容（全黑、全白、漸層）導致可逆性失效 | 極高 | **已發生** | DEF-006：payload 跨越全黑幀即無法擷取。合成載體集已納入全黑、全白、漸層（`gen_synthetic.py`）；所有載體跑 TC-ALG-01～05、09 |
 | RSK-02 | yt-dlp 遭平台封鎖、簽章變更 | 高 | 高 | 下載測試與離線素材分離；記錄 yt-dlp 版本 |
 | RSK-03 | 打包後缺少 DLL 或依賴 | 高 | 中 | 乾淨 VM 驗收（TC-PKG-02） |
 | RSK-04 | 擷取速度不足，造成播放卡頓、不同步 | 高 | **已發生** | DEF-002；評估多段分塊、加長 `initial_sec` 或影片等待 Chunk0 |
@@ -336,7 +363,7 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 | **RSK-06** | **依賴版本漂移**：ffmpeg／LAME 版本不同造成輸出位元組不同 | 中 | 已發生 | log 記錄所有版本；MP3 分塊改為位元組切割（DEF-001）以免受編碼器影響 |
 | **RSK-07** | **回歸未被攔截**（`a5919e0` 帶出 DEF-003） | 高 | 已發生 | commit 前必跑 verify 腳本；之後評估 CI |
 | **RSK-08** | **規格與實作不一致**：交接文件、程式預設值與確認後規格三者不同（Q4-5 已確認，DEF-005） | 中 | 已發生 | 規格以本文件 1.2 為準；每次規格變更須同步更新測試案例的預期結果 |
-| **RSK-09** | **素材授權**：Pixel 廣告影片不可公開 | 中 | 中 | 論文數據改用 Xiph 等授權明確的序列；廣告素材僅作內部測試 |
+| **RSK-09** | **素材授權**：Pixel 廣告影片不可公開；SVT 序列為 CC BY-NC-ND 4.0（**禁止改作**），嵌入後的 stego 檔與其影格屬改作 | 中 | 中 | 論文只報告量測數字、只展示未修改的原始影格並註明來源；不公開 SVT 的 stego 檔或修改後影格；Sintel（CC BY 3.0）須附「© copyright Blender Foundation \| durian.blender.org」；廣告素材僅作內部測試 |
 
 ---
 
@@ -345,7 +372,7 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 | 交付物 | 位置 | 狀態 |
 | :--- | :--- | :--- |
 | 系統測試計畫書 | `SYSTEM_TEST_PLAN.md` | 本文件 v2.1（待核准） |
-| 測試案例規格書 | `TEST_CASES_SPECIFICATION.md` | ⏳ 待撰寫（以 3.4 為骨架） |
+| 測試案例規格書 | `TEST_CASES_SPECIFICATION.md` | v1.0 草案（31 個案例：13 ✅、8 ❌、10 ⏳） |
 | 自動化驗證腳本 | `src/test/verify/`（`_common.py` 與 7 支腳本） | 已 commit（`4016071`） |
 | 原始 log 與資料來源 | `src/test/video/*/` 下的 `*.txt` 與 `SOURCES.txt` | `pixel_jimmy/` 8 份 log 已於 `4016071` 重跑、標頭乾淨（⏳ 尚未 commit）；`drive_bw/` 3 份 log 的產生腳本未入 repo，不可重現 |
 | 缺陷紀錄 | `DEFECT_LOG.md`（DEF-001～004） | 進行中 |
@@ -361,6 +388,11 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 | DEF-003 | IP 鎖定策略建立 DetectionResult 時拋出 TypeError（`a5919e0` 回歸） | Major | Open |
 | DEF-004 | chunk0 回報總時長為整首長度 | Minor | Open |
 | DEF-005 | IP 鎖定模式預設為開啟，與規格「選用、預設關閉」不符 | Major | Open |
+| DEF-006 | payload 跨越容量為 0 的幀時擷取失敗，整段音軌無法取回 | **Critical** | Open |
+| DEF-007 | 容量不足時 GUI 錯誤處理引用未定義變數 `reply` | Minor | Open |
+| DEF-008 | 容量不足要等全片編碼完才報錯，且留下無效 stego 檔 | Minor | Open |
+| DEF-009 | 擷取在 chunk0 之後才失敗時，Player 停止播放、無法降級 | Major | Open |
+| DEF-010 | 非英文 Windows 上時區無法判定國家，第 3 層與 VPN 交叉檢查失效 | Major | Open |
 
 ---
 
@@ -373,9 +405,9 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 | P3-3 | payload 通道無損 | ✅ | 同上；`chunk_log_3s.txt` |
 | P3-4 | 音軌與原檔位元級相同 | ✅（MP3） | `e2e_log.txt`；`.m4a`／`.aac` 未驗證 |
 | P3-5 | 舊 PSNR 算法高估 | ✅ | `verify_log.txt`：同資料舊算法 82.05 dB，MSE-first 全片 61.01 dB |
-| P3-6 | 單幀飽和 PSNR | 🟡 僅 1 支 | 54.77～56.00 dB；需正式載體集 |
-| P3-7 | Σuᵢ² = \|d\| | 🟡 | log 待補 |
-| P3-8 | D_exp = 1 − 0.5·q₀、p = ±1 對稱 | 🟡 | log 待補 |
+| P3-6 | 單幀飽和 PSNR | 🟡 僅 1 支影片＋4 張圖 | 影片 54.77～56.71 dB、圖片 52.52～53.52 dB；需正式載體集 |
+| P3-7 | Σuᵢ² = \|d\| | ✅ | `images/distortion_model_log.txt`：6,632,602 區塊 0 不符 |
+| P3-8 | D_exp = 1 − 0.5·q₀、p = ±1 對稱 | ✅（附條件） | 同上：誤差 < 0.7%；對稱差 0.05–0.67%，非全部 < 0.2% |
 | P3-9 | PSNR 對負載 | ⏳ | 待 `verify_load_sweep.py` |
 | P3-10 | 兩段式檔案膨脹 | ⏳ | 待 `verify_filesize.py` |
 | P3-11 | 舊報告 90.83／81.55／62.92 | 結案：無法重現 | 載體遺失；成因機制已由程式碼證實（`stego_bench.py:141`、`:479-486`） |
@@ -394,6 +426,20 @@ PSNR 一律同時報告四個值（舊算法、全片 dB 平均、全片 MSE-fir
 | 嵌入率 | 0.2175 bpp（嵌入幀）；0.0541 bpp（全片） |
 
 **限制**：單一載體，而且是有損 AV1 來源，不能代表一般化結論。log 已於 commit `4016071` 重跑，標頭乾淨，數值與 commit 前完全相同。
+
+### A.2 合成載體負載掃描（`src/test/video/synthetic/load_sweep/summary.md`）
+7 種合成圖樣 × 2 方法，負載 10/40/80/100% 與絕對 payload 256/1024 KiB；彙總表由 `summarize_sweep.py` 自各 log 產生。
+
+| 觀察 | 數據 |
+| :--- | :--- |
+| 可逆性 | 所有可嵌入案例 restore_fail = 0、payload 位元相等 |
+| 每幀容量 | Coltuc 約 0.249 bpp；Checkerboard 約 0.992–0.997 bpp（約 4 倍） |
+| 零容量圖樣 | Coltuc：noise、black、white 全部幀容量 0；Checkerboard：black、white 為 0，noise 0.0102 bpp |
+| 同 payload 1024 KiB 的全片 MSE-first PSNR | Coltuc 減 Checkerboard 為 −0.002～+0.89 dB（flat128 58.8726 vs 58.8746；hgrad 58.86 vs 57.97；dgrad 58.17 vs 57.92；shapes 58.22 vs 57.93） |
+| 同 payload 1024 KiB 的「無損基準→stego」膨脹 | Coltuc 約為 Checkerboard 的 1.5～1.8 倍（hgrad +1201% vs +729%；shapes +1045% vs +678%） |
+| 原因 | Coltuc 每幀容量低，同 payload 需分散到更多幀（α_video 0.708 vs 0.208） |
+
+**限制**：合成影片僅 24 幀、內容極度規律（基準檔很小，膨脹百分比因此極大），只能當控制組；Checkerboard 的 skip map 不存於影像內，比較對其有利。正式結論以 Xiph 載體（A.3，⏳ 執行中）為準。
 
 ---
 
@@ -428,6 +474,7 @@ python src/test/verify/verify_chunk_boundary.py <D> > <D>/boundary_log.txt
 python src/test/verify/verify_mp3_split.py      <D> > <D>/mp3_split_log.txt
 python src/test/verify/verify_e2e_pack.py       <D> > <D>/e2e_log.txt
 python src/test/verify/gui_handoff_probe.py     <D>/e2e_stego.mp4 <D>/gui_probe > <D>/gui_probe/gui_probe_log.txt
+python src/test/verify/verify_distortion_model.py --video <D>/cover.webm --frames 0 144 288 432 576 --image src/image/cat.jpg src/image/DE.jpg "src/image/PEE Stego.jpg" src/image/SEM_0420.JPG > src/test/video/images/distortion_model_log.txt
 ```
 
 註：`verify_audio.py`、`verify_chunks.py`、`verify_chunk_boundary.py` 比對的是**舊版** stego（`chunked_stego.mp4`）的擷取結果，用以記錄 DEF-001 修正前的狀態。
