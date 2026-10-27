@@ -1,0 +1,1755 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'D:/專題/PEEby宇/src/test/video/pixel_jimmy/e2e_stego.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:30.06, start: 0.000000, bitrate: 56855 kb/s
+  Stream #0:0[0x1](und): Video: hevc (Main) (hvc1 / 0x31637668), yuv420p(tv, progressive), 1920x1080, 56641 kb/s, 23.98 fps, 23.98 tbr, 24k tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 libx265
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 261 kb/s (default)
+      Metadata:
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+Traceback (most recent call last):
+  File "D:\專題\PEEby宇\src\player_app.py", line 1093, in on_manifest_received
+    pre_res = detect_best_locale(
+              ^^^^^^^^^^^^^^^^^^^
+  File "D:\專題\PEEby宇\src\i18n_detector.py", line 677, in detect_best_locale
+    res = detector.execute(available_tracks)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\專題\PEEby宇\src\i18n_detector.py", line 628, in execute
+    res = strategy.detect(available_tracks)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\專題\PEEby宇\src\i18n_detector.py", line 357, in detect
+    return DetectionResult(
+           ^^^^^^^^^^^^^^^^
+TypeError: DetectionResult.__init__() got an unexpected keyword argument 'confidence'
+[mp3 @ 000001D9FD0E4140] filesize and duration do not match (growing file?)
+Input #0, mp3, from 'C:/Users/ryan/AppData/Local/Temp/temp_extracted_tracks/de-DE_chunk0.mp3':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:30.17, start: 0.025057, bitrate: 19 kb/s
+  Stream #0:0: Audio: mp3 (mp3float), 44100 Hz, stereo, fltp, 192 kb/s
+      Metadata:
+        encoder         : Lavc61.19
+[mp3float @ 000001D9FD0E7580] Could not update timestamps for skipped samples.
+Input #0, mp3, from 'C:/Users/ryan/AppData/Local/Temp/temp_extracted_tracks/de-DE.mp3':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:30.17, start: 0.025057, bitrate: 192 kb/s
+  Stream #0:0: Audio: mp3 (mp3float), 44100 Hz, stereo, fltp, 192 kb/s
+      Metadata:
+        encoder         : Lavc61.19
+⚠️ Warning: HEVC RDH core (Zhang-Zeng-Ou 2D HS) load warning: No module named 'hevc_rdh_core'
+# script  : src/test/verify/gui_handoff_probe.py  (sha256 78ed7250140b554e)
+# args    : src/test/video/pixel_jimmy/e2e_stego.mp4 src/test/video/pixel_jimmy/gui_probe
+# commit  : 40160716e4f79de5bb34eed4550aa2387701f4cd
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 02:16:13 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+🚀 [StegoFacade] Starting decoding using method: 'auto'...
+  🔍 Auto-detecting algorithm: Trying Coltuc 2x2 PEE extraction...
+🔓 啟動 PEE 多檔案解碼還原 (支援串流切片): D:\專題\PEEby宇\src\test\video\pixel_jimmy\e2e_stego.mp4
+🔄 偵測到目標容量 80618232 bits，正在動態擴容緩衝區...
+⚡ [串流解碼] 偵測到 DE_CHUNK_V1 切片串流隱寫格式！啟動即時串流管線...
+🎉 [串流解碼] 第 1 幀即時解出語系清冊 Manifest！共 14 軌
+🎉 [串流解碼] 第 18 幀解出 Chunk 0 (共 14 軌, is_last=False)！
+  -> 已掃描 30 幀, 提取進度 13788911/80618232 bits
+  -> 已掃描 60 幀, 提取進度 27193840/80618232 bits
+  -> 已掃描 90 幀, 提取進度 40414726/80618232 bits
+  -> 已掃描 120 幀, 提取進度 53768762/80618232 bits
+  -> 已掃描 150 幀, 提取進度 67093802/80618232 bits
+🎉 [串流解碼] 第 179 幀解出 Chunk 1 (共 14 軌, is_last=True)！
+🎉 串流切片音訊完美還原成功！共解出 14 個多語音軌。
+  ✓ Successfully extracted payload via Coltuc 2x2 PEE!
+[N] events (t_ms since launch):
+      11876.6 load_start {}
+      11971.0 log[INFO] 初始化 DE 多軌藏密播放系統...
+      11973.1 log[INFO] 載入載體影片檔: e2e_stego.mp4
+      11974.4 log[PROCESS] 啟動 FFmpeg YUV420p 原生像素讀取管線...
+      11975.7 log[PROCESS] 載入解密引擎...
+      30827.0 log[SUCCESS] ⚡ [串流解碼] 讀取第 0 幀已即時解析出語系清冊 (Manifest)！共 14 國語系即時呈現 (首塊切片長度: 3.0s)
+      31747.6 log[SUCCESS] 解析成功！已讀取 PEE 隱寫中繼資料標頭 (Metadata Header)
+      31749.2 log[METADATA] 偵測到壓縮載荷大小: 10,077,279 Bytes (9.61 MB) | 預期位元: 80,618,232 bits
+      31750.0 log[PROCESS] 分配隱寫資料提取緩衝區... OK
+      32705.5 chunk0_received {'n_tracks': 14, 'video_pos': 0}
+      32705.6 log[SUCCESS] ⚡ [串流解碼] 首塊音訊 (Chunk 0, 前 3.0 秒) 解碼就緒！緩衝解除，立即同步開播有聲輸出！
+      40169.2 log[INFO] 已掃描 30/720 幀 (4%) | 已提取 13,788,911 bits | 瞬時速度: 1 FPS
+      43814.1 log[INFO] 已掃描 60/720 幀 (8%) | 已提取 27,193,840 bits | 瞬時速度: 1 FPS
+      45572.3 log[PROCESS] ⏳ 正在等待音訊串流後續切片解碼完成 (平滑緩衝中)...
+      52539.6 log[INFO] 已掃描 90/720 幀 (12%) | 已提取 40,414,726 bits | 瞬時速度: 2 FPS
+      55257.9 log[INFO] 已掃描 120/720 幀 (16%) | 已提取 53,768,762 bits | 瞬時速度: 2 FPS
+      58473.3 log[INFO] 已掃描 150/720 幀 (20%) | 已提取 67,093,802 bits | 瞬時速度: 3 FPS
+      61937.3 chunk1_received {'n_tracks': 14, 'video_pos': 4045}
+      61937.4 log[SUCCESS] 🎉 完整音訊串流解碼完畢！多語音軌無縫接續完成。
+      61957.7 log[SUCCESS] ✅ 解碼完成：全片 14 組多語音軌皆已解密就緒。
+      61962.3 log[SUCCESS] ⚡ 音訊串流無縫接續完成，零中斷持續播放。
+      61964.0 handoff {'video': 4045, 'old_audio': 30171, 'new_audio': 4045, 'new_ready': True, 'old_src': 'de-DE_chunk0.mp3', 'new_src': 'de-DE.mp3'}
+[O] timeline samples every 20 ms: t video_pos video_state audio_pos audio_state audio_dur src chunk0 buffering next_ready
+      12038.6      0 Stop       0 Stop       0  0 0 0
+      16010.1      0 Pause      0 Stop       0  0 0 0
+      16050.6      0 Pause      0 Stop       0  0 0 0
+      16063.8      0 Pause      0 Stop       0  0 0 0
+      16088.2      0 Pause      0 Stop       0  0 0 0
+      16104.6      0 Pause      0 Stop       0  0 0 0
+      16124.7      0 Pause      0 Stop       0  0 0 0
+      16147.5      0 Pause      0 Stop       0  0 0 0
+      16172.9      0 Pause      0 Stop       0  0 0 0
+      16190.8      0 Pause      0 Stop       0  0 0 0
+      16208.6      0 Pause      0 Stop       0  0 0 0
+      16235.2      0 Pause      0 Stop       0  0 0 0
+      16249.0      0 Pause      0 Stop       0  0 0 0
+      16263.7      0 Pause      0 Stop       0  0 0 0
+      16287.0      0 Pause      0 Stop       0  0 0 0
+      16309.8      0 Pause      0 Stop       0  0 0 0
+      16328.3      0 Pause      0 Stop       0  0 0 0
+      16359.6      0 Pause      0 Stop       0  0 0 0
+      16364.9      0 Pause      0 Stop       0  0 0 0
+      16387.4      0 Pause      0 Stop       0  0 0 0
+      16404.0      0 Pause      0 Stop       0  0 0 0
+      16423.7      0 Pause      0 Stop       0  0 0 0
+      16443.8      0 Pause      0 Stop       0  0 0 0
+      16465.6      0 Pause      0 Stop       0  0 0 0
+      16487.1      0 Pause      0 Stop       0  0 0 0
+      16504.2      0 Pause      0 Stop       0  0 0 0
+      16526.7      0 Pause      0 Stop       0  0 0 0
+      16550.3      0 Pause      0 Stop       0  0 0 0
+      16564.0      0 Pause      0 Stop       0  0 0 0
+      16584.4      0 Pause      0 Stop       0  0 0 0
+      16606.8      0 Pause      0 Stop       0  0 0 0
+      16623.9      0 Pause      0 Stop       0  0 0 0
+      16647.8      0 Pause      0 Stop       0  0 0 0
+      16664.3      0 Pause      0 Stop       0  0 0 0
+      16686.3      0 Pause      0 Stop       0  0 0 0
+      16815.1      0 Pause      0 Stop       0  0 0 0
+      16834.6      0 Pause      0 Stop       0  0 0 0
+      16847.8      0 Pause      0 Stop       0  0 0 0
+      16864.2      0 Pause      0 Stop       0  0 0 0
+      16885.0      0 Pause      0 Stop       0  0 0 0
+      16904.5      0 Pause      0 Stop       0  0 0 0
+      16923.4      0 Pause      0 Stop       0  0 0 0
+      16944.4      0 Pause      0 Stop       0  0 0 0
+      16965.3      0 Pause      0 Stop       0  0 0 0
+      16984.1      0 Pause      0 Stop       0  0 0 0
+      17004.3      0 Pause      0 Stop       0  0 0 0
+      17024.2      0 Pause      0 Stop       0  0 0 0
+      17045.7      0 Pause      0 Stop       0  0 0 0
+      17063.6      0 Pause      0 Stop       0  0 0 0
+      17084.1      0 Pause      0 Stop       0  0 0 0
+      17104.3      0 Pause      0 Stop       0  0 0 0
+      17124.1      0 Pause      0 Stop       0  0 0 0
+      17143.6      0 Pause      0 Stop       0  0 0 0
+      17163.5      0 Pause      0 Stop       0  0 0 0
+      17183.9      0 Pause      0 Stop       0  0 0 0
+      17204.1      0 Pause      0 Stop       0  0 0 0
+      17224.0      0 Pause      0 Stop       0  0 0 0
+      17244.1      0 Pause      0 Stop       0  0 0 0
+      17266.0      0 Pause      0 Stop       0  0 0 0
+      17284.3      0 Pause      0 Stop       0  0 0 0
+      17305.2      0 Pause      0 Stop       0  0 0 0
+      17325.2      0 Pause      0 Stop       0  0 0 0
+      17343.9      0 Pause      0 Stop       0  0 0 0
+      17363.7      0 Pause      0 Stop       0  0 0 0
+      17384.1      0 Pause      0 Stop       0  0 0 0
+      17404.7      0 Pause      0 Stop       0  0 0 0
+      17424.7      0 Pause      0 Stop       0  0 0 0
+      17444.4      0 Pause      0 Stop       0  0 0 0
+      17464.8      0 Pause      0 Stop       0  0 0 0
+      17488.2      0 Pause      0 Stop       0  0 0 0
+      17504.8      0 Pause      0 Stop       0  0 0 0
+      17525.1      0 Pause      0 Stop       0  0 0 0
+      17545.5      0 Pause      0 Stop       0  0 0 0
+      17566.0      0 Pause      0 Stop       0  0 0 0
+      17583.9      0 Pause      0 Stop       0  0 0 0
+      17604.9      0 Pause      0 Stop       0  0 0 0
+      17625.0      0 Pause      0 Stop       0  0 0 0
+      17643.6      0 Pause      0 Stop       0  0 0 0
+      17664.7      0 Pause      0 Stop       0  0 0 0
+      17684.6      0 Pause      0 Stop       0  0 0 0
+      17705.0      0 Pause      0 Stop       0  0 0 0
+      17724.6      0 Pause      0 Stop       0  0 0 0
+      17744.1      0 Pause      0 Stop       0  0 0 0
+      17764.8      0 Pause      0 Stop       0  0 0 0
+      17785.3      0 Pause      0 Stop       0  0 0 0
+      17803.7      0 Pause      0 Stop       0  0 0 0
+      17824.2      0 Pause      0 Stop       0  0 0 0
+      17844.0      0 Pause      0 Stop       0  0 0 0
+      17864.7      0 Pause      0 Stop       0  0 0 0
+      17884.3      0 Pause      0 Stop       0  0 0 0
+      17904.0      0 Pause      0 Stop       0  0 0 0
+      17923.4      0 Pause      0 Stop       0  0 0 0
+      17944.6      0 Pause      0 Stop       0  0 0 0
+      17964.3      0 Pause      0 Stop       0  0 0 0
+      17983.4      0 Pause      0 Stop       0  0 0 0
+      18003.4      0 Pause      0 Stop       0  0 0 0
+      18024.0      0 Pause      0 Stop       0  0 0 0
+      18044.9      0 Pause      0 Stop       0  0 0 0
+      18064.8      0 Pause      0 Stop       0  0 0 0
+      18083.9      0 Pause      0 Stop       0  0 0 0
+      18104.3      0 Pause      0 Stop       0  0 0 0
+      18124.8      0 Pause      0 Stop       0  0 0 0
+      18145.6      0 Pause      0 Stop       0  0 0 0
+      18164.9      0 Pause      0 Stop       0  0 0 0
+      18184.8      0 Pause      0 Stop       0  0 0 0
+      18204.8      0 Pause      0 Stop       0  0 0 0
+      18224.8      0 Pause      0 Stop       0  0 0 0
+      18244.2      0 Pause      0 Stop       0  0 0 0
+      18265.3      0 Pause      0 Stop       0  0 0 0
+      18287.4      0 Pause      0 Stop       0  0 0 0
+      18303.7      0 Pause      0 Stop       0  0 0 0
+      18324.0      0 Pause      0 Stop       0  0 0 0
+      18344.4      0 Pause      0 Stop       0  0 0 0
+      18365.8      0 Pause      0 Stop       0  0 0 0
+      18385.0      0 Pause      0 Stop       0  0 0 0
+      18404.8      0 Pause      0 Stop       0  0 0 0
+      18424.4      0 Pause      0 Stop       0  0 0 0
+      18443.8      0 Pause      0 Stop       0  0 0 0
+      18476.0      0 Pause      0 Stop       0  0 0 0
+      18488.2      0 Pause      0 Stop       0  0 0 0
+      18511.4      0 Pause      0 Stop       0  0 0 0
+      18528.7      0 Pause      0 Stop       0  0 0 0
+      18545.3      0 Pause      0 Stop       0  0 0 0
+      18567.9      0 Pause      0 Stop       0  0 0 0
+      18587.2      0 Pause      0 Stop       0  0 0 0
+      18605.7      0 Pause      0 Stop       0  0 0 0
+      18625.2      0 Pause      0 Stop       0  0 0 0
+      18650.0      0 Pause      0 Stop       0  0 0 0
+      18665.8      0 Pause      0 Stop       0  0 0 0
+      18683.5      0 Pause      0 Stop       0  0 0 0
+      18705.6      0 Pause      0 Stop       0  0 0 0
+      18728.4      0 Pause      0 Stop       0  0 0 0
+      18743.5      0 Pause      0 Stop       0  0 0 0
+      18765.0      0 Pause      0 Stop       0  0 0 0
+      18785.2      0 Pause      0 Stop       0  0 0 0
+      18807.3      0 Pause      0 Stop       0  0 0 0
+      18824.2      0 Pause      0 Stop       0  0 0 0
+      18845.4      0 Pause      0 Stop       0  0 0 0
+      18865.8      0 Pause      0 Stop       0  0 0 0
+      18886.3      0 Pause      0 Stop       0  0 0 0
+      18904.0      0 Pause      0 Stop       0  0 0 0
+      18924.4      0 Pause      0 Stop       0  0 0 0
+      18944.8      0 Pause      0 Stop       0  0 0 0
+      18966.0      0 Pause      0 Stop       0  0 0 0
+      18984.2      0 Pause      0 Stop       0  0 0 0
+      19004.5      0 Pause      0 Stop       0  0 0 0
+      19025.3      0 Pause      0 Stop       0  0 0 0
+      19043.6      0 Pause      0 Stop       0  0 0 0
+      19064.7      0 Pause      0 Stop       0  0 0 0
+      19084.7      0 Pause      0 Stop       0  0 0 0
+      19105.6      0 Pause      0 Stop       0  0 0 0
+      19123.4      0 Pause      0 Stop       0  0 0 0
+      19144.8      0 Pause      0 Stop       0  0 0 0
+      19169.1      0 Pause      0 Stop       0  0 0 0
+      19187.8      0 Pause      0 Stop       0  0 0 0
+      19203.4      0 Pause      0 Stop       0  0 0 0
+      19224.1      0 Pause      0 Stop       0  0 0 0
+      19243.9      0 Pause      0 Stop       0  0 0 0
+      19265.4      0 Pause      0 Stop       0  0 0 0
+      19284.0      0 Pause      0 Stop       0  0 0 0
+      19304.5      0 Pause      0 Stop       0  0 0 0
+      19324.4      0 Pause      0 Stop       0  0 0 0
+      19346.6      0 Pause      0 Stop       0  0 0 0
+      19364.2      0 Pause      0 Stop       0  0 0 0
+      19385.1      0 Pause      0 Stop       0  0 0 0
+      19403.7      0 Pause      0 Stop       0  0 0 0
+      19423.6      0 Pause      0 Stop       0  0 0 0
+      19444.7      0 Pause      0 Stop       0  0 0 0
+      19463.7      0 Pause      0 Stop       0  0 0 0
+      19484.0      0 Pause      0 Stop       0  0 0 0
+      19504.1      0 Pause      0 Stop       0  0 0 0
+      19524.9      0 Pause      0 Stop       0  0 0 0
+      19543.9      0 Pause      0 Stop       0  0 0 0
+      19564.0      0 Pause      0 Stop       0  0 0 0
+      19584.0      0 Pause      0 Stop       0  0 0 0
+      19606.1      0 Pause      0 Stop       0  0 0 0
+      19624.4      0 Pause      0 Stop       0  0 0 0
+      19643.9      0 Pause      0 Stop       0  0 0 0
+      19664.3      0 Pause      0 Stop       0  0 0 0
+      19683.6      0 Pause      0 Stop       0  0 0 0
+      19703.7      0 Pause      0 Stop       0  0 0 0
+      19724.8      0 Pause      0 Stop       0  0 0 0
+      19745.2      0 Pause      0 Stop       0  0 0 0
+      19765.2      0 Pause      0 Stop       0  0 0 0
+      19783.4      0 Pause      0 Stop       0  0 0 0
+      19805.6      0 Pause      0 Stop       0  0 0 0
+      19825.6      0 Pause      0 Stop       0  0 0 0
+      19844.4      0 Pause      0 Stop       0  0 0 0
+      19864.7      0 Pause      0 Stop       0  0 0 0
+      19884.7      0 Pause      0 Stop       0  0 0 0
+      19904.2      0 Pause      0 Stop       0  0 0 0
+      19923.3      0 Pause      0 Stop       0  0 0 0
+      19944.5      0 Pause      0 Stop       0  0 0 0
+      19964.0      0 Pause      0 Stop       0  0 0 0
+      19983.8      0 Pause      0 Stop       0  0 0 0
+      20004.0      0 Pause      0 Stop       0  0 0 0
+      20024.9      0 Pause      0 Stop       0  0 0 0
+      20046.1      0 Pause      0 Stop       0  0 0 0
+      20064.2      0 Pause      0 Stop       0  0 0 0
+      20084.2      0 Pause      0 Stop       0  0 0 0
+      20105.3      0 Pause      0 Stop       0  0 0 0
+      20124.1      0 Pause      0 Stop       0  0 0 0
+      20144.0      0 Pause      0 Stop       0  0 0 0
+      20164.7      0 Pause      0 Stop       0  0 0 0
+      20190.6      0 Pause      0 Stop       0  0 0 0
+      20204.0      0 Pause      0 Stop       0  0 0 0
+      20227.2      0 Pause      0 Stop       0  0 0 0
+      20244.7      0 Pause      0 Stop       0  0 0 0
+      20266.2      0 Pause      0 Stop       0  0 0 0
+      20284.0      0 Pause      0 Stop       0  0 0 0
+      20304.3      0 Pause      0 Stop       0  0 0 0
+      20323.8      0 Pause      0 Stop       0  0 0 0
+      20344.7      0 Pause      0 Stop       0  0 0 0
+      20363.8      0 Pause      0 Stop       0  0 0 0
+      20384.6      0 Pause      0 Stop       0  0 0 0
+      20403.8      0 Pause      0 Stop       0  0 0 0
+      20423.4      0 Pause      0 Stop       0  0 0 0
+      20444.0      0 Pause      0 Stop       0  0 0 0
+      20464.2      0 Pause      0 Stop       0  0 0 0
+      20484.5      0 Pause      0 Stop       0  0 0 0
+      20508.9      0 Pause      0 Stop       0  0 0 0
+      20523.9      0 Pause      0 Stop       0  0 0 0
+      20544.3      0 Pause      0 Stop       0  0 0 0
+      20565.0      0 Pause      0 Stop       0  0 0 0
+      20588.0      0 Pause      0 Stop       0  0 0 0
+      20605.8      0 Pause      0 Stop       0  0 0 0
+      20628.8      0 Pause      0 Stop       0  0 0 0
+      20643.9      0 Pause      0 Stop       0  0 0 0
+      20669.8      0 Pause      0 Stop       0  0 0 0
+      20684.7      0 Pause      0 Stop       0  0 0 0
+      20709.4      0 Pause      0 Stop       0  0 0 0
+      20731.1      0 Pause      0 Stop       0  0 0 0
+      20744.6      0 Pause      0 Stop       0  0 0 0
+      20766.0      0 Pause      0 Stop       0  0 0 0
+      20785.8      0 Pause      0 Stop       0  0 0 0
+      20803.8      0 Pause      0 Stop       0  0 0 0
+      20825.2      0 Pause      0 Stop       0  0 0 0
+      20845.2      0 Pause      0 Stop       0  0 0 0
+      20865.9      0 Pause      0 Stop       0  0 0 0
+      20885.1      0 Pause      0 Stop       0  0 0 0
+      20904.4      0 Pause      0 Stop       0  0 0 0
+      20924.1      0 Pause      0 Stop       0  0 0 0
+      20944.6      0 Pause      0 Stop       0  0 0 0
+      20965.3      0 Pause      0 Stop       0  0 0 0
+      20987.4      0 Pause      0 Stop       0  0 0 0
+      21010.7      0 Pause      0 Stop       0  0 0 0
+      21024.2      0 Pause      0 Stop       0  0 0 0
+      21047.7      0 Pause      0 Stop       0  0 0 0
+      21069.7      0 Pause      0 Stop       0  0 0 0
+      21090.7      0 Pause      0 Stop       0  0 0 0
+      21106.8      0 Pause      0 Stop       0  0 0 0
+      21124.0      0 Pause      0 Stop       0  0 0 0
+      21143.7      0 Pause      0 Stop       0  0 0 0
+      21166.7      0 Pause      0 Stop       0  0 0 0
+      21184.3      0 Pause      0 Stop       0  0 0 0
+      21203.9      0 Pause      0 Stop       0  0 0 0
+      21225.1      0 Pause      0 Stop       0  0 0 0
+      21249.3      0 Pause      0 Stop       0  0 0 0
+      21287.5      0 Pause      0 Stop       0  0 0 0
+      21288.7      0 Pause      0 Stop       0  0 0 0
+      21307.7      0 Pause      0 Stop       0  0 0 0
+      21323.7      0 Pause      0 Stop       0  0 0 0
+      21343.9      0 Pause      0 Stop       0  0 0 0
+      21368.2      0 Pause      0 Stop       0  0 0 0
+      21386.7      0 Pause      0 Stop       0  0 0 0
+      21403.5      0 Pause      0 Stop       0  0 0 0
+      21423.5      0 Pause      0 Stop       0  0 0 0
+      21445.3      0 Pause      0 Stop       0  0 0 0
+      21464.1      0 Pause      0 Stop       0  0 0 0
+      21484.0      0 Pause      0 Stop       0  0 0 0
+      21503.9      0 Pause      0 Stop       0  0 0 0
+      21525.2      0 Pause      0 Stop       0  0 0 0
+      21545.6      0 Pause      0 Stop       0  0 0 0
+      21564.0      0 Pause      0 Stop       0  0 0 0
+      21585.0      0 Pause      0 Stop       0  0 0 0
+      21607.8      0 Pause      0 Stop       0  0 0 0
+      21623.9      0 Pause      0 Stop       0  0 0 0
+      21644.8      0 Pause      0 Stop       0  0 0 0
+      21664.5      0 Pause      0 Stop       0  0 0 0
+      21684.2      0 Pause      0 Stop       0  0 0 0
+      21703.5      0 Pause      0 Stop       0  0 0 0
+      21723.9      0 Pause      0 Stop       0  0 0 0
+      21745.4      0 Pause      0 Stop       0  0 0 0
+      21763.4      0 Pause      0 Stop       0  0 0 0
+      21783.5      0 Pause      0 Stop       0  0 0 0
+      21804.2      0 Pause      0 Stop       0  0 0 0
+      21823.7      0 Pause      0 Stop       0  0 0 0
+      21843.5      0 Pause      0 Stop       0  0 0 0
+      21863.5      0 Pause      0 Stop       0  0 0 0
+      21885.3      0 Pause      0 Stop       0  0 0 0
+      21903.8      0 Pause      0 Stop       0  0 0 0
+      21923.4      0 Pause      0 Stop       0  0 0 0
+      21945.2      0 Pause      0 Stop       0  0 0 0
+      21965.2      0 Pause      0 Stop       0  0 0 0
+      21984.1      0 Pause      0 Stop       0  0 0 0
+      22004.1      0 Pause      0 Stop       0  0 0 0
+      22037.6      0 Pause      0 Stop       0  0 0 0
+      22043.8      0 Pause      0 Stop       0  0 0 0
+      22063.9      0 Pause      0 Stop       0  0 0 0
+      22084.5      0 Pause      0 Stop       0  0 0 0
+      22105.3      0 Pause      0 Stop       0  0 0 0
+      22123.6      0 Pause      0 Stop       0  0 0 0
+      22144.4      0 Pause      0 Stop       0  0 0 0
+      22165.1      0 Pause      0 Stop       0  0 0 0
+      22184.2      0 Pause      0 Stop       0  0 0 0
+      22204.2      0 Pause      0 Stop       0  0 0 0
+      22224.9      0 Pause      0 Stop       0  0 0 0
+      22244.8      0 Pause      0 Stop       0  0 0 0
+      22264.2      0 Pause      0 Stop       0  0 0 0
+      22284.3      0 Pause      0 Stop       0  0 0 0
+      22304.3      0 Pause      0 Stop       0  0 0 0
+      22325.7      0 Pause      0 Stop       0  0 0 0
+      22343.9      0 Pause      0 Stop       0  0 0 0
+      22364.4      0 Pause      0 Stop       0  0 0 0
+      22385.1      0 Pause      0 Stop       0  0 0 0
+      22404.3      0 Pause      0 Stop       0  0 0 0
+      22425.1      0 Pause      0 Stop       0  0 0 0
+      22448.2      0 Pause      0 Stop       0  0 0 0
+      22465.1      0 Pause      0 Stop       0  0 0 0
+      22488.3      0 Pause      0 Stop       0  0 0 0
+      22506.2      0 Pause      0 Stop       0  0 0 0
+      22526.4      0 Pause      0 Stop       0  0 0 0
+      22544.1      0 Pause      0 Stop       0  0 0 0
+      22565.3      0 Pause      0 Stop       0  0 0 0
+      22584.4      0 Pause      0 Stop       0  0 0 0
+      22605.0      0 Pause      0 Stop       0  0 0 0
+      22624.8      0 Pause      0 Stop       0  0 0 0
+      22643.9      0 Pause      0 Stop       0  0 0 0
+      22664.6      0 Pause      0 Stop       0  0 0 0
+      22685.8      0 Pause      0 Stop       0  0 0 0
+      22705.3      0 Pause      0 Stop       0  0 0 0
+      22724.5      0 Pause      0 Stop       0  0 0 0
+      22745.1      0 Pause      0 Stop       0  0 0 0
+      22763.4      0 Pause      0 Stop       0  0 0 0
+      22785.1      0 Pause      0 Stop       0  0 0 0
+      22804.8      0 Pause      0 Stop       0  0 0 0
+      22824.7      0 Pause      0 Stop       0  0 0 0
+      22844.4      0 Pause      0 Stop       0  0 0 0
+      22865.3      0 Pause      0 Stop       0  0 0 0
+      22884.6      0 Pause      0 Stop       0  0 0 0
+      22906.9      0 Pause      0 Stop       0  0 0 0
+      22924.7      0 Pause      0 Stop       0  0 0 0
+      22944.1      0 Pause      0 Stop       0  0 0 0
+      22964.4      0 Pause      0 Stop       0  0 0 0
+      22984.0      0 Pause      0 Stop       0  0 0 0
+      23007.7      0 Pause      0 Stop       0  0 0 0
+      23024.2      0 Pause      0 Stop       0  0 0 0
+      23044.2      0 Pause      0 Stop       0  0 0 0
+      23063.8      0 Pause      0 Stop       0  0 0 0
+      23094.0      0 Pause      0 Stop       0  0 0 0
+      23103.6      0 Pause      0 Stop       0  0 0 0
+      23127.2      0 Pause      0 Stop       0  0 0 0
+      23143.9      0 Pause      0 Stop       0  0 0 0
+      23163.3      0 Pause      0 Stop       0  0 0 0
+      23184.0      0 Pause      0 Stop       0  0 0 0
+      23203.9      0 Pause      0 Stop       0  0 0 0
+      23224.3      0 Pause      0 Stop       0  0 0 0
+      23243.9      0 Pause      0 Stop       0  0 0 0
+      23264.0      0 Pause      0 Stop       0  0 0 0
+      23284.0      0 Pause      0 Stop       0  0 0 0
+      23305.6      0 Pause      0 Stop       0  0 0 0
+      23324.0      0 Pause      0 Stop       0  0 0 0
+      23345.8      0 Pause      0 Stop       0  0 0 0
+      23365.4      0 Pause      0 Stop       0  0 0 0
+      23388.5      0 Pause      0 Stop       0  0 0 0
+      23403.9      0 Pause      0 Stop       0  0 0 0
+      23423.4      0 Pause      0 Stop       0  0 0 0
+      23444.3      0 Pause      0 Stop       0  0 0 0
+      23466.0      0 Pause      0 Stop       0  0 0 0
+      23483.3      0 Pause      0 Stop       0  0 0 0
+      23503.5      0 Pause      0 Stop       0  0 0 0
+      23523.4      0 Pause      0 Stop       0  0 0 0
+      23544.8      0 Pause      0 Stop       0  0 0 0
+      23563.3      0 Pause      0 Stop       0  0 0 0
+      23584.2      0 Pause      0 Stop       0  0 0 0
+      23605.0      0 Pause      0 Stop       0  0 0 0
+      23624.1      0 Pause      0 Stop       0  0 0 0
+      23643.6      0 Pause      0 Stop       0  0 0 0
+      23664.4      0 Pause      0 Stop       0  0 0 0
+      23684.1      0 Pause      0 Stop       0  0 0 0
+      23704.7      0 Pause      0 Stop       0  0 0 0
+      23724.7      0 Pause      0 Stop       0  0 0 0
+      23745.0      0 Pause      0 Stop       0  0 0 0
+      23766.8      0 Pause      0 Stop       0  0 0 0
+      23783.8      0 Pause      0 Stop       0  0 0 0
+      23804.8      0 Pause      0 Stop       0  0 0 0
+      23829.9      0 Pause      0 Stop       0  0 0 0
+      23845.7      0 Pause      0 Stop       0  0 0 0
+      23863.3      0 Pause      0 Stop       0  0 0 0
+      23883.6      0 Pause      0 Stop       0  0 0 0
+      23905.1      0 Pause      0 Stop       0  0 0 0
+      23923.3      0 Pause      0 Stop       0  0 0 0
+      23944.1      0 Pause      0 Stop       0  0 0 0
+      23963.6      0 Pause      0 Stop       0  0 0 0
+      23984.4      0 Pause      0 Stop       0  0 0 0
+      24004.1      0 Pause      0 Stop       0  0 0 0
+      24025.1      0 Pause      0 Stop       0  0 0 0
+      24045.0      0 Pause      0 Stop       0  0 0 0
+      24063.9      0 Pause      0 Stop       0  0 0 0
+      24084.3      0 Pause      0 Stop       0  0 0 0
+      24105.0      0 Pause      0 Stop       0  0 0 0
+      24124.6      0 Pause      0 Stop       0  0 0 0
+      24144.0      0 Pause      0 Stop       0  0 0 0
+      24164.6      0 Pause      0 Stop       0  0 0 0
+      24184.2      0 Pause      0 Stop       0  0 0 0
+      24204.7      0 Pause      0 Stop       0  0 0 0
+      24227.3      0 Pause      0 Stop       0  0 0 0
+      24244.6      0 Pause      0 Stop       0  0 0 0
+      24265.7      0 Pause      0 Stop       0  0 0 0
+      24284.4      0 Pause      0 Stop       0  0 0 0
+      24305.3      0 Pause      0 Stop       0  0 0 0
+      24324.5      0 Pause      0 Stop       0  0 0 0
+      24344.4      0 Pause      0 Stop       0  0 0 0
+      24364.8      0 Pause      0 Stop       0  0 0 0
+      24384.5      0 Pause      0 Stop       0  0 0 0
+      24404.8      0 Pause      0 Stop       0  0 0 0
+      24425.4      0 Pause      0 Stop       0  0 0 0
+      24444.3      0 Pause      0 Stop       0  0 0 0
+      24464.1      0 Pause      0 Stop       0  0 0 0
+      24484.2      0 Pause      0 Stop       0  0 0 0
+      24504.0      0 Pause      0 Stop       0  0 0 0
+      24524.5      0 Pause      0 Stop       0  0 0 0
+      24544.7      0 Pause      0 Stop       0  0 0 0
+      24564.4      0 Pause      0 Stop       0  0 0 0
+      24592.5      0 Pause      0 Stop       0  0 0 0
+      24605.2      0 Pause      0 Stop       0  0 0 0
+      24624.5      0 Pause      0 Stop       0  0 0 0
+      24646.4      0 Pause      0 Stop       0  0 0 0
+      24664.3      0 Pause      0 Stop       0  0 0 0
+      24684.5      0 Pause      0 Stop       0  0 0 0
+      24705.2      0 Pause      0 Stop       0  0 0 0
+      24725.2      0 Pause      0 Stop       0  0 0 0
+      24743.8      0 Pause      0 Stop       0  0 0 0
+      24763.7      0 Pause      0 Stop       0  0 0 0
+      24784.0      0 Pause      0 Stop       0  0 0 0
+      24803.6      0 Pause      0 Stop       0  0 0 0
+      24823.6      0 Pause      0 Stop       0  0 0 0
+      24844.2      0 Pause      0 Stop       0  0 0 0
+      24863.8      0 Pause      0 Stop       0  0 0 0
+      24883.6      0 Pause      0 Stop       0  0 0 0
+      24904.0      0 Pause      0 Stop       0  0 0 0
+      24924.0      0 Pause      0 Stop       0  0 0 0
+      24946.1      0 Pause      0 Stop       0  0 0 0
+      24965.3      0 Pause      0 Stop       0  0 0 0
+      24983.8      0 Pause      0 Stop       0  0 0 0
+      25003.8      0 Pause      0 Stop       0  0 0 0
+      25024.9      0 Pause      0 Stop       0  0 0 0
+      25043.6      0 Pause      0 Stop       0  0 0 0
+      25064.3      0 Pause      0 Stop       0  0 0 0
+      25084.5      0 Pause      0 Stop       0  0 0 0
+      25105.2      0 Pause      0 Stop       0  0 0 0
+      25123.8      0 Pause      0 Stop       0  0 0 0
+      25143.7      0 Pause      0 Stop       0  0 0 0
+      25164.1      0 Pause      0 Stop       0  0 0 0
+      25183.5      0 Pause      0 Stop       0  0 0 0
+      25203.8      0 Pause      0 Stop       0  0 0 0
+      25224.1      0 Pause      0 Stop       0  0 0 0
+      25245.0      0 Pause      0 Stop       0  0 0 0
+      25264.0      0 Pause      0 Stop       0  0 0 0
+      25284.2      0 Pause      0 Stop       0  0 0 0
+      25305.5      0 Pause      0 Stop       0  0 0 0
+      25323.8      0 Pause      0 Stop       0  0 0 0
+      25345.0      0 Pause      0 Stop       0  0 0 0
+      25363.9      0 Pause      0 Stop       0  0 0 0
+      25384.1      0 Pause      0 Stop       0  0 0 0
+      25406.3      0 Pause      0 Stop       0  0 0 0
+      25424.1      0 Pause      0 Stop       0  0 0 0
+      25444.4      0 Pause      0 Stop       0  0 0 0
+      25464.2      0 Pause      0 Stop       0  0 0 0
+      25484.0      0 Pause      0 Stop       0  0 0 0
+      25504.1      0 Pause      0 Stop       0  0 0 0
+      25527.3      0 Pause      0 Stop       0  0 0 0
+      25545.0      0 Pause      0 Stop       0  0 0 0
+      25565.1      0 Pause      0 Stop       0  0 0 0
+      25584.0      0 Pause      0 Stop       0  0 0 0
+      25603.9      0 Pause      0 Stop       0  0 0 0
+      25625.3      0 Pause      0 Stop       0  0 0 0
+      25644.5      0 Pause      0 Stop       0  0 0 0
+      25664.3      0 Pause      0 Stop       0  0 0 0
+      25684.6      0 Pause      0 Stop       0  0 0 0
+      25704.2      0 Pause      0 Stop       0  0 0 0
+      25724.0      0 Pause      0 Stop       0  0 0 0
+      25745.0      0 Pause      0 Stop       0  0 0 0
+      25764.1      0 Pause      0 Stop       0  0 0 0
+      25784.3      0 Pause      0 Stop       0  0 0 0
+      25809.4      0 Pause      0 Stop       0  0 0 0
+      25824.0      0 Pause      0 Stop       0  0 0 0
+      25844.2      0 Pause      0 Stop       0  0 0 0
+      25863.3      0 Pause      0 Stop       0  0 0 0
+      25883.4      0 Pause      0 Stop       0  0 0 0
+      25903.4      0 Pause      0 Stop       0  0 0 0
+      25926.0      0 Pause      0 Stop       0  0 0 0
+      25943.6      0 Pause      0 Stop       0  0 0 0
+      25963.9      0 Pause      0 Stop       0  0 0 0
+      25986.7      0 Pause      0 Stop       0  0 0 0
+      26003.7      0 Pause      0 Stop       0  0 0 0
+      26024.7      0 Pause      0 Stop       0  0 0 0
+      26044.3      0 Pause      0 Stop       0  0 0 0
+      26067.0      0 Pause      0 Stop       0  0 0 0
+      26084.3      0 Pause      0 Stop       0  0 0 0
+      26104.1      0 Pause      0 Stop       0  0 0 0
+      26125.0      0 Pause      0 Stop       0  0 0 0
+      26145.6      0 Pause      0 Stop       0  0 0 0
+      26163.9      0 Pause      0 Stop       0  0 0 0
+      26185.3      0 Pause      0 Stop       0  0 0 0
+      26204.1      0 Pause      0 Stop       0  0 0 0
+      26224.3      0 Pause      0 Stop       0  0 0 0
+      26249.3      0 Pause      0 Stop       0  0 0 0
+      26269.3      0 Pause      0 Stop       0  0 0 0
+      26289.8      0 Pause      0 Stop       0  0 0 0
+      26307.2      0 Pause      0 Stop       0  0 0 0
+      26327.1      0 Pause      0 Stop       0  0 0 0
+      26344.0      0 Pause      0 Stop       0  0 0 0
+      26366.0      0 Pause      0 Stop       0  0 0 0
+      26384.6      0 Pause      0 Stop       0  0 0 0
+      26409.8      0 Pause      0 Stop       0  0 0 0
+      26427.7      0 Pause      0 Stop       0  0 0 0
+      26452.1      0 Pause      0 Stop       0  0 0 0
+      26464.1      0 Pause      0 Stop       0  0 0 0
+      26484.5      0 Pause      0 Stop       0  0 0 0
+      26504.2      0 Pause      0 Stop       0  0 0 0
+      26527.3      0 Pause      0 Stop       0  0 0 0
+      26544.2      0 Pause      0 Stop       0  0 0 0
+      26566.9      0 Pause      0 Stop       0  0 0 0
+      26586.4      0 Pause      0 Stop       0  0 0 0
+      26606.0      0 Pause      0 Stop       0  0 0 0
+      26625.5      0 Pause      0 Stop       0  0 0 0
+      26643.4      0 Pause      0 Stop       0  0 0 0
+      26671.4      0 Pause      0 Stop       0  0 0 0
+      26684.2      0 Pause      0 Stop       0  0 0 0
+      26706.6      0 Pause      0 Stop       0  0 0 0
+      26724.3      0 Pause      0 Stop       0  0 0 0
+      26753.9      0 Pause      0 Stop       0  0 0 0
+      26763.4      0 Pause      0 Stop       0  0 0 0
+      26785.8      0 Pause      0 Stop       0  0 0 0
+      26803.6      0 Pause      0 Stop       0  0 0 0
+      26824.5      0 Pause      0 Stop       0  0 0 0
+      26843.8      0 Pause      0 Stop       0  0 0 0
+      26864.2      0 Pause      0 Stop       0  0 0 0
+      26885.3      0 Pause      0 Stop       0  0 0 0
+      26903.8      0 Pause      0 Stop       0  0 0 0
+      26924.4      0 Pause      0 Stop       0  0 0 0
+      26945.3      0 Pause      0 Stop       0  0 0 0
+      26968.2      0 Pause      0 Stop       0  0 0 0
+      26984.0      0 Pause      0 Stop       0  0 0 0
+      27004.0      0 Pause      0 Stop       0  0 0 0
+      27025.3      0 Pause      0 Stop       0  0 0 0
+      27048.1      0 Pause      0 Stop       0  0 0 0
+      27064.3      0 Pause      0 Stop       0  0 0 0
+      27084.3      0 Pause      0 Stop       0  0 0 0
+      27104.3      0 Pause      0 Stop       0  0 0 0
+      27138.5      0 Pause      0 Stop       0  0 0 0
+      27151.2      0 Pause      0 Stop       0  0 0 0
+      27163.5      0 Pause      0 Stop       0  0 0 0
+      27192.6      0 Pause      0 Stop       0  0 0 0
+      27203.9      0 Pause      0 Stop       0  0 0 0
+      27226.1      0 Pause      0 Stop       0  0 0 0
+      27244.6      0 Pause      0 Stop       0  0 0 0
+      27263.4      0 Pause      0 Stop       0  0 0 0
+      27283.9      0 Pause      0 Stop       0  0 0 0
+      27303.5      0 Pause      0 Stop       0  0 0 0
+      27325.8      0 Pause      0 Stop       0  0 0 0
+      27343.4      0 Pause      0 Stop       0  0 0 0
+      27363.4      0 Pause      0 Stop       0  0 0 0
+      27392.7      0 Pause      0 Stop       0  0 0 0
+      27403.9      0 Pause      0 Stop       0  0 0 0
+      27424.6      0 Pause      0 Stop       0  0 0 0
+      27444.4      0 Pause      0 Stop       0  0 0 0
+      27464.2      0 Pause      0 Stop       0  0 0 0
+      27486.9      0 Pause      0 Stop       0  0 0 0
+      27503.3      0 Pause      0 Stop       0  0 0 0
+      27523.8      0 Pause      0 Stop       0  0 0 0
+      27543.8      0 Pause      0 Stop       0  0 0 0
+      27563.6      0 Pause      0 Stop       0  0 0 0
+      27590.8      0 Pause      0 Stop       0  0 0 0
+      27604.6      0 Pause      0 Stop       0  0 0 0
+      27634.1      0 Pause      0 Stop       0  0 0 0
+      27652.5      0 Pause      0 Stop       0  0 0 0
+      27668.3      0 Pause      0 Stop       0  0 0 0
+      27690.6      0 Pause      0 Stop       0  0 0 0
+      27705.5      0 Pause      0 Stop       0  0 0 0
+      27730.0      0 Pause      0 Stop       0  0 0 0
+      27749.9      0 Pause      0 Stop       0  0 0 0
+      27778.4      0 Pause      0 Stop       0  0 0 0
+      27787.9      0 Pause      0 Stop       0  0 0 0
+      27803.6      0 Pause      0 Stop       0  0 0 0
+      27823.8      0 Pause      0 Stop       0  0 0 0
+      27844.0      0 Pause      0 Stop       0  0 0 0
+      27863.5      0 Pause      0 Stop       0  0 0 0
+      27883.4      0 Pause      0 Stop       0  0 0 0
+      27907.1      0 Pause      0 Stop       0  0 0 0
+      27924.1      0 Pause      0 Stop       0  0 0 0
+      27956.5      0 Pause      0 Stop       0  0 0 0
+      27964.2      0 Pause      0 Stop       0  0 0 0
+      27984.2      0 Pause      0 Stop       0  0 0 0
+      28009.4      0 Pause      0 Stop       0  0 0 0
+      28026.0      0 Pause      0 Stop       0  0 0 0
+      28044.1      0 Pause      0 Stop       0  0 0 0
+      28068.0      0 Pause      0 Stop       0  0 0 0
+      28088.0      0 Pause      0 Stop       0  0 0 0
+      28109.1      0 Pause      0 Stop       0  0 0 0
+      28128.5      0 Pause      0 Stop       0  0 0 0
+      28145.3      0 Pause      0 Stop       0  0 0 0
+      28163.8      0 Pause      0 Stop       0  0 0 0
+      28185.3      0 Pause      0 Stop       0  0 0 0
+      28204.1      0 Pause      0 Stop       0  0 0 0
+      28227.9      0 Pause      0 Stop       0  0 0 0
+      28244.2      0 Pause      0 Stop       0  0 0 0
+      28263.5      0 Pause      0 Stop       0  0 0 0
+      28283.8      0 Pause      0 Stop       0  0 0 0
+      28304.6      0 Pause      0 Stop       0  0 0 0
+      28324.2      0 Pause      0 Stop       0  0 0 0
+      28345.8      0 Pause      0 Stop       0  0 0 0
+      28364.5      0 Pause      0 Stop       0  0 0 0
+      28383.6      0 Pause      0 Stop       0  0 0 0
+      28404.1      0 Pause      0 Stop       0  0 0 0
+      28423.8      0 Pause      0 Stop       0  0 0 0
+      28443.9      0 Pause      0 Stop       0  0 0 0
+      28464.5      0 Pause      0 Stop       0  0 0 0
+      28488.4      0 Pause      0 Stop       0  0 0 0
+      28504.1      0 Pause      0 Stop       0  0 0 0
+      28524.5      0 Pause      0 Stop       0  0 0 0
+      28544.2      0 Pause      0 Stop       0  0 0 0
+      28564.2      0 Pause      0 Stop       0  0 0 0
+      28583.5      0 Pause      0 Stop       0  0 0 0
+      28760.8      0 Pause      0 Stop       0  0 0 0
+      28772.9      0 Pause      0 Stop       0  0 0 0
+      28789.2      0 Pause      0 Stop       0  0 0 0
+      28809.1      0 Pause      0 Stop       0  0 0 0
+      28826.5      0 Pause      0 Stop       0  0 0 0
+      28848.4      0 Pause      0 Stop       0  0 0 0
+      28863.4      0 Pause      0 Stop       0  0 0 0
+      28889.3      0 Pause      0 Stop       0  0 0 0
+      28903.8      0 Pause      0 Stop       0  0 0 0
+      28933.4      0 Pause      0 Stop       0  0 0 0
+      28946.6      0 Pause      0 Stop       0  0 0 0
+      28964.1      0 Pause      0 Stop       0  0 0 0
+      28990.1      0 Pause      0 Stop       0  0 0 0
+      29004.4      0 Pause      0 Stop       0  0 0 0
+      29024.5      0 Pause      0 Stop       0  0 0 0
+      29049.9      0 Pause      0 Stop       0  0 0 0
+      29071.5      0 Pause      0 Stop       0  0 0 0
+      29092.6      0 Pause      0 Stop       0  0 0 0
+      29104.4      0 Pause      0 Stop       0  0 0 0
+      29127.1      0 Pause      0 Stop       0  0 0 0
+      29154.4      0 Pause      0 Stop       0  0 0 0
+      29168.3      0 Pause      0 Stop       0  0 0 0
+      29190.7      0 Pause      0 Stop       0  0 0 0
+      29209.9      0 Pause      0 Stop       0  0 0 0
+      29227.1      0 Pause      0 Stop       0  0 0 0
+      29244.9      0 Pause      0 Stop       0  0 0 0
+      29263.8      0 Pause      0 Stop       0  0 0 0
+      29284.1      0 Pause      0 Stop       0  0 0 0
+      29303.7      0 Pause      0 Stop       0  0 0 0
+      29323.8      0 Pause      0 Stop       0  0 0 0
+      29345.5      0 Pause      0 Stop       0  0 0 0
+      29367.7      0 Pause      0 Stop       0  0 0 0
+      29388.1      0 Pause      0 Stop       0  0 0 0
+      29403.3      0 Pause      0 Stop       0  0 0 0
+      29423.8      0 Pause      0 Stop       0  0 0 0
+      29448.3      0 Pause      0 Stop       0  0 0 0
+      29464.4      0 Pause      0 Stop       0  0 0 0
+      29484.9      0 Pause      0 Stop       0  0 0 0
+      29507.7      0 Pause      0 Stop       0  0 0 0
+      29524.5      0 Pause      0 Stop       0  0 0 0
+      29548.7      0 Pause      0 Stop       0  0 0 0
+      29566.9      0 Pause      0 Stop       0  0 0 0
+      29585.9      0 Pause      0 Stop       0  0 0 0
+      29605.6      0 Pause      0 Stop       0  0 0 0
+      29624.7      0 Pause      0 Stop       0  0 0 0
+      29650.2      0 Pause      0 Stop       0  0 0 0
+      29671.9      0 Pause      0 Stop       0  0 0 0
+      29689.0      0 Pause      0 Stop       0  0 0 0
+      29711.1      0 Pause      0 Stop       0  0 0 0
+      29729.3      0 Pause      0 Stop       0  0 0 0
+      29749.9      0 Pause      0 Stop       0  0 0 0
+      29766.1      0 Pause      0 Stop       0  0 0 0
+      29790.0      0 Pause      0 Stop       0  0 0 0
+      29809.5      0 Pause      0 Stop       0  0 0 0
+      29828.5      0 Pause      0 Stop       0  0 0 0
+      29845.3      0 Pause      0 Stop       0  0 0 0
+      29864.4      0 Pause      0 Stop       0  0 0 0
+      29888.7      0 Pause      0 Stop       0  0 0 0
+      29910.1      0 Pause      0 Stop       0  0 0 0
+      29929.4      0 Pause      0 Stop       0  0 0 0
+      29951.5      0 Pause      0 Stop       0  0 0 0
+      29965.0      0 Pause      0 Stop       0  0 0 0
+      29983.9      0 Pause      0 Stop       0  0 0 0
+      30010.4      0 Pause      0 Stop       0  0 0 0
+      30023.9      0 Pause      0 Stop       0  0 0 0
+      30049.3      0 Pause      0 Stop       0  0 0 0
+      30069.9      0 Pause      0 Stop       0  0 0 0
+      30089.9      0 Pause      0 Stop       0  0 0 0
+      30113.0      0 Pause      0 Stop       0  0 0 0
+      30129.1      0 Pause      0 Stop       0  0 0 0
+      30151.9      0 Pause      0 Stop       0  0 0 0
+      30171.0      0 Pause      0 Stop       0  0 0 0
+      30194.0      0 Pause      0 Stop       0  0 0 0
+      30211.9      0 Pause      0 Stop       0  0 0 0
+      30230.9      0 Pause      0 Stop       0  0 0 0
+      30249.0      0 Pause      0 Stop       0  0 0 0
+      30278.7      0 Pause      0 Stop       0  0 0 0
+      30288.8      0 Pause      0 Stop       0  0 0 0
+      30310.6      0 Pause      0 Stop       0  0 0 0
+      30329.8      0 Pause      0 Stop       0  0 0 0
+      30352.7      0 Pause      0 Stop       0  0 0 0
+      30371.0      0 Pause      0 Stop       0  0 0 0
+      30390.5      0 Pause      0 Stop       0  0 0 0
+      30409.7      0 Pause      0 Stop       0  0 0 0
+      30430.1      0 Pause      0 Stop       0  0 0 0
+      30455.4      0 Pause      0 Stop       0  0 0 0
+      30470.1      0 Pause      0 Stop       0  0 0 0
+      30489.0      0 Pause      0 Stop       0  0 0 0
+      30510.8      0 Pause      0 Stop       0  0 0 0
+      30530.1      0 Pause      0 Stop       0  0 0 0
+      30552.1      0 Pause      0 Stop       0  0 0 0
+      30567.8      0 Pause      0 Stop       0  0 0 0
+      30584.7      0 Pause      0 Stop       0  0 0 0
+      30603.5      0 Pause      0 Stop       0  0 0 0
+      30624.0      0 Pause      0 Stop       0  0 0 0
+      30647.0      0 Pause      0 Stop       0  0 0 0
+      30665.1      0 Pause      0 Stop       0  0 0 0
+      30683.5      0 Pause      0 Stop       0  0 0 0
+      30704.1      0 Pause      0 Stop       0  0 0 0
+      30724.6      0 Pause      0 Stop       0  0 0 0
+      30745.2      0 Pause      0 Stop       0  0 0 0
+      30764.6      0 Pause      0 Stop       0  0 0 0
+      30784.1      0 Pause      0 Stop       0  0 0 0
+      30804.3      0 Pause      0 Stop       0  0 0 0
+      30826.4      0 Pause      0 Stop       0  0 0 0
+      30856.1      0 Pause      0 Stop       0  0 0 0
+      30863.8      0 Pause      0 Stop       0  0 0 0
+      30885.0      0 Pause      0 Stop       0  0 0 0
+      30904.3      0 Pause      0 Stop       0  0 0 0
+      30924.3      0 Pause      0 Stop       0  0 0 0
+      30953.1      0 Pause      0 Stop       0  0 0 0
+      30963.9      0 Pause      0 Stop       0  0 0 0
+      30983.8      0 Pause      0 Stop       0  0 0 0
+      31003.9      0 Pause      0 Stop       0  0 0 0
+      31029.5      0 Pause      0 Stop       0  0 0 0
+      31043.8      0 Pause      0 Stop       0  0 0 0
+      31064.0      0 Pause      0 Stop       0  0 0 0
+      31083.7      0 Pause      0 Stop       0  0 0 0
+      31106.7      0 Pause      0 Stop       0  0 0 0
+      31123.1      0 Pause      0 Stop       0  0 0 0
+      31143.4      0 Pause      0 Stop       0  0 0 0
+      31164.2      0 Pause      0 Stop       0  0 0 0
+      31183.7      0 Pause      0 Stop       0  0 0 0
+      31205.0      0 Pause      0 Stop       0  0 0 0
+      31225.2      0 Pause      0 Stop       0  0 0 0
+      31246.2      0 Pause      0 Stop       0  0 0 0
+      31263.1      0 Pause      0 Stop       0  0 0 0
+      31284.2      0 Pause      0 Stop       0  0 0 0
+      31304.0      0 Pause      0 Stop       0  0 0 0
+      31324.3      0 Pause      0 Stop       0  0 0 0
+      31344.1      0 Pause      0 Stop       0  0 0 0
+      31364.1      0 Pause      0 Stop       0  0 0 0
+      31384.0      0 Pause      0 Stop       0  0 0 0
+      31404.4      0 Pause      0 Stop       0  0 0 0
+      31423.9      0 Pause      0 Stop       0  0 0 0
+      31443.4      0 Pause      0 Stop       0  0 0 0
+      31463.8      0 Pause      0 Stop       0  0 0 0
+      31483.9      0 Pause      0 Stop       0  0 0 0
+      31504.6      0 Pause      0 Stop       0  0 0 0
+      31525.0      0 Pause      0 Stop       0  0 0 0
+      31548.5      0 Pause      0 Stop       0  0 0 0
+      31569.4      0 Pause      0 Stop       0  0 0 0
+      31584.7      0 Pause      0 Stop       0  0 0 0
+      31604.1      0 Pause      0 Stop       0  0 0 0
+      31626.4      0 Pause      0 Stop       0  0 0 0
+      31644.7      0 Pause      0 Stop       0  0 0 0
+      31664.8      0 Pause      0 Stop       0  0 0 0
+      31684.8      0 Pause      0 Stop       0  0 0 0
+      31705.3      0 Pause      0 Stop       0  0 0 0
+      31724.3      0 Pause      0 Stop       0  0 0 0
+      31751.0      0 Pause      0 Stop       0  0 0 0
+      32102.1      0 Pause      0 Stop       0  0 0 0
+      32104.9      0 Pause      0 Stop       0  0 0 0
+      32124.1      0 Pause      0 Stop       0  0 0 0
+      32144.2      0 Pause      0 Stop       0  0 0 0
+      32168.2      0 Pause      0 Stop       0  0 0 0
+      32184.2      0 Pause      0 Stop       0  0 0 0
+      32204.2      0 Pause      0 Stop       0  0 0 0
+      32224.3      0 Pause      0 Stop       0  0 0 0
+      32244.1      0 Pause      0 Stop       0  0 0 0
+      32266.5      0 Pause      0 Stop       0  0 0 0
+      32285.4      0 Pause      0 Stop       0  0 0 0
+      32304.7      0 Pause      0 Stop       0  0 0 0
+      32324.2      0 Pause      0 Stop       0  0 0 0
+      32344.8      0 Pause      0 Stop       0  0 0 0
+      32365.4      0 Pause      0 Stop       0  0 0 0
+      32384.0      0 Pause      0 Stop       0  0 0 0
+      32404.5      0 Pause      0 Stop       0  0 0 0
+      32424.6      0 Pause      0 Stop       0  0 0 0
+      32446.1      0 Pause      0 Stop       0  0 0 0
+      32463.9      0 Pause      0 Stop       0  0 0 0
+      32483.9      0 Pause      0 Stop       0  0 0 0
+      32504.5      0 Pause      0 Stop       0  0 0 0
+      32524.1      0 Pause      0 Stop       0  0 0 0
+      32544.2      0 Pause      0 Stop       0  0 0 0
+      32566.8      0 Pause      0 Stop       0  0 0 0
+      32584.5      0 Pause      0 Stop       0  0 0 0
+      32604.5      0 Pause      0 Stop       0  0 0 0
+      32624.0      0 Pause      0 Stop       0  0 0 0
+      32644.0      0 Pause      0 Stop       0  0 0 0
+      32666.3      0 Pause      0 Stop       0  0 0 0
+      32684.0      0 Pause      0 Stop       0  0 0 0
+      32716.2      0 Play       0 Stop       0 de-DE_chunk0.mp3 1 0 0
+      33089.3      0 Play       0 Stop       0 de-DE_chunk0.mp3 1 0 0
+      33130.8      0 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      33146.9    417 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      33169.6    417 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      33184.6    417 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39675.2    458 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39722.4   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39753.1   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39764.2   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39784.2   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39804.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39827.1   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39844.4   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39863.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39883.6   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39903.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39923.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39944.1   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39967.3   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      39985.0   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40003.2   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40026.1   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40044.1   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40063.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40084.6   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40106.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40123.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40143.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40164.3   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40185.6   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40204.7   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40224.3   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40244.3   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40263.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40283.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40304.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40323.6   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40343.9   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40363.7   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40385.2   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40406.7   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40424.4   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40445.0   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40464.0   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40484.2   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40504.3   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40524.9   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40550.0   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40564.2   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40583.9   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40605.0   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40625.6   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40643.9   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40665.2   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40684.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40706.4   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40725.4   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40744.7   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40764.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40783.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40806.1   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40825.6   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40844.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40864.0   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40884.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40904.2   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40925.0   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40944.3   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40964.3   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      40984.1   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41007.7   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41024.6   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41043.7   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41068.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41084.4   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41103.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41123.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41143.6   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41164.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41187.3   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41205.1   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41224.4   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41243.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41263.7   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41283.7   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41303.9   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41323.7   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41347.2   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41363.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41387.0   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41403.6   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41424.0   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41444.4   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41464.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41485.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41503.9   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41525.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41544.1   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41564.1   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41585.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41607.0   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41623.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41643.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41664.4   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41684.1   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41704.0   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41723.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41747.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41763.9   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41783.9   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41804.5   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41823.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41843.7   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41863.7   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41888.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41911.9   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41935.8   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41959.2   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41971.2   3545 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      41992.6   3670 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42013.2   3670 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42035.1   3670 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42052.1   3712 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42076.7   3712 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42092.9   3753 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42104.9   3753 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42128.0   3753 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42155.3   3795 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42165.2   3795 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42191.8   3837 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42208.2   3837 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42234.6   3837 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42255.0   3920 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42271.9   3920 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42289.8   3962 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42310.7   3962 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42330.5   3962 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42370.9   4004 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42388.8   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42407.1   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42430.9   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42447.5   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42470.2   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42487.3   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42509.8   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42529.4   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42550.7   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42564.3   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42584.2   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42611.3   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42632.8   4045 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42650.6   4045 Play      53 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42670.4   4045 Play      53 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42689.1   4045 Play     105 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42704.8   4045 Play     105 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42731.9   4045 Play     105 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42752.2   4045 Play     157 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42763.9   4045 Play     157 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42783.6   4045 Play     210 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42810.7   4045 Play     210 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42824.2   4045 Play     210 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42854.8   4045 Play     236 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42874.8   4045 Play     236 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42890.9   4045 Play     288 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42912.0   4045 Play     288 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42929.8   4045 Play     288 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42954.1   4045 Play     340 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42971.4   4045 Play     340 Play   30171 de-DE_chunk0.mp3 1 0 0
+      42992.7   4045 Play     419 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43004.2   4045 Play     419 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43035.5   4045 Play     419 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43052.3   4045 Play     445 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43076.2   4045 Play     445 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43087.2   4045 Play     497 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43112.3   4045 Play     497 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43128.7   4045 Play     497 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43154.1   4045 Play     549 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43172.8   4045 Play     549 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43194.4   4045 Play     601 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43204.2   4045 Play     601 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43234.8   4045 Play     601 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43251.9   4045 Play     654 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43265.1   4045 Play     654 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43290.8   4045 Play     706 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43313.9   4045 Play     706 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43331.4   4045 Play     706 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43351.5   4045 Play     732 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43372.1   4045 Play     732 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43392.6   4045 Play     810 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43415.8   4045 Play     810 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43433.2   4045 Play     810 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43455.0   4045 Play     836 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43473.7   4045 Play     836 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43495.2   4045 Play     889 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43516.8   4045 Play     889 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43535.1   4045 Play     889 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43550.5   4045 Play     941 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43573.7   4045 Play     941 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43592.1   4045 Play     993 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43616.0   4045 Play     993 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43639.0   4045 Play     993 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43652.9   4045 Play    1045 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43672.1   4045 Play    1045 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43685.6   4045 Play    1098 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43715.0   4045 Play    1098 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43733.7   4045 Play    1098 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43753.5   4045 Play    1124 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43764.2   4045 Play    1124 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43790.0   4045 Play    1202 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43812.0   4045 Play    1202 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43827.6   4045 Play    1202 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43848.9   4045 Play    1254 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43873.0   4045 Play    1254 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43893.2   4045 Play    1307 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43913.6   4045 Play    1307 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43934.0   4045 Play    1307 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43954.0   4045 Play    1333 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43972.9   4045 Play    1333 Play   30171 de-DE_chunk0.mp3 1 0 0
+      43986.7   4045 Play    1385 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44017.5   4045 Play    1385 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44036.9   4045 Play    1385 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44054.3   4045 Play    1437 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44071.5   4045 Play    1437 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44091.9   4045 Play    1490 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44115.2   4045 Play    1490 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44133.0   4045 Play    1490 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44154.5   4045 Play    1542 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44173.9   4045 Play    1542 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44189.7   4045 Play    1594 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44212.0   4045 Play    1594 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44234.8   4045 Play    1594 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44252.3   4045 Play    1646 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44264.5   4045 Play    1646 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44287.1   4045 Play    1699 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44313.1   4045 Play    1699 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44336.1   4045 Play    1699 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44349.4   4045 Play    1751 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44371.3   4045 Play    1751 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44393.4   4045 Play    1803 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44413.5   4045 Play    1803 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44435.8   4045 Play    1803 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44453.9   4045 Play    1855 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44470.8   4045 Play    1855 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44486.7   4045 Play    1908 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44513.3   4045 Play    1908 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44534.5   4045 Play    1908 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44552.7   4045 Play    1960 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44571.8   4045 Play    1960 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44583.8   4045 Play    1986 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44613.1   4045 Play    1986 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44630.5   4045 Play    1986 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44653.4   4045 Play    2038 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44673.6   4045 Play    2038 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44689.4   4045 Play    2116 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44704.7   4045 Play    2116 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44738.1   4045 Play    2116 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44751.7   4045 Play    2143 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44764.1   4045 Play    2143 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44784.7   4045 Play    2195 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44813.4   4045 Play    2195 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44823.7   4045 Play    2195 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44849.0   4045 Play    2247 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44872.9   4045 Play    2247 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44889.8   4045 Play    2299 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44913.2   4045 Play    2299 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44926.1   4045 Play    2299 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44953.2   4045 Play    2352 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44969.8   4045 Play    2352 Play   30171 de-DE_chunk0.mp3 1 0 0
+      44987.7   4045 Play    2404 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45013.7   4045 Play    2404 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45035.8   4045 Play    2404 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45050.3   4045 Play    2456 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45073.0   4045 Play    2456 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45085.6   4045 Play    2482 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45114.6   4045 Play    2482 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45139.0   4045 Play    2482 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45152.3   4045 Play    2534 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45170.2   4045 Play    2534 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45186.4   4045 Play    2587 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45212.9   4045 Play    2587 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45238.1   4045 Play    2587 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45256.1   4045 Play    2639 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45265.2   4045 Play    2639 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45291.8   4045 Play    2691 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45314.8   4045 Play    2691 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45324.8   4045 Play    2691 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45345.2   4045 Play    2743 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45369.2   4045 Play    2743 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45389.5   4045 Play    2796 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45408.2   4045 Play    2796 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45430.1   4045 Play    2796 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45452.6   4045 Play    2848 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45469.1   4045 Play    2848 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45490.4   4045 Play    2900 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45513.9   4045 Play    2900 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45530.2   4045 Play    2900 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45551.0   4045 Play    2952 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45568.1   4045 Play    2952 Play   30171 de-DE_chunk0.mp3 1 0 0
+      45583.6   4045 Pause   2979 Play   30171 de-DE_chunk0.mp3 1 1 0
+      45605.6   4045 Pause   2979 Play   30171 de-DE_chunk0.mp3 1 1 0
+      51592.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51609.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51623.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51644.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51663.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51687.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51704.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51724.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51748.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51763.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51783.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51806.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51826.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51843.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51863.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51883.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51904.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51925.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51949.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51965.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      51986.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52004.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52023.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52047.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52064.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52085.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52107.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52124.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52144.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52167.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52183.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52204.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52227.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52246.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52267.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52284.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52309.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52326.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52345.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52364.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52389.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52403.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52424.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52444.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52463.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52483.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52503.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52526.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52546.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52564.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52583.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52605.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52625.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52644.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52663.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52684.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52704.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52725.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52745.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52764.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52783.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52806.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52827.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52844.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52863.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52887.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52904.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52924.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52944.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52968.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      52983.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53004.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53024.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53043.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53063.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53084.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53108.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53124.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53144.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53164.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53185.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53203.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53223.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53246.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53263.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53283.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53303.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53325.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53343.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53364.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53388.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53405.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53423.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53444.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53464.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53483.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53504.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53526.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53546.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53564.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53585.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53606.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53623.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53643.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53669.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53686.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53704.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53723.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53746.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53765.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53784.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53807.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53823.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53843.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53864.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53883.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53906.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53923.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53944.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53963.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      53986.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54004.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54024.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54044.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54063.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54084.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54105.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54125.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54144.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54164.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54183.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54204.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54223.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54246.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54264.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54284.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54306.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54328.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54345.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54364.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54384.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54406.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54423.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54447.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54464.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54483.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54504.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54525.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54546.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54563.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54585.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54604.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54624.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54644.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54665.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54684.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54704.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54725.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54745.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54766.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54783.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54805.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54825.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54843.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54865.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54884.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54906.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54923.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54944.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54968.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      54983.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55004.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55028.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55047.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55063.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55084.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55106.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55123.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55144.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55164.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55187.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55205.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55224.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55245.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55264.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55283.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55303.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55326.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55343.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55368.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55386.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55404.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55424.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55443.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55466.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55484.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55504.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55524.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55544.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55564.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55584.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55606.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55626.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55644.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55666.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55685.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55706.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55724.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55747.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55766.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55784.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55804.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55825.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55844.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55863.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55884.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55904.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55923.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55946.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55969.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      55984.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56006.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56027.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56046.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56065.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56085.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56107.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56123.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56143.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56164.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56183.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56204.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56223.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56243.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56263.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56284.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56307.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56327.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56344.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56364.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56388.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56403.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56424.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56445.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56464.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56484.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56504.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56523.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56543.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56564.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56587.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56607.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56624.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56647.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56667.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56686.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56705.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56727.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56748.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56763.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56786.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56803.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56826.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56844.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56864.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56885.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56907.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56924.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56947.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56965.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      56984.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57005.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57026.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57044.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57065.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57084.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57104.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57124.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57144.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57163.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57186.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57204.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57224.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57246.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57264.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57285.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57308.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57327.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57344.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57363.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57385.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57403.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57424.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57445.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57464.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57483.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57503.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57528.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57544.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57564.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57584.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57605.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57624.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57643.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57666.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57685.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57703.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57725.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57746.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57764.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57783.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57805.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57827.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57845.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57864.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57885.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57907.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57924.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57944.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57966.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      57983.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58003.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58027.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58044.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58064.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58084.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58104.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58124.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58144.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58164.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58184.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58207.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58225.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58246.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58264.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58283.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58304.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58324.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58343.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58364.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58384.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58403.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58424.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58443.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58468.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58483.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58504.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58524.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58545.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58564.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58588.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58608.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58625.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58643.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58666.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58684.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58709.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58724.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58747.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58765.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58784.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58805.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58828.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58844.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58864.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58888.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58905.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58923.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58943.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58967.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      58984.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59003.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59024.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59044.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59065.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59084.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59107.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59124.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59144.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59167.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59186.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59203.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59224.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59245.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59266.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59283.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59304.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59325.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59343.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59363.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59384.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59407.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59424.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59443.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59463.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59487.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59507.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59528.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59548.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+[mp3float @ 000001D9FD0EB080] Could not update timestamps for skipped samples.
+      59564.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59585.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59607.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59623.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59644.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59664.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59687.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59703.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59724.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59746.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59764.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59784.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59806.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59823.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59844.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59866.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59886.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59905.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59924.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59949.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59963.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      59984.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60004.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60028.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60044.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60064.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60084.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60104.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60124.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60143.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60164.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60184.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60204.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60223.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60245.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60264.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60285.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60308.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60324.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60344.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60363.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60387.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60404.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60423.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60448.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60465.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60484.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60503.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60529.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60543.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60564.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60584.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60605.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60624.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60645.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60667.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60683.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60704.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60724.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60746.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60763.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60784.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60809.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60825.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60844.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60865.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60889.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60905.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60924.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60943.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60965.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      60983.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61003.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61025.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61044.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61064.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61084.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61105.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61124.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61144.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61163.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61196.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61203.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61224.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61245.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61263.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61283.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61308.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61323.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61343.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61363.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61383.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61403.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61423.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61447.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61466.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61483.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61504.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61526.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61543.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61566.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61583.8   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61603.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61624.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61643.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61667.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61684.0   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61704.3   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61729.9   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61743.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61764.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61785.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61806.1   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61825.2   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61843.5   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61864.4   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61883.7   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 1 0
+      61945.6   4045 Pause  30171 Stop   30171 de-DE_chunk0.mp3 1 0 0
+      62114.5   4045 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62131.3   4045 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62151.0   4045 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62164.6   4045 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62192.5   4045 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62213.5   4045 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62231.6   4045 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62251.5   4045 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62270.7   4045 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62287.6   4045 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62311.3   4045 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62329.3   4096 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62352.4   4096 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62371.3   4096 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62393.5   4138 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62412.0   4138 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62426.3   4181 Play    4045 Play   30171 de-DE.mp3 0 0 0
+      62455.1   4181 Play    4045 Play   30171 de-DE.mp3 0 0 0
+[P] screenshots:
+      39522.2 00_chunk0_playing.png
+      51444.9 01_waiting_chunk1.png
+      67602.3 02_after_handoff_0.5s.png
+      72774.5 03_after_handoff_3s.png
+      77901.6 04_final.png
+[Q] metrics:
+    chunk0 received at 32715.1 ms; first audio Playing at 33130.8 ms (+415.8 ms)
+    video paused waiting for chunk1: 45583.6 → 61883.7 ms (16300.1 ms), at video_pos=4045
+    handoff at 61964.0 ms: video=4045 old_audio=30171 new_audio=4045 (new - old = -26126 ms) de-DE_chunk0.mp3 -> de-DE.mp3
+    samples within [-1 s, +2 s] of handoff: 66, with audio or video not Playing: 48
+    audio - video after handoff: min=-136 max=0 mean=-61.1 ms (n=10)
+🧹 成功清除臨時解密音軌。

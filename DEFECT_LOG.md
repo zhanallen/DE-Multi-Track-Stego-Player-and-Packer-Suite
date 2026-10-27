@@ -10,7 +10,7 @@
 | 欄位 | 內容 |
 | :--- | :--- |
 | 嚴重度 | **Major** |
-| 狀態 | **Fixed（待 commit 後於乾淨工作區重驗）** |
+| 狀態 | **Fixed**（修正於 `4016071`；以該 commit 重跑 `mp3_split_log.txt`、`e2e_log.txt` 皆 PASS，標頭乾淨） |
 | 模組 | MOD-PK / MOD-PL — `src/audio_chunker.py`（`split_audio_into_chunks`、`concatenate_chunks`） |
 | 發現日期 | 2026-10-27 |
 | 發現版本 | `a5919e0` |
@@ -40,39 +40,43 @@ StegoPlayer 擷取出的完整音軌比原始 mp3 多 1,332 個取樣（44.1 kHz
 - `.m4a` / `.aac` 仍走重新編碼路徑，AAC priming（1,024–2,112 samples）預期造成同類問題，尚未驗證。
 - chunk0 保留原檔的 Xing/Info 標頭，其總 frame 數描述的是完整檔案，部分播放器可能顯示錯誤的總時長；StegoPlayer 以 EndOfMedia 與 `initial_sec` 邊界切換，不依賴此值，但未做 GUI 實測。
 - 既有以舊版封裝的 stego 檔（如雲端「已藏密」3 支）重新擷取時缺陷仍在，需以新版重新封裝。
-- 驗證 log 帶有 `src/ has uncommitted changes` 標記；commit 後需重跑以取得可追溯 log。
+- 修正前證據（`boundary_log.txt`、`audio_log.txt`、`chunk_log_3s.txt`）比對的是舊版 `chunked_stego.mp4`，以 `4016071` 重跑後仍重現 +1,332 samples，作為修正前狀態的紀錄。
 
 ---
 
-## DEF-002　分塊串流播放無法維持影音同步：chunk0 期間音訊落後、切點暫停 13–14 秒、切換時跳過約 1.95 秒音訊
+## DEF-002　分塊串流播放無法維持影音同步：chunk0 出聲延遲、音訊落後、切點長時間暫停、切換時跳過音訊
 
 | 欄位 | 內容 |
 | :--- | :--- |
-| 嚴重度 | **Major** |
+| 嚴重度 | **Major**（發布前必修，SYSTEM_TEST_PLAN 4.2／Q6b） |
 | 狀態 | **Open** |
 | 模組 | MOD-PL — `src/player_app.py`（`on_chunk_received`、`sync_check`、`handoff_to_full_track`、`on_media_status_changed`）、`src/pee_stego.py`（`decode_video_multi`、`files_to_chunked_bits` 的兩段式分塊協議） |
 | 發現日期 | 2026-10-27 |
-| 發現版本 | `a5919e0` + 工作區修改（DEF-001 修正；本缺陷與該修正無關） |
+| 發現版本 | `a5919e0` + 工作區修改；**以 `4016071` 重現** |
 | 測試載體 | `src/test/video/pixel_jimmy/e2e_stego.mp4`（`verify_e2e_pack.py` 以 `initial_sec=3.0` 封裝 14 軌，payload 80,618,232 bits，179 幀） |
 | 測試環境 | LAPTOP-BA0FPL1L，Windows 11 Home 26200，Python 3.11.5，PySide6 6.11.1（Qt Multimedia FFmpeg 7.1.3 後端） |
 
-### 現象（`gui_probe/gui_probe_log.txt`，第 2 次執行）
-| 時間（自啟動） | 事件 |
+### 現象（`gui_probe/gui_probe_log.txt`，commit `4016071`，標頭乾淨）
+| 時間（自探針啟動） | 事件 |
 | ---: | :--- |
-| 18,979 ms | 收到 chunk0，影片位置 0 ms |
-| 19,248 ms | 音訊開始播放（+268 ms） |
-| 19,466 → 23,389 ms | **主執行緒停滯 3.9 s**（20 ms 取樣計時器未觸發）；期間影片持續播放 |
-| 23,480 ms | 影片 4,421 ms、音訊 1,150 ms → **音訊落後影片約 3.3 s** |
-| 25,313 ms | chunk0 播完（音訊約 2,926 ms），chunk1 未就緒 → **影片暫停於 4,879 ms** |
-| 38,579 ms | chunk1 解出（第 179 幀）→ 暫停共 **13.3 s** |
-| 38,659 ms | 切換：新播放器自影片位置 4,879 ms 起播，而 chunk0 實際只播到約 2,926 ms → **約 1.95 s 音訊內容被跳過** |
+| 11,877 ms | 開始載入 stego 影片 |
+| 32,706 ms | 收到 chunk0（載入後 **20.8 s**），影片位置 0 ms |
+| 33,131 ms | 音訊播放器進入 Playing 狀態（+416 ms），但位置停在 0 |
+| 33,185 → 39,675 ms | **主執行緒停滯 6.5 s**（20 ms 取樣計時器未觸發） |
+| 39,675 → 42,093 ms | 影片位置跳到 3,545 ms 後停住，狀態仍為 Playing |
+| 42,389 ms | 影片 4,045 ms、音訊 0 ms → **音訊落後影片約 4.0 s** |
+| 42,651 ms | 音訊位置才開始前進（收到 chunk0 後 **9.9 s**） |
+| 45,584 ms | chunk0 播到約 2,979 ms，chunk1 未就緒 → **影片暫停於 4,045 ms** |
+| 45,606 → 51,593 ms | 主執行緒再次停滯 6.0 s |
+| 61,937 ms | chunk1 解出（第 179 幀；載入後 50.1 s，平均約 3.6 FPS）→ 暫停共 **16.3 s** |
+| 61,964 ms | 切換：新播放器自影片位置 4,045 ms 起播，而 chunk0 只播到約 2,979 ms → **約 1.07 s 音訊內容被跳過** |
 
-第 1 次執行（冷啟動）：chunk0 解出時影片已在 3,545 ms，超過切點，**chunk0 完全未被播出**；影片暫停 14.0 s；恢復後音訊相對影片穩定落後約 0.6 s（mean −581 ms，n=261）。
+**先前執行（commit 前，log 已被覆蓋，不可追溯，僅供參考）**：另兩次執行分別觀察到「chunk0 解出時影片已超過切點、chunk0 完全未播出，暫停 14.0 s」與「主執行緒停滯 3.9 s、音訊落後 3.3 s、暫停 13.3 s、切換跳過約 1.95 s」。三次結果的數值差異大，但現象一致。
 
 ### 初步分析（未經修正驗證）
 1. **影片不等待 chunk0**：影片載入完成即播放（推測經 `check_and_resume_playback`，`player_app.py:1631`），與 chunk0 是否就緒無關。
-2. **主執行緒停滯**：解碼執行緒期間 GUI 事件迴圈出現 2.9–3.9 s 的停滯；推測為解碼執行緒中持有 GIL 的步驟（zlib 解壓、NumPy 緩衝區操作、檔案寫出）。chunk0 期間 `sync_check` 刻意不重新對齊（`player_app.py:1677` 條件），落後無法自行修正。
-3. **兩段式協議的結構限制**：chunk1 包含所有音軌的剩餘全部內容，須解完第 179 幀才可用；實測解碼速度 2–9 FPS（同時有 Qt 播放 HEVC 無損 1080p 與擷取管線兩個解碼器），遠低於 23.98 fps 播放速度，`initial_sec=3.0` 下必然在切點暫停。
+2. **主執行緒停滯**：解碼執行緒期間 GUI 事件迴圈出現最長 6.5 s 的停滯；推測為解碼執行緒中持有 GIL 的步驟（zlib 解壓、NumPy 緩衝區操作、檔案寫出）。chunk0 期間 `sync_check` 刻意不重新對齊（`player_app.py:1677` 條件），落後無法自行修正。
+3. **兩段式協議的結構限制**：chunk1 包含所有音軌的剩餘全部內容，須解完第 179 幀才可用；GUI 內實測擷取平均約 3.6 FPS、瞬時 1–3 FPS（同時有 Qt 播放 HEVC 無損 1080p 與擷取管線兩個解碼器；腳本環境約 6.5 FPS，`e2e_log.txt`），遠低於 23.98 fps 播放速度，`initial_sec=3.0` 下必然在切點暫停。
 4. **切換位置取自影片位置**：`on_media_status_changed`（`player_app.py:1732`）對 `audio_player_next` 以 `max(boundary_ms, video_player.position())` 定位，影片超前時直接跳過中間音訊。
 
 ### 重現
@@ -84,8 +88,8 @@ python src/test/verify/gui_handoff_probe.py src/test/video/pixel_jimmy/e2e_stego
 
 ### 限制
 - 以播放器位置/狀態推論，未做人耳聆聽。
-- 僅 1 支載體、2 次執行；冷/熱啟動結果差異大，尚未量化變異。
-- 截圖 00 的時間標籤顯示 00:00，但實際擷取於主執行緒停滯結束後（影片約 4.4 s），標籤未及時更新。
+- 僅 1 支載體；三次執行數值差異大，尚未量化變異。
+- 截圖擷取時間受主執行緒停滯影響，可能晚於排定時間；畫面上的時間標籤也可能未及時更新。
 
 ---
 
