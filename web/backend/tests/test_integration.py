@@ -87,41 +87,53 @@ def test_full_streaming_decode_flow(start_live_server, stego_video, tmp_path):
 
 
 def test_reconnect_receives_snapshot_with_missed_state(start_live_server, stego_video):
+    """Disconnect mid-decode right after the manifest; chunk0 is produced while
+    no client is listening, and the reconnect snapshot must contain both."""
+    client_disconnected = threading.Event()
     chunk0_delivered = threading.Event()
-    resume_decoding = threading.Event()
+    resume_after_chunk0 = threading.Event()
     real_decode = load_default_decoder()
 
-    def paused_after_chunk0(video, output_dir, method, progress_callback, on_manifest_ready, on_chunk_ready):
-        def chunk_then_pause(chunk_idx, tracks, is_last):
+    def gated_decode(video, output_dir, method, progress_callback, on_manifest_ready, on_chunk_ready):
+        def manifest_then_wait(manifest):
+            on_manifest_ready(manifest)
+            client_disconnected.wait(60)
+
+        def chunk_then_wait(chunk_idx, tracks, is_last):
             on_chunk_ready(chunk_idx, tracks, is_last)
             if chunk_idx == 0:
                 chunk0_delivered.set()
-                resume_decoding.wait(60)
-        return real_decode(video, output_dir, method=method, progress_callback=progress_callback,
-                           on_manifest_ready=on_manifest_ready, on_chunk_ready=chunk_then_pause)
+                resume_after_chunk0.wait(60)
 
-    server = start_live_server(load_decoder=lambda: paused_after_chunk0)
+        return real_decode(video, output_dir, method=method, progress_callback=progress_callback,
+                           on_manifest_ready=manifest_then_wait, on_chunk_ready=chunk_then_wait)
+
+    server = start_live_server(load_decoder=lambda: gated_decode)
     session_id = _upload(server, stego_video)["session_id"]
     events_url = server.url(f"/api/sessions/{session_id}/events")
-
-    first_reader = SseReader(events_url).__enter__()
-    assert first_reader.next_event()[0] == "snapshot"
-    first_reader.close()  # client disconnects before decoding starts
-    _start_decode(server, session_id)
     try:
+        first_reader = SseReader(events_url).__enter__()
+        assert first_reader.next_event()[0] == "snapshot"
+        _start_decode(server, session_id)
+        first_reader.collect_until({"manifest"}, timeout_sec=DECODE_TIMEOUT_SEC)
+        first_reader.close()  # browser drops the connection while decoding
+        client_disconnected.set()
         assert chunk0_delivered.wait(DECODE_TIMEOUT_SEC)
+
         with SseReader(events_url) as second_reader:
             name, snapshot = second_reader.next_event()
             assert name == "snapshot"
             assert snapshot["state"] == "decoding"
-            assert snapshot["manifest"] is not None
+            assert {track["lang"] for track in snapshot["manifest"]["tracks"]} == {"zh-TW", "en"}
             assert set(snapshot["chunks"]["0"]) == {"zh-TW", "en"}
-            assert any("Manifest" in log["message"] for log in snapshot["logs"])
-            resume_decoding.set()
+            assert any("Chunk 0" in log["message"] for log in snapshot["logs"])
+            resume_after_chunk0.set()
             events = second_reader.collect_until(TERMINAL_EVENTS, timeout_sec=DECODE_TIMEOUT_SEC)
         assert events[-1][0] == "finished"
+        assert [data["part"] for name, data in events if name == "chunk"] == ["full"]
     finally:
-        resume_decoding.set()
+        client_disconnected.set()
+        resume_after_chunk0.set()
 
 
 def test_plain_video_reports_no_payload(start_live_server, plain_video):

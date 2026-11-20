@@ -51,7 +51,9 @@ class SseReader:
                 self._connected.set()
                 response.raise_for_status()
                 self._parse_lines(response.iter_lines())
-        except (httpx.HTTPError, RuntimeError, ValueError):
+        except Exception:
+            # Closing the response from another thread surfaces as different
+            # errors per OS (e.g. WinError 10053 on Windows); only real failures matter.
             if not self._is_closing.is_set():
                 raise
         finally:
