@@ -48,6 +48,7 @@ class Settings:
     temp_root: Path
     max_upload_bytes: int
     geoip_db_path: Path
+    sse_heartbeat_sec: float = SSE_HEARTBEAT_SEC
 
     @classmethod
     def from_environment(cls) -> "Settings":
