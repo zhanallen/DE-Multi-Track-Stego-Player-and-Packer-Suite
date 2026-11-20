@@ -37,3 +37,18 @@ def register_error_handlers(app: FastAPI) -> None:
     app.add_exception_handler(ApiError, _render_api_error)
     app.add_exception_handler(StarletteHTTPException, _render_http_error)
     app.add_exception_handler(RequestValidationError, _render_validation_error)
+
+
+class SessionNotFoundError(ApiError):
+    def __init__(self, message: str = "找不到指定的 session"):
+        super().__init__(404, "session_not_found", message)
+
+
+class ResourceNotFoundError(ApiError):
+    def __init__(self, message: str):
+        super().__init__(404, "not_found", message)
+
+
+class ConflictError(ApiError):
+    def __init__(self, code: str, message: str):
+        super().__init__(409, code, message)
