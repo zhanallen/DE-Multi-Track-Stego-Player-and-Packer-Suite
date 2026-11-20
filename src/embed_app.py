@@ -417,8 +417,7 @@ class StegoEmbedApp(QMainWindow):
                 self, "Error", 
                 f"Audio payload ({self.total_payload_size / (1024*1024):.2f} MB) exceeds video carrier capacity ({self.estimated_capacity / (1024*1024):.2f} MB)!"
             )
-            if reply == QMessageBox.No:
-                return
+            return
 
         # Disable all inputs during operation
         self.set_ui_enabled(False)

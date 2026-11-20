@@ -1,0 +1,18 @@
+# script  : src/test/verify/verify_ffmpeg_source.py  (sha256 a90776ef619a6a40)
+# args    : src/test/video/pixel_jimmy/audio_de-DE.mp3
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:17:49 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+[S] static scan of src/*.py for ffmpeg invocations:
+    ok        audio_chunker.py:8: return imageio_ffmpeg.get_ffmpeg_exe()
+    ok        download_app.py:83: ffmpeg_path = imageio_ffmpeg.get_ffmpeg_exe()
+    ok        pee_stego.py:581: ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+    ok        pee_stego.py:707: ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+    hardcoded ffmpeg references: 0
+[R] bundled ffmpeg: C:\Python311\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe
+    decoy ffmpeg  : C:\Users\ryan\AppData\Local\Temp\decoy_ffmpeg_m1r0pzzc\ffmpeg.exe
+    default                    -> bundled (expect bundled)  chunker uses same=True  chunks_ok=True  PASS
+    decoy first on PATH        -> bundled (expect bundled)  chunker uses same=True  chunks_ok=True  PASS
+    IMAGEIO_FFMPEG_EXE=decoy   -> decoy   (expect decoy)  chunker uses same=True  chunks_ok=True  PASS
+[RESULT] PASS

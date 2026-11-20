@@ -1,0 +1,32 @@
+# script  : src/test/verify/verify_chunk_boundary.py  (sha256 7816bea93a7fe760)
+# args    : src/test/video/pixel_jimmy
+# commit  : 2bedda993a568ffa1f8ff0a6791412bcf11313f5
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 09:16:34 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.10.11 numpy=2.2.6 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+# sha256 audio_de-DE.mp3 = 7120707c137b33d462d2c15918b563043b07d1d2f6ad6f44c8e06dd915b21e40
+# sha256 extracted\de-DE_chunk0.mp3 = dd3755d70839c7e4e4f9f9c2552f5632d99af21d6b227f664addd681485646b4
+# sha256 extracted\de-DE_chunk1.mp3 = ad02ddf8e66ddc1b20f892f66e4a98867231254f29576d8dfe818352064037bf
+# sha256 extracted\de-DE.mp3 = c3d987198963d881487eb14d0fed0d0318b9671719739938672646070de66c99
+[G] decoded sample counts (stereo frames @ 44100 Hz), cut = 132300:
+    original           = 1329152
+    extracted chunk0   = 132300  (vs cut: +0)
+    extracted chunk1   = 1196852  (vs original-cut: +0)
+    local chunk1       = 1196928  (vs original-cut: +76)
+    extracted full     = 1330484  (vs original: +1332; vs chunk0+chunk1: +1332)
+[H] alignment of extracted full vs original (positive lag = extracted is later):
+    t=  0.5s lag=   +0 samples (  +0.00 ms) corr=0.9999
+    t=  1.5s lag=   +0 samples (  +0.00 ms) corr=0.9999
+    t=  2.4s lag=   +0 samples (  +0.00 ms) corr=0.9999
+    t=  3.6s lag=+1332 samples ( +30.20 ms) corr=1.0000
+    t=  5.0s lag=+1332 samples ( +30.20 ms) corr=1.0000
+    t= 10.0s lag=+1332 samples ( +30.20 ms) corr=1.0000
+    t= 20.0s lag=+1332 samples ( +30.20 ms) corr=0.9998
+    t= 28.0s lag=+1332 samples ( +30.20 ms) corr=1.0000
+[H] extracted chunk1 vs original[cut:] and vs local chunk1:
+    t= 0.2s  vs original: lag=   +0 corr=0.9999   vs local: lag= +227 corr=0.9999
+    t= 1.0s  vs original: lag=   +0 corr=0.9999   vs local: lag= +227 corr=0.9999
+    t= 5.0s  vs original: lag=   +0 corr=1.0000   vs local: lag= +227 corr=1.0000
+[I] near-silent runs (|x|<8, >=64 samples) within ±0.2 s of the join in extracted full:
+    at 132574 (+6.21 ms from join) length=1394 (31.61 ms)
+[I] same window in original around the cut (reference):

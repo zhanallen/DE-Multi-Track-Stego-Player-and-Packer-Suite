@@ -1,0 +1,76 @@
+# script  : src/test/verify/verify_distortion_model.py  (sha256 431f60916abc846c)
+# args    : --video src/test/video/pixel_jimmy/cover.webm --frames 0 144 288 432 576 --image src/image/cat.jpg src/image/DE.jpg src/image/PEE Stego.jpg src/image/SEM_0420.JPG
+# commit  : bf05120f315586b0d8efc8e02ab96af6e8285e9d
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 11:15:44 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.11.5 numpy=2.4.2 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+# random payload: numpy default_rng(seed=20261027).integers(0, 2)
+# sha256 src/test/video/pixel_jimmy/cover.webm = 4db53cee6176d86d9433f2e19e70a86d3e8a565151071cb09bfd89bec2e6e852
+== cover.webm frame 0  1920x1080  resv_rows=2  embedded_bits=472621  (incl. side-channel LSBs)
+   [P3-7] blocks processed=517188  u-pattern mismatches=0  sum(u^2)!=|d| mismatches=0  skipped-but-changed=0  max|delta|=1
+   [SSE ] measured=393848  = blocks 392875 + reserved-rows 973 + other 0  (identity OK)
+   [P3-8] expandable=474773  q0=0.7017 q+=0.1489 q-=0.1494  symmetry gap |q+-q-|/(q+ + q-)=0.146%  shift=42415
+          mean|d|: p=0 0.4995 (exp 0.5)  p=+1 1.5017 (exp 1.5)  p=-1 0.4998 (exp 0.5)  shift 2.0000 (exp 2)
+          D_exp measured=0.64883  general=0.64892 (err +0.015%)  1-0.5q0=0.64914 (err +0.048%)
+   [PSNR] measured=55.3448 dB  model(general)=55.3443 (-0.0005)  model(1-0.5q0)=55.3431 (-0.0016)  bpp=0.2279
+== cover.webm frame 144  1920x1080  resv_rows=2  embedded_bits=449133  (incl. side-channel LSBs)
+   [P3-7] blocks processed=517430  u-pattern mismatches=0  sum(u^2)!=|d| mismatches=0  skipped-but-changed=0  max|delta|=1
+   [SSE ] measured=434179  = blocks 433641 + reserved-rows 538 + other 0  (identity OK)
+   [P3-8] expandable=450173  q0=0.6728 q+=0.1637 q-=0.1635  symmetry gap |q+-q-|/(q+ + q-)=0.048%  shift=67257
+          mean|d|: p=0 0.5007 (exp 0.5)  p=+1 1.5001 (exp 1.5)  p=-1 0.5017 (exp 0.5)  shift 2.0000 (exp 2)
+          D_exp measured=0.66447  general=0.66369 (err -0.118%)  1-0.5q0=0.66361 (err -0.129%)
+   [PSNR] measured=54.9214 dB  model(general)=54.9249 (+0.0035)  model(1-0.5q0)=54.9252 (+0.0039)  bpp=0.2166
+== cover.webm frame 288  1920x1080  resv_rows=2  embedded_bits=452828  (incl. side-channel LSBs)
+   [P3-7] blocks processed=517428  u-pattern mismatches=0  sum(u^2)!=|d| mismatches=0  skipped-but-changed=0  max|delta|=1
+   [SSE ] measured=427163  = blocks 426580 + reserved-rows 583 + other 0  (identity OK)
+   [P3-8] expandable=453884  q0=0.6839 q+=0.1577 q-=0.1584  symmetry gap |q+-q-|/(q+ + q-)=0.209%  shift=63544
+          mean|d|: p=0 0.5012 (exp 0.5)  p=+1 1.5030 (exp 1.5)  p=-1 0.5052 (exp 0.5)  shift 2.0000 (exp 2)
+          D_exp measured=0.65984  general=0.65773 (err -0.320%)  1-0.5q0=0.65806 (err -0.269%)
+   [PSNR] measured=54.9921 dB  model(general)=55.0019 (+0.0097)  model(1-0.5q0)=55.0003 (+0.0082)  bpp=0.2184
+== cover.webm frame 432  1920x1080  resv_rows=2  embedded_bits=451076  (incl. side-channel LSBs)
+   [P3-7] blocks processed=517419  u-pattern mismatches=0  sum(u^2)!=|d| mismatches=0  skipped-but-changed=0  max|delta|=1
+   [SSE ] measured=425346  = blocks 424640 + reserved-rows 706 + other 0  (identity OK)
+   [P3-8] expandable=452404  q0=0.6994 q+=0.1504 q-=0.1502  symmetry gap |q+-q-|/(q+ + q-)=0.070%  shift=65015
+          mean|d|: p=0 0.5010 (exp 0.5)  p=+1 1.4995 (exp 1.5)  p=-1 0.5011 (exp 0.5)  shift 2.0000 (exp 2)
+          D_exp measured=0.65121  general=0.65040 (err -0.125%)  1-0.5q0=0.65029 (err -0.141%)
+   [PSNR] measured=55.0106 dB  model(general)=55.0144 (+0.0037)  model(1-0.5q0)=55.0149 (+0.0042)  bpp=0.2175
+== cover.webm frame 576  1920x1080  resv_rows=2  embedded_bits=506311  (incl. side-channel LSBs)
+   [P3-7] blocks processed=517440  u-pattern mismatches=0  sum(u^2)!=|d| mismatches=0  skipped-but-changed=0  max|delta|=1
+   [SSE ] measured=287933  = blocks 287530 + reserved-rows 403 + other 0  (identity OK)
+   [P3-8] expandable=507111  q0=0.9466 q+=0.0266 q-=0.0268  symmetry gap |q+-q-|/(q+ + q-)=0.454%  shift=10329
+          mean|d|: p=0 0.4996 (exp 0.5)  p=+1 1.5060 (exp 1.5)  p=-1 0.4967 (exp 0.5)  shift 2.0000 (exp 2)
+          D_exp measured=0.52626  general=0.52657 (err +0.059%)  1-0.5q0=0.52669 (err +0.082%)
+   [PSNR] measured=56.7051 dB  model(general)=56.7027 (-0.0024)  model(1-0.5q0)=56.7018 (-0.0033)  bpp=0.2442
+# sha256 src/image/cat.jpg = 7c70c5856dbd635761e1e4fde52353666919c7a9f70d4261eebbf54aff964008
+== cat.jpg  500x401  resv_rows=8  embedded_bits=24244  (incl. side-channel LSBs)
+   [P3-7] blocks processed=48605  u-pattern mismatches=0  sum(u^2)!=|d| mismatches=0  skipped-but-changed=0  max|delta|=1
+   [SSE ] measured=64053  = blocks 62153 + reserved-rows 1900 + other 0  (identity OK)
+   [P3-8] expandable=27964  q0=0.5128 q+=0.2445 q-=0.2427  symmetry gap |q+-q-|/(q+ + q-)=0.360%  shift=20641
+          mean|d|: p=0 0.4991 (exp 0.5)  p=+1 1.4963 (exp 1.5)  p=-1 0.5134 (exp 0.5)  shift 2.0000 (exp 2)
+          D_exp measured=0.74635  general=0.74449 (err -0.249%)  1-0.5q0=0.74362 (err -0.367%)
+   [PSNR] measured=53.0866 dB  model(general)=53.0901 (+0.0035)  model(1-0.5q0)=53.0917 (+0.0052)  bpp=0.1209
+# sha256 src/image/DE.jpg = b0fd4b5b16cb69474ba7250a343eb0fbfa0a48047be53adde06e9776af94340e
+== DE.jpg  500x401  resv_rows=12  embedded_bits=14858  (incl. side-channel LSBs)
+   [P3-7] blocks processed=47886  u-pattern mismatches=0  sum(u^2)!=|d| mismatches=0  skipped-but-changed=0  max|delta|=1
+   [SSE ] measured=72969  = blocks 70443 + reserved-rows 2526 + other 0  (identity OK)
+   [P3-8] expandable=19930  q0=0.5379 q+=0.2315 q-=0.2306  symmetry gap |q+-q-|/(q+ + q-)=0.206%  shift=27956
+          mean|d|: p=0 0.4974 (exp 0.5)  p=+1 1.5104 (exp 1.5)  p=-1 0.4851 (exp 0.5)  shift 2.0000 (exp 2)
+          D_exp measured=0.72910  general=0.73151 (err +0.330%)  1-0.5q0=0.73103 (err +0.265%)
+   [PSNR] measured=52.5206 dB  model(general)=52.5177 (-0.0029)  model(1-0.5q0)=52.5183 (-0.0023)  bpp=0.0741
+# sha256 src/image/PEE Stego.jpg = 19cb2bf4b3deb40d70a1f949a72805b21433687fc577f9cddc88e217d9784767
+== PEE Stego.jpg  500x401  resv_rows=8  embedded_bits=24147  (incl. side-channel LSBs)
+   [P3-7] blocks processed=48615  u-pattern mismatches=0  sum(u^2)!=|d| mismatches=0  skipped-but-changed=0  max|delta|=1
+   [SSE ] measured=64134  = blocks 62274 + reserved-rows 1860 + other 0  (identity OK)
+   [P3-8] expandable=27867  q0=0.5187 q+=0.2418 q-=0.2395  symmetry gap |q+-q-|/(q+ + q-)=0.492%  shift=20748
+          mean|d|: p=0 0.4941 (exp 0.5)  p=+1 1.5121 (exp 1.5)  p=-1 0.5164 (exp 0.5)  shift 2.0000 (exp 2)
+          D_exp measured=0.74561  general=0.74183 (err -0.508%)  1-0.5q0=0.74064 (err -0.667%)
+   [PSNR] measured=53.0811 dB  model(general)=53.0882 (+0.0071)  model(1-0.5q0)=53.0905 (+0.0094)  bpp=0.1204
+# sha256 src/image/SEM_0420.JPG = 7ce10c19b521118cfb5f414de98e18e6891bbc124b3dfbda5d68b8fff229e9cb
+== SEM_0420.JPG  4000x6000  resv_rows=24  embedded_bits=4041309  (incl. side-channel LSBs)
+   [P3-7] blocks processed=5938591  u-pattern mismatches=0  sum(u^2)!=|d| mismatches=0  skipped-but-changed=0  max|delta|=1
+   [SSE ] measured=6944340  = blocks 6896356 + reserved-rows 47984 + other 0  (identity OK)
+   [P3-8] expandable=4137245  q0=0.4121 q+=0.2959 q-=0.2920  symmetry gap |q+-q-|/(q+ + q-)=0.672%  shift=1801346
+          mean|d|: p=0 0.5006 (exp 0.5)  p=+1 1.4999 (exp 1.5)  p=-1 0.4999 (exp 0.5)  shift 2.0000 (exp 2)
+          D_exp measured=0.79610  general=0.79590 (err -0.025%)  1-0.5q0=0.79393 (err -0.273%)
+   [PSNR] measured=53.5166 dB  model(general)=53.5171 (+0.0005)  model(1-0.5q0)=53.5222 (+0.0056)  bpp=0.1684
+[RESULT] P3-7 PASS

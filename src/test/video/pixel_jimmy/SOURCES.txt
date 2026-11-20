@@ -1,0 +1,14 @@
+Source: Google Drive shared by allen940403allen@gmail.com, downloaded 2026-10-27.
+Local name            <- Drive file (id)
+cover.webm            <- "Google Pixel 10 Switch like Jimmy Butler.webm" (1r2AsB352GULfzbuoFi-nDs-v8gq0EzPV), folder 多音軌測試/Google Pixel 10 Switch like Jimmy Butler
+chunked_stego.mp4     <- "Google Pixel 10 Switch like Jimmy Butler_chunked_stego.mp4" (1ONq_WXF3ec39DCEzW9OJrrclxC3isqJQ), folder 已藏密
+audio_<lang>.mp3      <- "Google Pixel 10 Switch like Jimmy Butler_audio_<lang>.mp3" (same folder as cover.webm)
+Content: Google advertisement (YouTube). Internal testing only; do not redistribute or publish frames/audio.
+Logs: verify_log.txt (video lossless/PSNR/reversibility), audio_log.txt (extraction vs originals),
+      chunk_log.txt (re-split at 6.0 s), chunk_log_3s.txt (re-split at 3.0 s).
+Scripts: src/test/verify/verify_jimmy.py, verify_audio.py, verify_chunks.py (each log header records script path, sha256 and commit).
+Reproduce (from repo root):
+  python src/test/verify/verify_jimmy.py  src/test/video/pixel_jimmy > src/test/video/pixel_jimmy/verify_log.txt
+  python src/test/verify/verify_audio.py  src/test/video/pixel_jimmy > src/test/video/pixel_jimmy/audio_log.txt
+  python src/test/verify/verify_chunks.py src/test/video/pixel_jimmy --initial-sec 3.0 > src/test/video/pixel_jimmy/chunk_log_3s.txt
+  python src/test/verify/verify_chunks.py src/test/video/pixel_jimmy --initial-sec 6.0 > src/test/video/pixel_jimmy/chunk_log.txt

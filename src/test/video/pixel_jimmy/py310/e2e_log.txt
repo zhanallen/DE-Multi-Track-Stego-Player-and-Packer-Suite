@@ -1,0 +1,36 @@
+# script  : src/test/verify/verify_e2e_pack.py  (sha256 34170c60634e56b6)
+# args    : src/test/video/pixel_jimmy
+# commit  : 2bedda993a568ffa1f8ff0a6791412bcf11313f5
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 09:16:39 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.10.11 numpy=2.2.6 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+# sha256 cover.webm = 4db53cee6176d86d9433f2e19e70a86d3e8a565151071cb09bfd89bec2e6e852
+[L] pipeline log:
+    ⚡ 讀取並以串流切片方式封裝多個音訊 (首塊 3.0s): 14 軌
+      -> 切片串流封裝完畢！Manifest (231 B), Chunk0 (1016391 B), Chunk1 (9060621 B)
+      -> 總長度: 80618232 bits (10077275 bytes)
+    🎉 多檔案編碼寫入無損影片成功！
+    🔓 啟動 PEE 多檔案解碼還原 (支援串流切片): src/test/video/pixel_jimmy\e2e_stego.mp4
+    🔄 偵測到目標容量 80618232 bits，正在動態擴容緩衝區...
+    ⚡ [串流解碼] 偵測到 DE_CHUNK_V1 切片串流隱寫格式！啟動即時串流管線...
+    🎉 [串流解碼] 第 1 幀即時解出語系清冊 Manifest！共 14 軌
+    🎉 [串流解碼] 第 18 幀解出 Chunk 0 (共 14 軌, is_last=False)！
+    🎉 [串流解碼] 第 179 幀解出 Chunk 1 (共 14 軌, is_last=True)！
+    🎉 串流切片音訊完美還原成功！共解出 14 個多語音軌。
+[L] encode 35.7s, decode 4.7s, stego size=213623817 sha256=0e0898b44d70044ce2c599bd0d6eba1fde33f7fe906ed500971bf13c4ff5b7c2
+[M] lang | original_sha256 | extracted_sha256 | equal
+    de-DE  | 7120707c137b33d4… | 7120707c137b33d4… | True
+    en     | ccf1326292180e4e… | ccf1326292180e4e… | True
+    en-US  | ccf1326292180e4e… | ccf1326292180e4e… | True
+    es-US  | d4eb76b2bdf27f92… | d4eb76b2bdf27f92… | True
+    fr-FR  | 444e55bb3700f14f… | 444e55bb3700f14f… | True
+    hi     | 1be94b237a2c3c61… | 1be94b237a2c3c61… | True
+    id     | 8cbe6121926b09ea… | 8cbe6121926b09ea… | True
+    it     | f6fc83add959f289… | f6fc83add959f289… | True
+    ja     | 4389883ae19c2a15… | 4389883ae19c2a15… | True
+    ml     | 9045437837742486… | 9045437837742486… | True
+    nl-NL  | cb0b44643d94cefa… | cb0b44643d94cefa… | True
+    pl     | 007a376e6b948738… | 007a376e6b948738… | True
+    pt-BR  | 72728c7df421c03d… | 72728c7df421c03d… | True
+    uk     | f3723286fbd6a429… | f3723286fbd6a429… | True
+[RESULT] PASS

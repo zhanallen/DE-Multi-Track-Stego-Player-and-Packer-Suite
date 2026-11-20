@@ -1,0 +1,674 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'D:/專題/PEEby宇/src/test/video/pixel_jimmy/e2e_stego.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:30.06, start: 0.000000, bitrate: 56855 kb/s
+  Stream #0:0[0x1](und): Video: hevc (Main) (hvc1 / 0x31637668), yuv420p(tv, progressive), 1920x1080, 56641 kb/s, 23.98 fps, 23.98 tbr, 24k tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 libx265
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 261 kb/s (default)
+      Metadata:
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+Traceback (most recent call last):
+  File "D:\專題\PEEby宇\src\player_app.py", line 1093, in on_manifest_received
+    pre_res = detect_best_locale(
+  File "D:\專題\PEEby宇\src\i18n_detector.py", line 677, in detect_best_locale
+    res = detector.execute(available_tracks)
+  File "D:\專題\PEEby宇\src\i18n_detector.py", line 628, in execute
+    res = strategy.detect(available_tracks)
+  File "D:\專題\PEEby宇\src\i18n_detector.py", line 357, in detect
+    return DetectionResult(
+TypeError: DetectionResult.__init__() got an unexpected keyword argument 'confidence'
+[mp3 @ 00000250479F71C0] filesize and duration do not match (growing file?)
+Input #0, mp3, from 'C:/Users/ryan/AppData/Local/Temp/temp_extracted_tracks/de-DE_chunk0.mp3':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:30.17, start: 0.025057, bitrate: 19 kb/s
+  Stream #0:0: Audio: mp3 (mp3float), 44100 Hz, stereo, fltp, 192 kb/s
+      Metadata:
+        encoder         : Lavc61.19
+[mp3float @ 0000025047971CC0] Could not update timestamps for skipped samples.
+Input #0, mp3, from 'C:/Users/ryan/AppData/Local/Temp/temp_extracted_tracks/de-DE.mp3':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:30.17, start: 0.025057, bitrate: 192 kb/s
+  Stream #0:0: Audio: mp3 (mp3float), 44100 Hz, stereo, fltp, 192 kb/s
+      Metadata:
+        encoder         : Lavc61.19
+⚠️ Warning: HEVC RDH core (Zhang-Zeng-Ou 2D HS) load warning: No module named 'hevc_rdh_core'
+# script  : src/test/verify/gui_handoff_probe.py  (sha256 78ed7250140b554e)
+# args    : src/test/video/pixel_jimmy/e2e_stego.mp4 src/test/video/pixel_jimmy/py310/gui_probe
+# commit  : 2bedda993a568ffa1f8ff0a6791412bcf11313f5
+# untracked .py in src/ (not part of commit): src/algo_bench.py
+# run at  : 2026-10-27 09:17:21 +0800  host=LAPTOP-BA0FPL1L
+# env     : python=3.10.11 numpy=2.2.6 ffmpeg=ffmpeg-win-x86_64-v7.1.exe
+🚀 [StegoFacade] Starting decoding using method: 'auto'...
+  🔍 Auto-detecting algorithm: Trying Coltuc 2x2 PEE extraction...
+🔓 啟動 PEE 多檔案解碼還原 (支援串流切片): D:\專題\PEEby宇\src\test\video\pixel_jimmy\e2e_stego.mp4
+🔄 偵測到目標容量 80618232 bits，正在動態擴容緩衝區...
+⚡ [串流解碼] 偵測到 DE_CHUNK_V1 切片串流隱寫格式！啟動即時串流管線...
+🎉 [串流解碼] 第 1 幀即時解出語系清冊 Manifest！共 14 軌
+🎉 [串流解碼] 第 18 幀解出 Chunk 0 (共 14 軌, is_last=False)！
+  -> 已掃描 30 幀, 提取進度 13788911/80618232 bits
+  -> 已掃描 60 幀, 提取進度 27193840/80618232 bits
+  -> 已掃描 90 幀, 提取進度 40414726/80618232 bits
+  -> 已掃描 120 幀, 提取進度 53768762/80618232 bits
+  -> 已掃描 150 幀, 提取進度 67093802/80618232 bits
+🎉 [串流解碼] 第 179 幀解出 Chunk 1 (共 14 軌, is_last=True)！
+🎉 串流切片音訊完美還原成功！共解出 14 個多語音軌。
+  ✓ Successfully extracted payload via Coltuc 2x2 PEE!
+[N] events (t_ms since launch):
+       1527.0 load_start {}
+       1539.7 log[INFO] 初始化 DE 多軌藏密播放系統...
+       1540.1 log[INFO] 載入載體影片檔: e2e_stego.mp4
+       1540.2 log[PROCESS] 啟動 FFmpeg YUV420p 原生像素讀取管線...
+       1540.2 log[PROCESS] 載入解密引擎...
+       3471.5 log[SUCCESS] ⚡ [串流解碼] 讀取第 0 幀已即時解析出語系清冊 (Manifest)！共 14 國語系即時呈現 (首塊切片長度: 3.0s)
+       3713.1 log[SUCCESS] 解析成功！已讀取 PEE 隱寫中繼資料標頭 (Metadata Header)
+       3713.6 log[METADATA] 偵測到壓縮載荷大小: 10,077,279 Bytes (9.61 MB) | 預期位元: 80,618,232 bits
+       3713.9 log[PROCESS] 分配隱寫資料提取緩衝區... OK
+       4003.1 chunk0_received {'n_tracks': 14, 'video_pos': 0}
+       4003.1 log[SUCCESS] ⚡ [串流解碼] 首塊音訊 (Chunk 0, 前 3.0 秒) 解碼就緒！緩衝解除，立即同步開播有聲輸出！
+       4395.7 log[INFO] 已掃描 30/720 幀 (4%) | 已提取 13,788,911 bits | 瞬時速度: 10 FPS
+       5266.3 log[INFO] 已掃描 60/720 幀 (8%) | 已提取 27,193,840 bits | 瞬時速度: 16 FPS
+       6016.5 log[INFO] 已掃描 90/720 幀 (12%) | 已提取 40,414,726 bits | 瞬時速度: 20 FPS
+       6485.9 log[INFO] 已掃描 120/720 幀 (16%) | 已提取 53,768,762 bits | 瞬時速度: 24 FPS
+       7102.7 log[INFO] 已掃描 150/720 幀 (20%) | 已提取 67,093,802 bits | 瞬時速度: 26 FPS
+       7892.5 chunk1_received {'n_tracks': 14, 'video_pos': 3003}
+       7892.6 log[SUCCESS] 🎉 完整音訊串流解碼完畢！多語音軌無縫接續完成。
+       7896.6 log[SUCCESS] ✅ 解碼完成：全片 14 組多語音軌皆已解密就緒。
+       7897.4 log[SUCCESS] ⚡ 音訊串流無縫接續完成，零中斷持續播放。
+       7897.7 handoff {'video': 3003, 'old_audio': 2352, 'new_audio': 3003, 'new_ready': True, 'old_src': 'de-DE_chunk0.mp3', 'new_src': 'de-DE.mp3'}
+[O] timeline samples every 20 ms: t video_pos video_state audio_pos audio_state audio_dur src chunk0 buffering next_ready
+       1550.5      0 Stop       0 Stop       0  0 0 0
+       2002.8      0 Pause      0 Stop       0  0 0 0
+       2013.3      0 Pause      0 Stop       0  0 0 0
+       2027.4      0 Pause      0 Stop       0  0 0 0
+       2047.4      0 Pause      0 Stop       0  0 0 0
+       2068.8      0 Pause      0 Stop       0  0 0 0
+       2088.1      0 Pause      0 Stop       0  0 0 0
+       2135.8      0 Pause      0 Stop       0  0 0 0
+       2147.9      0 Pause      0 Stop       0  0 0 0
+       2167.5      0 Pause      0 Stop       0  0 0 0
+       2187.6      0 Pause      0 Stop       0  0 0 0
+       2210.3      0 Pause      0 Stop       0  0 0 0
+       2230.1      0 Pause      0 Stop       0  0 0 0
+       2247.3      0 Pause      0 Stop       0  0 0 0
+       2268.0      0 Pause      0 Stop       0  0 0 0
+       2287.6      0 Pause      0 Stop       0  0 0 0
+       2307.7      0 Pause      0 Stop       0  0 0 0
+       2327.3      0 Pause      0 Stop       0  0 0 0
+       2347.8      0 Pause      0 Stop       0  0 0 0
+       2367.3      0 Pause      0 Stop       0  0 0 0
+       2387.8      0 Pause      0 Stop       0  0 0 0
+       2407.9      0 Pause      0 Stop       0  0 0 0
+       2427.3      0 Pause      0 Stop       0  0 0 0
+       2447.7      0 Pause      0 Stop       0  0 0 0
+       2467.3      0 Pause      0 Stop       0  0 0 0
+       2487.8      0 Pause      0 Stop       0  0 0 0
+       2507.9      0 Pause      0 Stop       0  0 0 0
+       2528.0      0 Pause      0 Stop       0  0 0 0
+       2547.3      0 Pause      0 Stop       0  0 0 0
+       2568.8      0 Pause      0 Stop       0  0 0 0
+       2587.6      0 Pause      0 Stop       0  0 0 0
+       2607.8      0 Pause      0 Stop       0  0 0 0
+       2627.3      0 Pause      0 Stop       0  0 0 0
+       2648.1      0 Pause      0 Stop       0  0 0 0
+       2667.8      0 Pause      0 Stop       0  0 0 0
+       2687.5      0 Pause      0 Stop       0  0 0 0
+       2708.2      0 Pause      0 Stop       0  0 0 0
+       2728.5      0 Pause      0 Stop       0  0 0 0
+       2748.6      0 Pause      0 Stop       0  0 0 0
+       2767.8      0 Pause      0 Stop       0  0 0 0
+       2788.8      0 Pause      0 Stop       0  0 0 0
+       2807.9      0 Pause      0 Stop       0  0 0 0
+       2831.3      0 Pause      0 Stop       0  0 0 0
+       2851.8      0 Pause      0 Stop       0  0 0 0
+       2868.4      0 Pause      0 Stop       0  0 0 0
+       2887.7      0 Pause      0 Stop       0  0 0 0
+       2907.9      0 Pause      0 Stop       0  0 0 0
+       2929.7      0 Pause      0 Stop       0  0 0 0
+       2947.9      0 Pause      0 Stop       0  0 0 0
+       2968.6      0 Pause      0 Stop       0  0 0 0
+       2989.4      0 Pause      0 Stop       0  0 0 0
+       3011.0      0 Pause      0 Stop       0  0 0 0
+       3029.0      0 Pause      0 Stop       0  0 0 0
+       3047.9      0 Pause      0 Stop       0  0 0 0
+       3068.0      0 Pause      0 Stop       0  0 0 0
+       3092.1      0 Pause      0 Stop       0  0 0 0
+       3109.8      0 Pause      0 Stop       0  0 0 0
+       3174.7      0 Pause      0 Stop       0  0 0 0
+       3188.4      0 Pause      0 Stop       0  0 0 0
+       3208.1      0 Pause      0 Stop       0  0 0 0
+       3229.4      0 Pause      0 Stop       0  0 0 0
+       3248.3      0 Pause      0 Stop       0  0 0 0
+       3268.1      0 Pause      0 Stop       0  0 0 0
+       3292.4      0 Pause      0 Stop       0  0 0 0
+       3315.4      0 Pause      0 Stop       0  0 0 0
+       3330.9      0 Pause      0 Stop       0  0 0 0
+       3352.5      0 Pause      0 Stop       0  0 0 0
+       3368.5      0 Pause      0 Stop       0  0 0 0
+       3390.5      0 Pause      0 Stop       0  0 0 0
+       3411.5      0 Pause      0 Stop       0  0 0 0
+       3428.4      0 Pause      0 Stop       0  0 0 0
+       3448.6      0 Pause      0 Stop       0  0 0 0
+       3467.7      0 Pause      0 Stop       0  0 0 0
+       3487.8      0 Pause      0 Stop       0  0 0 0
+       3508.0      0 Pause      0 Stop       0  0 0 0
+       3527.7      0 Pause      0 Stop       0  0 0 0
+       3547.6      0 Pause      0 Stop       0  0 0 0
+       3568.3      0 Pause      0 Stop       0  0 0 0
+       3587.9      0 Pause      0 Stop       0  0 0 0
+       3608.1      0 Pause      0 Stop       0  0 0 0
+       3627.5      0 Pause      0 Stop       0  0 0 0
+       3648.7      0 Pause      0 Stop       0  0 0 0
+       3667.9      0 Pause      0 Stop       0  0 0 0
+       3688.0      0 Pause      0 Stop       0  0 0 0
+       3708.4      0 Pause      0 Stop       0  0 0 0
+       3827.9      0 Pause      0 Stop       0  0 0 0
+       3828.2      0 Pause      0 Stop       0  0 0 0
+       3848.1      0 Pause      0 Stop       0  0 0 0
+       3868.3      0 Pause      0 Stop       0  0 0 0
+       3888.0      0 Pause      0 Stop       0  0 0 0
+       3907.7      0 Pause      0 Stop       0  0 0 0
+       3927.5      0 Pause      0 Stop       0  0 0 0
+       3947.6      0 Pause      0 Stop       0  0 0 0
+       3968.0      0 Pause      0 Stop       0  0 0 0
+       3988.0      0 Pause      0 Stop       0  0 0 0
+       4114.4      0 Play       0 Stop       0 de-DE_chunk0.mp3 1 0 0
+       4129.5      0 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4148.1      0 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4171.4    125 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4191.6    125 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4207.7    125 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4228.6    125 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4248.3    208 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4267.9    208 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4288.1    208 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4309.8    250 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4328.4    250 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4348.7    333 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4368.2    333 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4390.0    333 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4408.2    375 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4428.4    375 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4448.6    417 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4467.8    417 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4487.9    417 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4640.6    458 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4648.0    625 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4667.9    625 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4689.3    625 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4707.9    667 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4728.4    667 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4748.0    709 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4767.6    709 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4787.9    709 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4808.9    750 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4828.8    750 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4848.2    834 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4867.3    834 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4889.5    834 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4908.1    875 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4930.6    875 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4948.3    917 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4967.8    917 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       4987.8    917 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5008.7    959 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5028.4    959 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5049.2   1001 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5067.8   1001 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5087.6   1001 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5108.4   1084 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5128.3   1084 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5148.7   1126 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5167.5   1126 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5189.9   1126 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5208.6   1167 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5228.5   1167 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5248.7   1209 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5267.3   1209 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5287.7   1209 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5307.7   1251 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5327.9   1251 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5348.6   1334 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5368.0   1334 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5388.0   1334 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5408.4   1334 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5428.2   1334 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5448.8   1376 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5468.0   1376 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5487.7   1376 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5508.9   1418 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5527.6   1418 Play       0 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5548.2   1459 Play      53 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5568.4   1459 Play      53 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5590.0   1459 Play      53 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5608.6   1501 Play     105 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5627.9   1501 Play     105 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5649.6   1543 Play     131 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5667.7   1543 Play     131 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5687.9   1543 Play     131 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5708.4   1543 Play     183 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5727.8   1543 Play     183 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5748.3   1584 Play     236 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5767.6   1584 Play     236 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5787.7   1584 Play     236 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5807.6   1626 Play     288 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5827.9   1626 Play     288 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5848.8   1668 Play     340 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5868.1   1668 Play     340 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5887.9   1668 Play     340 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5908.0   1710 Play     392 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5928.7   1710 Play     392 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5947.9   1710 Play     445 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5968.1   1710 Play     445 Play   30171 de-DE_chunk0.mp3 1 0 0
+       5988.2   1710 Play     445 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6008.3   1751 Play     497 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6027.7   1751 Play     497 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6047.9   1793 Play     549 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6067.9   1793 Play     549 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6089.9   1793 Play     549 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6108.2   1835 Play     601 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6127.6   1835 Play     601 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6147.7   1876 Play     654 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6167.8   1876 Play     654 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6188.4   1876 Play     654 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6207.7   1876 Play     706 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6227.4   1876 Play     706 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6247.5   1918 Play     758 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6267.4   1918 Play     758 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6287.9   1918 Play     758 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6307.9   1960 Play     810 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6327.8   1960 Play     810 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6347.9   2002 Play     836 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6367.4   2002 Play     836 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6388.0   2002 Play     836 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6408.4   2043 Play     915 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6427.5   2043 Play     915 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6447.7   2043 Play     967 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6468.1   2043 Play     967 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6487.4   2043 Play     967 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6507.7   2085 Play     993 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6527.8   2085 Play     993 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6548.2   2127 Play    1045 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6567.6   2127 Play    1045 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6590.2   2127 Play    1045 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6608.6   2168 Play    1098 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6627.5   2168 Play    1098 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6647.4   2210 Play    1150 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6668.0   2210 Play    1150 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6687.8   2210 Play    1150 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6709.1   2252 Play    1202 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6727.6   2252 Play    1202 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6747.9   2252 Play    1254 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6767.8   2252 Play    1254 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6787.9   2252 Play    1254 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6807.8   2293 Play    1307 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6828.0   2293 Play    1307 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6848.0   2335 Play    1359 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6867.7   2335 Play    1359 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6890.5   2335 Play    1359 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6907.5   2377 Play    1411 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6928.2   2377 Play    1411 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6948.5   2419 Play    1463 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6968.2   2419 Play    1463 Play   30171 de-DE_chunk0.mp3 1 0 0
+       6987.4   2419 Play    1463 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7008.5   2419 Play    1516 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7027.7   2419 Play    1516 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7048.4   2460 Play    1568 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7069.0   2460 Play    1568 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7087.7   2460 Play    1568 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7107.8   2502 Play    1594 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7127.4   2502 Play    1594 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7147.6   2544 Play    1646 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7168.3   2544 Play    1646 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7187.4   2544 Play    1646 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7208.7   2585 Play    1699 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7228.4   2585 Play    1699 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7247.4   2585 Play    1751 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7268.2   2585 Play    1751 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7287.6   2585 Play    1751 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7309.1   2627 Play    1803 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7327.7   2627 Play    1803 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7347.4   2669 Play    1855 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7367.4   2669 Play    1855 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7389.3   2669 Play    1855 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7408.3   2711 Play    1908 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7427.6   2711 Play    1908 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7447.8   2752 Play    1960 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7467.7   2752 Play    1960 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7488.1   2752 Play    1960 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7508.9   2752 Play    2012 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7527.7   2752 Play    2012 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7549.5   2794 Play    2064 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7568.7   2794 Play    2064 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7588.3   2794 Play    2064 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7608.0   2836 Play    2116 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7627.8   2836 Play    2116 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7647.8   2877 Play    2169 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7667.7   2877 Play    2169 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7689.8   2877 Play    2169 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7707.5   2919 Play    2195 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7727.6   2919 Play    2195 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7747.5   2919 Play    2247 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7767.5   2919 Play    2247 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7787.5   2919 Play    2247 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7807.9   2961 Play    2299 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7827.4   2961 Play    2299 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7848.3   3003 Play    2352 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7867.9   3003 Play    2352 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7894.1   3003 Play    2352 Play   30171 de-DE_chunk0.mp3 1 0 0
+       7919.9   3003 Play    3003 Play   30171 de-DE.mp3 0 0 0
+       7928.0   3003 Play    3003 Play   30171 de-DE.mp3 0 0 0
+       8028.6   3003 Play    3003 Play   30171 de-DE.mp3 0 0 0
+       8047.7   3128 Play    3031 Play   30171 de-DE.mp3 0 0 0
+       8067.6   3128 Play    3031 Play   30171 de-DE.mp3 0 0 0
+       8087.3   3128 Play    3031 Play   30171 de-DE.mp3 0 0 0
+       8108.0   3169 Play    3083 Play   30171 de-DE.mp3 0 0 0
+       8127.4   3169 Play    3083 Play   30171 de-DE.mp3 0 0 0
+       8147.2   3211 Play    3135 Play   30171 de-DE.mp3 0 0 0
+       8167.1   3211 Play    3135 Play   30171 de-DE.mp3 0 0 0
+       8187.9   3211 Play    3135 Play   30171 de-DE.mp3 0 0 0
+       8208.0   3253 Play    3161 Play   30171 de-DE.mp3 0 0 0
+       8227.3   3253 Play    3161 Play   30171 de-DE.mp3 0 0 0
+       8247.7   3253 Play    3214 Play   30171 de-DE.mp3 0 0 0
+       8267.4   3253 Play    3214 Play   30171 de-DE.mp3 0 0 0
+       8287.5   3253 Play    3214 Play   30171 de-DE.mp3 0 0 0
+       8307.5   3294 Play    3266 Play   30171 de-DE.mp3 0 0 0
+       8327.6   3294 Play    3266 Play   30171 de-DE.mp3 0 0 0
+       8347.5   3336 Play    3318 Play   30171 de-DE.mp3 0 0 0
+       8367.8   3336 Play    3318 Play   30171 de-DE.mp3 0 0 0
+       8388.1   3336 Play    3318 Play   30171 de-DE.mp3 0 0 0
+       8446.1   3378 Play    3370 Play   30171 de-DE.mp3 0 0 0
+       8447.6   3420 Play    3423 Play   30171 de-DE.mp3 0 0 0
+       8467.7   3420 Play    3423 Play   30171 de-DE.mp3 0 0 0
+       8487.5   3420 Play    3423 Play   30171 de-DE.mp3 0 0 0
+       8508.1   3461 Play    3475 Play   30171 de-DE.mp3 0 0 0
+       8528.4   3461 Play    3475 Play   30171 de-DE.mp3 0 0 0
+       8547.2   3461 Play    3527 Play   30171 de-DE.mp3 0 0 0
+       8567.3   3461 Play    3527 Play   30171 de-DE.mp3 0 0 0
+       8587.5   3461 Play    3527 Play   30171 de-DE.mp3 0 0 0
+       8607.6   3503 Play    3579 Play   30171 de-DE.mp3 0 0 0
+       8627.8   3503 Play    3579 Play   30171 de-DE.mp3 0 0 0
+       8647.5   3545 Play    3632 Play   30171 de-DE.mp3 0 0 0
+       8667.5   3545 Play    3632 Play   30171 de-DE.mp3 0 0 0
+       8687.8   3545 Play    3632 Play   30171 de-DE.mp3 0 0 0
+       8707.6   3586 Play    3684 Play   30171 de-DE.mp3 0 0 0
+       8727.2   3586 Play    3684 Play   30171 de-DE.mp3 0 0 0
+       8747.7   3628 Play    3736 Play   30171 de-DE.mp3 0 0 0
+       8767.3   3628 Play    3736 Play   30171 de-DE.mp3 0 0 0
+       8787.7   3628 Play    3736 Play   30171 de-DE.mp3 0 0 0
+       8807.9   3628 Play    3788 Play   30171 de-DE.mp3 0 0 0
+       8827.7   3628 Play    3788 Play   30171 de-DE.mp3 0 0 0
+       8847.8   3670 Play    3841 Play   30171 de-DE.mp3 0 0 0
+       8867.6   3670 Play    3841 Play   30171 de-DE.mp3 0 0 0
+       8887.3   3670 Play    3841 Play   30171 de-DE.mp3 0 0 0
+       8907.5   3712 Play    3893 Play   30171 de-DE.mp3 0 0 0
+       8927.5   3712 Play    3893 Play   30171 de-DE.mp3 0 0 0
+       8947.6   3753 Play    3945 Play   30171 de-DE.mp3 0 0 0
+       8967.1   3753 Play    3945 Play   30171 de-DE.mp3 0 0 0
+       8987.6   3753 Play    3945 Play   30171 de-DE.mp3 0 0 0
+       9007.6   3795 Play    3997 Play   30171 de-DE.mp3 0 0 0
+       9027.6   3795 Play    3997 Play   30171 de-DE.mp3 0 0 0
+       9047.8   3795 Play    4023 Play   30171 de-DE.mp3 0 0 0
+       9067.7   3795 Play    4023 Play   30171 de-DE.mp3 0 0 0
+       9087.5   3795 Play    4023 Play   30171 de-DE.mp3 0 0 0
+       9107.6   3837 Play    4076 Play   30171 de-DE.mp3 0 0 0
+       9127.5   3837 Play    4076 Play   30171 de-DE.mp3 0 0 0
+       9148.0   3878 Play    4128 Play   30171 de-DE.mp3 0 0 0
+       9167.8   3878 Play    4128 Play   30171 de-DE.mp3 0 0 0
+       9187.3   3878 Play    4128 Play   30171 de-DE.mp3 0 0 0
+       9207.8   3920 Play    4180 Play   30171 de-DE.mp3 0 0 0
+       9227.8   3920 Play    4180 Play   30171 de-DE.mp3 0 0 0
+       9247.9   3962 Play    4232 Play   30171 de-DE.mp3 0 0 0
+       9267.6   3962 Play    4232 Play   30171 de-DE.mp3 0 0 0
+       9287.4   3962 Play    4232 Play   30171 de-DE.mp3 0 0 0
+       9307.7   3968 Play    4285 Play   30171 de-DE.mp3 0 0 0
+       9327.8   3968 Play    4285 Play   30171 de-DE.mp3 0 0 0
+       9347.5   4032 Play    4337 Play   30171 de-DE.mp3 0 0 0
+       9367.6   4032 Play    4337 Play   30171 de-DE.mp3 0 0 0
+       9387.3   4032 Play    4337 Play   30171 de-DE.mp3 0 0 0
+       9408.6   4074 Play    4389 Play   30171 de-DE.mp3 0 0 0
+       9427.5   4074 Play    4389 Play   30171 de-DE.mp3 0 0 0
+       9447.7   4129 Play    4441 Play   30171 de-DE.mp3 0 0 0
+       9467.5   4129 Play    4441 Play   30171 de-DE.mp3 0 0 0
+       9487.9   4129 Play    4441 Play   30171 de-DE.mp3 0 0 0
+       9508.1   4181 Play    4494 Play   30171 de-DE.mp3 0 0 0
+       9527.6   4181 Play    4494 Play   30171 de-DE.mp3 0 0 0
+       9547.8   4224 Play    4546 Play   30171 de-DE.mp3 0 0 0
+       9567.4   4224 Play    4546 Play   30171 de-DE.mp3 0 0 0
+       9686.1   4224 Play    4546 Play   30171 de-DE.mp3 0 0 0
+       9721.1   4379 Play    4676 Play   30171 de-DE.mp3 0 0 0
+       9727.6   4394 Play    4703 Play   30171 de-DE.mp3 0 0 0
+       9747.7   4421 Play    4729 Play   30171 de-DE.mp3 0 0 0
+       9767.5   4421 Play    4729 Play   30171 de-DE.mp3 0 0 0
+       9787.6   4421 Play    4729 Play   30171 de-DE.mp3 0 0 0
+       9807.6   4480 Play    4781 Play   30171 de-DE.mp3 0 0 0
+       9827.2   4480 Play    4781 Play   30171 de-DE.mp3 0 0 0
+       9847.4   4522 Play    4833 Play   30171 de-DE.mp3 0 0 0
+       9867.1   4522 Play    4833 Play   30171 de-DE.mp3 0 0 0
+       9887.6   4522 Play    4833 Play   30171 de-DE.mp3 0 0 0
+       9907.6   4565 Play    4885 Play   30171 de-DE.mp3 0 0 0
+       9927.3   4565 Play    4885 Play   30171 de-DE.mp3 0 0 0
+       9947.7   4629 Play    4938 Play   30171 de-DE.mp3 0 0 0
+       9967.5   4629 Play    4938 Play   30171 de-DE.mp3 0 0 0
+       9987.9   4629 Play    4938 Play   30171 de-DE.mp3 0 0 0
+      10007.8   4672 Play    4990 Play   30171 de-DE.mp3 0 0 0
+      10027.5   4672 Play    4990 Play   30171 de-DE.mp3 0 0 0
+      10047.7   4714 Play    5042 Play   30171 de-DE.mp3 0 0 0
+      10067.5   4714 Play    5042 Play   30171 de-DE.mp3 0 0 0
+      10087.5   4714 Play    5042 Play   30171 de-DE.mp3 0 0 0
+      10107.7   4778 Play    5094 Play   30171 de-DE.mp3 0 0 0
+      10127.5   4778 Play    5094 Play   30171 de-DE.mp3 0 0 0
+      10147.6   4821 Play    5147 Play   30171 de-DE.mp3 0 0 0
+      10167.5   4821 Play    5147 Play   30171 de-DE.mp3 0 0 0
+      10187.5   4821 Play    5147 Play   30171 de-DE.mp3 0 0 0
+      10207.4   4879 Play    5173 Play   30171 de-DE.mp3 0 0 0
+      10227.5   4879 Play    5173 Play   30171 de-DE.mp3 0 0 0
+      10247.7   4928 Play    5225 Play   30171 de-DE.mp3 0 0 0
+      10267.5   4928 Play    5225 Play   30171 de-DE.mp3 0 0 0
+      10287.4   4928 Play    5225 Play   30171 de-DE.mp3 0 0 0
+      10307.5   4970 Play    5277 Play   30171 de-DE.mp3 0 0 0
+      10327.6   4970 Play    5277 Play   30171 de-DE.mp3 0 0 0
+      10347.4   5013 Play    5330 Play   30171 de-DE.mp3 0 0 0
+      10368.9   5013 Play    5330 Play   30171 de-DE.mp3 0 0 0
+      10387.4   5013 Play    5330 Play   30171 de-DE.mp3 0 0 0
+      10407.7   5077 Play    5382 Play   30171 de-DE.mp3 0 0 0
+      10427.7   5077 Play    5382 Play   30171 de-DE.mp3 0 0 0
+      10447.5   5130 Play    5434 Play   30171 de-DE.mp3 0 0 0
+      10467.2   5130 Play    5434 Play   30171 de-DE.mp3 0 0 0
+      10487.8   5130 Play    5434 Play   30171 de-DE.mp3 0 0 0
+      10508.0   5184 Play    5486 Play   30171 de-DE.mp3 0 0 0
+      10527.5   5184 Play    5486 Play   30171 de-DE.mp3 0 0 0
+      10547.5   5226 Play    5539 Play   30171 de-DE.mp3 0 0 0
+      10567.6   5226 Play    5539 Play   30171 de-DE.mp3 0 0 0
+      10588.2   5226 Play    5539 Play   30171 de-DE.mp3 0 0 0
+      10607.7   5269 Play    5591 Play   30171 de-DE.mp3 0 0 0
+      10627.4   5269 Play    5591 Play   30171 de-DE.mp3 0 0 0
+      10647.6   5333 Play    5643 Play   30171 de-DE.mp3 0 0 0
+      10667.6   5333 Play    5643 Play   30171 de-DE.mp3 0 0 0
+      10687.5   5333 Play    5643 Play   30171 de-DE.mp3 0 0 0
+      10707.5   5380 Play    5695 Play   30171 de-DE.mp3 0 0 0
+      10727.6   5380 Play    5695 Play   30171 de-DE.mp3 0 0 0
+      10747.8   5422 Play    5748 Play   30171 de-DE.mp3 0 0 0
+      10767.4   5422 Play    5748 Play   30171 de-DE.mp3 0 0 0
+      10787.3   5422 Play    5748 Play   30171 de-DE.mp3 0 0 0
+      10807.8   5482 Play    5774 Play   30171 de-DE.mp3 0 0 0
+      10827.8   5482 Play    5774 Play   30171 de-DE.mp3 0 0 0
+      10847.6   5525 Play    5826 Play   30171 de-DE.mp3 0 0 0
+      10867.6   5525 Play    5826 Play   30171 de-DE.mp3 0 0 0
+      10887.4   5525 Play    5826 Play   30171 de-DE.mp3 0 0 0
+      10932.0   5568 Play    5878 Play   30171 de-DE.mp3 0 0 0
+      10947.8   5632 Play    5930 Play   30171 de-DE.mp3 0 0 0
+      10967.5   5632 Play    5930 Play   30171 de-DE.mp3 0 0 0
+      10987.8   5632 Play    5930 Play   30171 de-DE.mp3 0 0 0
+      11007.7   5674 Play    5983 Play   30171 de-DE.mp3 0 0 0
+      11028.2   5674 Play    5983 Play   30171 de-DE.mp3 0 0 0
+      11047.4   5717 Play    6035 Play   30171 de-DE.mp3 0 0 0
+      11067.2   5717 Play    6035 Play   30171 de-DE.mp3 0 0 0
+      11087.8   5717 Play    6035 Play   30171 de-DE.mp3 0 0 0
+      11107.7   5781 Play    6087 Play   30171 de-DE.mp3 0 0 0
+      11127.5   5781 Play    6087 Play   30171 de-DE.mp3 0 0 0
+      11147.4   5824 Play    6139 Play   30171 de-DE.mp3 0 0 0
+      11167.5   5824 Play    6139 Play   30171 de-DE.mp3 0 0 0
+      11187.7   5824 Play    6139 Play   30171 de-DE.mp3 0 0 0
+      11207.5   5880 Play    6192 Play   30171 de-DE.mp3 0 0 0
+      11227.5   5880 Play    6192 Play   30171 de-DE.mp3 0 0 0
+      11247.3   5930 Play    6244 Play   30171 de-DE.mp3 0 0 0
+      11267.5   5930 Play    6244 Play   30171 de-DE.mp3 0 0 0
+      11287.4   5930 Play    6244 Play   30171 de-DE.mp3 0 0 0
+      11307.6   5973 Play    6296 Play   30171 de-DE.mp3 0 0 0
+      11327.4   5973 Play    6296 Play   30171 de-DE.mp3 0 0 0
+      11347.5   6016 Play    6348 Play   30171 de-DE.mp3 0 0 0
+      11367.8   6016 Play    6348 Play   30171 de-DE.mp3 0 0 0
+      11388.9   6016 Play    6348 Play   30171 de-DE.mp3 0 0 0
+      11408.0   6080 Play    6374 Play   30171 de-DE.mp3 0 0 0
+      11427.8   6080 Play    6374 Play   30171 de-DE.mp3 0 0 0
+      11447.6   6131 Play    6427 Play   30171 de-DE.mp3 0 0 0
+[mp3float @ 000002504796F080] Could not update timestamps for skipped samples.
+      11467.9   6131 Play    6427 Play   30171 de-DE.mp3 0 0 0
+      11487.8   6131 Play    6427 Play   30171 de-DE.mp3 0 0 0
+      11507.6   6172 Play    6479 Play   30171 de-DE.mp3 0 0 0
+      11527.3   6172 Play    6479 Play   30171 de-DE.mp3 0 0 0
+      11547.5   6229 Play    6531 Play   30171 de-DE.mp3 0 0 0
+      11567.3   6229 Play    6531 Play   30171 de-DE.mp3 0 0 0
+      11587.4   6229 Play    6531 Play   30171 de-DE.mp3 0 0 0
+      11607.8   6272 Play    6583 Play   30171 de-DE.mp3 0 0 0
+      11627.7   6272 Play    6583 Play   30171 de-DE.mp3 0 0 0
+      11647.3   6314 Play    6636 Play   30171 de-DE.mp3 0 0 0
+      11667.6   6314 Play    6636 Play   30171 de-DE.mp3 0 0 0
+      11687.8   6314 Play    6636 Play   30171 de-DE.mp3 0 0 0
+      11707.7   6381 Play    6688 Play   30171 de-DE.mp3 0 0 0
+      11727.6   6381 Play    6688 Play   30171 de-DE.mp3 0 0 0
+      11747.3   6423 Play    6740 Play   30171 de-DE.mp3 0 0 0
+      11767.2   6423 Play    6740 Play   30171 de-DE.mp3 0 0 0
+      11787.9   6423 Play    6740 Play   30171 de-DE.mp3 0 0 0
+      11808.0   6464 Play    6792 Play   30171 de-DE.mp3 0 0 0
+      11827.4   6464 Play    6792 Play   30171 de-DE.mp3 0 0 0
+      11847.1   6528 Play    6845 Play   30171 de-DE.mp3 0 0 0
+      11867.8   6528 Play    6845 Play   30171 de-DE.mp3 0 0 0
+      11887.8   6528 Play    6845 Play   30171 de-DE.mp3 0 0 0
+      11907.5   6570 Play    6897 Play   30171 de-DE.mp3 0 0 0
+      11927.8   6570 Play    6897 Play   30171 de-DE.mp3 0 0 0
+      11947.7   6634 Play    6923 Play   30171 de-DE.mp3 0 0 0
+      11967.2   6634 Play    6923 Play   30171 de-DE.mp3 0 0 0
+      11987.7   6634 Play    6923 Play   30171 de-DE.mp3 0 0 0
+      12007.3   6677 Play    6975 Play   30171 de-DE.mp3 0 0 0
+      12027.9   6677 Play    6975 Play   30171 de-DE.mp3 0 0 0
+      12047.8   6720 Play    7028 Play   30171 de-DE.mp3 0 0 0
+      12067.9   6720 Play    7028 Play   30171 de-DE.mp3 0 0 0
+      12087.4   6720 Play    7028 Play   30171 de-DE.mp3 0 0 0
+      12107.5   6784 Play    7080 Play   30171 de-DE.mp3 0 0 0
+      12127.6   6784 Play    7080 Play   30171 de-DE.mp3 0 0 0
+      12147.4   6826 Play    7132 Play   30171 de-DE.mp3 0 0 0
+      12167.3   6826 Play    7132 Play   30171 de-DE.mp3 0 0 0
+      12187.5   6826 Play    7132 Play   30171 de-DE.mp3 0 0 0
+      12207.7   6881 Play    7184 Play   30171 de-DE.mp3 0 0 0
+      12227.8   6881 Play    7184 Play   30171 de-DE.mp3 0 0 0
+      12247.3   6933 Play    7236 Play   30171 de-DE.mp3 0 0 0
+      12267.7   6933 Play    7236 Play   30171 de-DE.mp3 0 0 0
+      12287.8   6933 Play    7236 Play   30171 de-DE.mp3 0 0 0
+      12307.4   6976 Play    7289 Play   30171 de-DE.mp3 0 0 0
+      12327.1   6976 Play    7289 Play   30171 de-DE.mp3 0 0 0
+      12347.5   7018 Play    7341 Play   30171 de-DE.mp3 0 0 0
+      12368.1   7018 Play    7341 Play   30171 de-DE.mp3 0 0 0
+      12388.3   7018 Play    7341 Play   30171 de-DE.mp3 0 0 0
+      12407.7   7082 Play    7393 Play   30171 de-DE.mp3 0 0 0
+      12427.4   7082 Play    7393 Play   30171 de-DE.mp3 0 0 0
+      12447.5   7132 Play    7445 Play   30171 de-DE.mp3 0 0 0
+      12467.8   7132 Play    7445 Play   30171 de-DE.mp3 0 0 0
+      12487.8   7132 Play    7445 Play   30171 de-DE.mp3 0 0 0
+      12507.9   7173 Play    7472 Play   30171 de-DE.mp3 0 0 0
+      12527.4   7173 Play    7472 Play   30171 de-DE.mp3 0 0 0
+      12547.4   7232 Play    7524 Play   30171 de-DE.mp3 0 0 0
+      12567.8   7232 Play    7524 Play   30171 de-DE.mp3 0 0 0
+      12587.7   7232 Play    7524 Play   30171 de-DE.mp3 0 0 0
+      12607.3   7274 Play    7576 Play   30171 de-DE.mp3 0 0 0
+      12627.8   7274 Play    7576 Play   30171 de-DE.mp3 0 0 0
+      12647.8   7317 Play    7628 Play   30171 de-DE.mp3 0 0 0
+      12667.8   7317 Play    7628 Play   30171 de-DE.mp3 0 0 0
+      12687.4   7317 Play    7628 Play   30171 de-DE.mp3 0 0 0
+      12707.9   7382 Play    7681 Play   30171 de-DE.mp3 0 0 0
+      12727.1   7382 Play    7681 Play   30171 de-DE.mp3 0 0 0
+      12747.6   7424 Play    7733 Play   30171 de-DE.mp3 0 0 0
+      12767.6   7424 Play    7733 Play   30171 de-DE.mp3 0 0 0
+      12788.0   7424 Play    7733 Play   30171 de-DE.mp3 0 0 0
+      12807.8   7466 Play    7785 Play   30171 de-DE.mp3 0 0 0
+      12827.8   7466 Play    7785 Play   30171 de-DE.mp3 0 0 0
+      12847.5   7530 Play    7837 Play   30171 de-DE.mp3 0 0 0
+      12867.2   7530 Play    7837 Play   30171 de-DE.mp3 0 0 0
+      12887.4   7530 Play    7837 Play   30171 de-DE.mp3 0 0 0
+      12907.4   7573 Play    7890 Play   30171 de-DE.mp3 0 0 0
+      12927.2   7573 Play    7890 Play   30171 de-DE.mp3 0 0 0
+      12947.8   7632 Play    7942 Play   30171 de-DE.mp3 0 0 0
+      12967.5   7632 Play    7942 Play   30171 de-DE.mp3 0 0 0
+      12988.7   7632 Play    7942 Play   30171 de-DE.mp3 0 0 0
+      13008.4   7680 Play    7994 Play   30171 de-DE.mp3 0 0 0
+      13027.8   7680 Play    7994 Play   30171 de-DE.mp3 0 0 0
+      13047.5   7722 Play    8046 Play   30171 de-DE.mp3 0 0 0
+      13067.6   7722 Play    8046 Play   30171 de-DE.mp3 0 0 0
+      13087.7   7722 Play    8046 Play   30171 de-DE.mp3 0 0 0
+      13107.6   7765 Play    8072 Play   30171 de-DE.mp3 0 0 0
+      13127.6   7765 Play    8072 Play   30171 de-DE.mp3 0 0 0
+      13148.3   7829 Play    8125 Play   30171 de-DE.mp3 0 0 0
+      13167.7   7829 Play    8125 Play   30171 de-DE.mp3 0 0 0
+      13187.4   7829 Play    8125 Play   30171 de-DE.mp3 0 0 0
+      13207.8   7882 Play    8177 Play   30171 de-DE.mp3 0 0 0
+      13227.5   7882 Play    8177 Play   30171 de-DE.mp3 0 0 0
+      13247.3   7924 Play    8229 Play   30171 de-DE.mp3 0 0 0
+      13267.5   7924 Play    8229 Play   30171 de-DE.mp3 0 0 0
+      13288.0   7924 Play    8229 Play   30171 de-DE.mp3 0 0 0
+      13307.7   7978 Play    8281 Play   30171 de-DE.mp3 0 0 0
+      13327.6   7978 Play    8281 Play   30171 de-DE.mp3 0 0 0
+      13347.5   8021 Play    8334 Play   30171 de-DE.mp3 0 0 0
+      13367.7   8021 Play    8334 Play   30171 de-DE.mp3 0 0 0
+      13387.6   8021 Play    8334 Play   30171 de-DE.mp3 0 0 0
+      13407.4   8064 Play    8386 Play   30171 de-DE.mp3 0 0 0
+      13427.6   8064 Play    8386 Play   30171 de-DE.mp3 0 0 0
+      13447.4   8133 Play    8438 Play   30171 de-DE.mp3 0 0 0
+      13467.6   8133 Play    8438 Play   30171 de-DE.mp3 0 0 0
+      13487.8   8133 Play    8438 Play   30171 de-DE.mp3 0 0 0
+      13507.3   8174 Play    8490 Play   30171 de-DE.mp3 0 0 0
+      13527.8   8174 Play    8490 Play   30171 de-DE.mp3 0 0 0
+      13547.8   8216 Play    8543 Play   30171 de-DE.mp3 0 0 0
+      13567.7   8216 Play    8543 Play   30171 de-DE.mp3 0 0 0
+      13587.7   8216 Play    8543 Play   30171 de-DE.mp3 0 0 0
+      13607.4   8277 Play    8595 Play   30171 de-DE.mp3 0 0 0
+      13627.5   8277 Play    8595 Play   30171 de-DE.mp3 0 0 0
+      13647.6   8320 Play    8647 Play   30171 de-DE.mp3 0 0 0
+      13667.8   8320 Play    8647 Play   30171 de-DE.mp3 0 0 0
+      13687.3   8320 Play    8647 Play   30171 de-DE.mp3 0 0 0
+      13708.2   8384 Play    8673 Play   30171 de-DE.mp3 0 0 0
+      13727.3   8384 Play    8673 Play   30171 de-DE.mp3 0 0 0
+      13747.8   8426 Play    8725 Play   30171 de-DE.mp3 0 0 0
+      13767.8   8426 Play    8725 Play   30171 de-DE.mp3 0 0 0
+      13787.8   8426 Play    8725 Play   30171 de-DE.mp3 0 0 0
+      13807.5   8469 Play    8778 Play   30171 de-DE.mp3 0 0 0
+      13827.1   8469 Play    8778 Play   30171 de-DE.mp3 0 0 0
+      13847.6   8533 Play    8830 Play   30171 de-DE.mp3 0 0 0
+      13867.4   8533 Play    8830 Play   30171 de-DE.mp3 0 0 0
+      13887.8   8533 Play    8830 Play   30171 de-DE.mp3 0 0 0
+[P] screenshots:
+       4640.1 00_chunk0_playing.png
+       8445.4 01_after_handoff_0.5s.png
+      10931.3 02_after_handoff_3s.png
+      13931.0 03_final.png
+[Q] metrics:
+    chunk0 received at 4006.1 ms; first audio Playing at 4129.5 ms (+123.4 ms)
+    video never paused waiting for chunk1
+    handoff at 7897.7 ms: video=3003 old_audio=2352 new_audio=3003 (new - old = +651 ms) de-DE_chunk0.mp3 -> de-DE.mp3
+    samples within [-1 s, +2 s] of handoff: 140, with audio or video not Playing: 0
+    audio - video after handoff: min=-92 max=332 mean=272.0 ms (n=278)
+🧹 成功清除臨時解密音軌。
