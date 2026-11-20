@@ -35,9 +35,10 @@ def create_app(
     settings: Settings | None = None,
     load_decoder: Callable[[], DecodeFunction] = load_default_decoder,
     load_detector: Callable[[], DetectFunction] = load_default_detector,
+    remover: DirectoryRemover | None = None,
 ) -> FastAPI:
     active_settings = settings or Settings.from_environment()
-    store = SessionStore(active_settings.temp_root, DirectoryRemover())
+    store = SessionStore(active_settings.temp_root, remover or DirectoryRemover())
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI):
