@@ -28,9 +28,15 @@ if os.path.exists('for_ip/main.py'):
 if os.path.exists('for_ip/run_dashboard.bat'):
     db_files.append(('for_ip/run_dashboard.bat', 'for_ip'))
 
-datas = numba_datas + llvmlite_datas + cv2_datas + ffmpeg_datas + db_files
+font_files = []
+for font_name in ('Cubic_11.ttf', 'PixelifySans.ttf', 'OFL.txt'):
+    fp = os.path.join('src', 'assets', 'fonts', font_name)
+    if os.path.exists(fp):
+        font_files.append((fp, 'assets/fonts'))
+
+datas = numba_datas + llvmlite_datas + cv2_datas + ffmpeg_datas + db_files + font_files
 binaries = vc_binaries + numba_binaries + llvmlite_binaries + cv2_binaries + ffmpeg_binaries
-hiddenimports = ['stego_facade', 'audio_chunker', 'pee_stego', 'pyinstaller_utils', 'i18n_detector', 'maxminddb', 'requests', 'ipaddress', 'PySide6.QtMultimedia', 'PySide6.QtMultimediaWidgets'] + numba_hiddenimports + llvmlite_hiddenimports + cv2_hiddenimports + ffmpeg_hiddenimports
+hiddenimports = ['stego_facade', 'audio_chunker', 'pee_stego', 'pyinstaller_utils', 'i18n_detector', 'player_ui_theme', 'player_ui_icons', 'player_ui_widgets', 'maxminddb', 'requests', 'ipaddress', 'PySide6.QtMultimedia', 'PySide6.QtMultimediaWidgets'] + numba_hiddenimports + llvmlite_hiddenimports + cv2_hiddenimports + ffmpeg_hiddenimports
 
 a = Analysis(
     ['src/player_app.py'],
